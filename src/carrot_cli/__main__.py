@@ -6,6 +6,7 @@ import click
 # porcelain
 from .sub_command_1 import command as sub_command_1
 from .sub_command_2 import command as sub_command_2
+from .sub_command_3 import command as sub_command_3
 
 # Version number is automatically set via bumpversion.
 # DO NOT MODIFY:
@@ -56,6 +57,7 @@ def version():
 # Update with new sub-commands:
 main_entry.add_command(sub_command_1.main)
 main_entry.add_command(sub_command_2.main)
+main_entry.add_command(sub_command_3.main)
 
 
 if __name__ == "__main__":
