@@ -60,8 +60,8 @@ Our versions are specified by a 3 number semantic version system (https://semver
 To update the version with bumpversion do the following:
 
 `bumpversion PART` where PART is one of:
-	- major
-	- minor
-	- patch
+- major
+- minor
+- patch
 
 This will increase the corresponding version number by 1.
