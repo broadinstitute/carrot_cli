@@ -4,10 +4,10 @@ from sys import argv
 import click
 
 # porcelain
-from .sub_command_1 import command as sub_command_1
-from .sub_command_2 import command as sub_command_2
-from .sub_command_3 import command as sub_command_3
 from .pipeline import command as pipeline
+from .template import command as template
+from .test import command as test
+from .subscription import command as subscription
 from .config import manager as config_manager
 from .config import command as config
 
@@ -61,10 +61,10 @@ def version():
 
 
 # Update with new sub-commands:
-main_entry.add_command(sub_command_1.main)
-main_entry.add_command(sub_command_2.main)
-main_entry.add_command(sub_command_3.main)
 main_entry.add_command(pipeline.main)
+main_entry.add_command(template.main)
+main_entry.add_command(test.main)
+main_entry.add_command(subscription.main)
 main_entry.add_command(config.main)
 
 
