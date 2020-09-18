@@ -1,9 +1,10 @@
 import logging
-import click
 import sys
+import click
 
 from ..config import manager as config
 from ..rest import tests
+from ..rest import runs
 
 LOGGER = logging.getLogger(__name__)
 
@@ -193,6 +194,32 @@ def create(
         )
     )
 
+@main.command(name="update")
+@click.argument("id")
+@click.option(
+    "--name",
+    default="",
+    help="The name of the test"
+)
+@click.option(
+    "--description",
+    default="",
+    help="The description of the test"
+)
+def update(
+    id,
+    name,
+    description
+):
+    """Update test with ID with the specified parameters"""
+    print(
+        tests.update(
+            id,
+            name,
+            description
+        )
+    )
+
 @main.command(name="run")
 @click.argument("id")
 @click.option(
@@ -245,29 +272,119 @@ def run(
         )
     )
 
-@main.command(name="update")
+@main.command(name="find_runs")
 @click.argument("id")
 @click.option(
     "--name",
     default="",
-    help="The name of the test"
+    help="The name of the run"
 )
 @click.option(
-    "--description",
+    "--status",
     default="",
-    help="The description of the test"
+    help="The status of the run"
 )
-def update(
+@click.option(
+    "--test_input",
+    default="",
+    help="A JSON file containing the inputs to the test WDL for the run"
+)
+@click.option(
+    "--eval_input",
+    default="",
+    help="A JSON file containing the inputs to the eval WDL for the run"
+)
+@click.option(
+    "--cromwell_job_id",
+    default="",
+    help="The unique ID assigned to the Cromwell job in which the test ran"
+)
+@click.option(
+    "--created_before",
+    default="",
+    help="Upper bound for run's created_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss"
+)
+@click.option(
+    "--created_after",
+    default="",
+    help="Lower bound for run's created_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss"
+)
+@click.option(
+    "--created_by",
+    default="",
+    help="Email of the creator of the run"
+)
+@click.option(
+    "--finished_before",
+    default="",
+    help="Upper bound for run's finished_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss"
+)
+@click.option(
+    "--finished_after",
+    default="",
+    help="Lower bound for run's finished_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss"
+)
+@click.option(
+    "--sort",
+    default="",
+    help="A comma-separated list of sort keys, enclosed in asc() for ascending or desc() for "
+        "descending.  Ex. asc(status),desc(created_at)"
+)
+@click.option(
+    "--limit",
+    default=20,
+    show_default=True,
+    help="The maximum number of run records to return"
+)
+@click.option(
+    "--offset",
+    default=0,
+    show_default=True,
+    help="The offset to start at within the list of records to return.  Ex. Sorting by "
+        "asc(created_at) with offset=1 would return records sorted by when they were created "
+        "starting from the second record to be created"
+)
+def find_runs(
     id,
     name,
-    description
+    status,
+    test_input,
+    eval_input,
+    cromwell_job_id,
+    created_before,
+    created_after,
+    created_by,
+    finished_before,
+    finished_after,
+    sort,
+    limit,
+    offset
 ):
-    """Update test with ID with the specified parameters"""
+    """Retrieve runs of the test specified by ID, filtered by the specified parameters"""
+    # Load data from files for test_input and eval_input, if set
+    if test_input != "":
+        with open(test_input, 'r') as test_input_file:
+            test_input = test_input_file.read()
+    if eval_input != "":
+        with open(eval_input, 'r') as eval_input_file:
+            eval_input = eval_input_file.read()
     print(
-        tests.update(
+        runs.find(
+            "tests",
             id,
             name,
-            description
+            status,
+            test_input,
+            eval_input,
+            cromwell_job_id,
+            created_before,
+            created_after,
+            created_by,
+            finished_before,
+            finished_after,
+            sort,
+            limit,
+            offset
         )
     )
 

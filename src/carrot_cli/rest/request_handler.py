@@ -95,6 +95,37 @@ def run(test_id, params):
     req = requests.Request("POST", address, json=body)
     return send_request(req)
 
+def find_runs(entity, id, params):
+    """
+        Submits a request to the find_runs mapping for the specified entity with the specified id 
+        and filtering by the specified params
+    """
+    # Build request address
+    address = "http://%s/api/v1/%s/%s/runs" % (config.load_var("carrot_server_address"), 
+        entity, id)
+    # Filter out params that are not set
+    params = list(filter(lambda param: param[1] != "", params))
+    # Create and send request
+    req = requests.Request('GET', address, params=params)
+    return send_request(req)
+
+def create_map(entity1, entity1_id, entity2, entity2_id, params):
+    """
+        Submits a request for creating a mapping between entity1 and entity2, with the specified
+        params.
+    """
+    # Build request address
+    address = "http://%s/api/v1/%s/%s/%s/%s" % (config.load_var("carrot_server_address"), 
+        entity1, entity1_id, entity2, entity2_id)
+    # Build request json body from params, filtering out empty ones
+    body = {}
+    for param in params:
+        if param[1] != "":
+            body[param[0]] = param[1]
+    # Create and send request
+    req = requests.Request('POST', address, json=body)
+    return send_request(req)
+
 def send_request(req):
     """Sends the specified Request object and handles potential errors"""
     try:

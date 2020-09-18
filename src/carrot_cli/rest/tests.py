@@ -82,13 +82,6 @@ def run(
     created_by
 ):
     """Submits a request to CARROT's test run mapping"""
-    # Load data from files for test_input and eval_input, if set
-    if test_input != "":
-        with open(test_input, 'r') as test_input_file:
-            test_input = test_input_file.read()
-    if eval_input != "":
-        with open(eval_input, 'r') as eval_input_file:
-            eval_input = eval_input_file.read()
     # Create parameter list
     params = [
         ("name", name),
@@ -97,7 +90,6 @@ def run(
         ("created_by", created_by)
     ]
     return request_handler.run(test_id, params)
-
 
 def subscribe(
     test_id,

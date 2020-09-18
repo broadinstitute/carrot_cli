@@ -8,6 +8,9 @@ from .pipeline import command as pipeline
 from .template import command as template
 from .test import command as test
 from .subscription import command as subscription
+from .result import command as result
+from .run import command as run
+from .software import command as software
 from .config import manager as config_manager
 from .config import command as config
 
@@ -65,6 +68,9 @@ main_entry.add_command(pipeline.main)
 main_entry.add_command(template.main)
 main_entry.add_command(test.main)
 main_entry.add_command(subscription.main)
+main_entry.add_command(result.main)
+main_entry.add_command(run.main)
+main_entry.add_command(software.main)
 main_entry.add_command(config.main)
 
 
