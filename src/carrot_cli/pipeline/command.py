@@ -298,9 +298,11 @@ def subscribe(
             print("Subscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable")
             sys.exit(1)
-    pipelines.subscribe(
-        id,
-        email
+    print(
+        pipelines.subscribe(
+            id,
+            email
+        )
     )
 
 @main.command(name="unsubscribe")
@@ -326,7 +328,9 @@ def unsubscribe(
             print("Unsubscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable")
             sys.exit(1)
-    pipelines.unsubscribe(
-        id,
-        email
+    print(
+        pipelines.unsubscribe(
+            id,
+            email
+        )
     )

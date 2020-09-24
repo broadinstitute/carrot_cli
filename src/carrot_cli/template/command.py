@@ -350,9 +350,11 @@ def subscribe(
             print("Subscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable")
             sys.exit(1)
-    templates.subscribe(
-        id,
-        email
+    print(
+        templates.subscribe(
+            id,
+            email
+        )
     )
 
 @main.command(name="unsubscribe")
@@ -378,9 +380,11 @@ def unsubscribe(
             print("Unsubscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable")
             sys.exit(1)
-    templates.unsubscribe(
-        id,
-        email
+    print(
+        templates.unsubscribe(
+            id,
+            email
+        )
     )
 
 @main.command(name="map_to_result")

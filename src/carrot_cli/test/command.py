@@ -412,9 +412,11 @@ def subscribe(
             print("Subscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable")
             sys.exit(1)
-    tests.subscribe(
-        id,
-        email
+    print(
+        tests.subscribe(
+            id,
+            email
+        )
     )
 
 @main.command(name="unsubscribe")
@@ -440,7 +442,9 @@ def unsubscribe(
             print("Unsubscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable")
             sys.exit(1)
-    tests.unsubscribe(
-        id,
-        email
+    print(
+        tests.unsubscribe(
+            id,
+            email
+        )
     )
