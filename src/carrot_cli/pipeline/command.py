@@ -166,7 +166,8 @@ def update(
 @click.option(
     "--status",
     default="",
-    help="The status of the run"
+    help="The status of the run. Status include: aborted, building, created, failed, "
+        "queued_in_cromwell, running, starting, submitted, succeeded, waiting_for_queue_space"
 )
 @click.option(
     "--test_input",

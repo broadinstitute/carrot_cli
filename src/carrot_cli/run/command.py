@@ -1,8 +1,6 @@
 import logging
 import click
-import sys
 
-from ..config import manager as config
 from ..rest import runs
 
 LOGGER = logging.getLogger(__name__)

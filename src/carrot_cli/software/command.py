@@ -1,13 +1,10 @@
 import logging
 import click
-import sys
 
 from ..config import manager as config
 from ..rest import software
-from ..rest import runs
 
 LOGGER = logging.getLogger(__name__)
-
 
 @click.group(name="software")
 def main():
@@ -17,7 +14,7 @@ def main():
 @click.argument("id")
 def find_by_id(id):
     """Retrieve a software definition by its ID"""
-    print(softwares.find_by_id(id))
+    print(software.find_by_id(id))
 
 @main.command(name="find")
 @click.option(
@@ -89,7 +86,7 @@ def find(
 ):
     """Retrieve software definitions filtered to match the specified parameters"""
     print(
-        softwares.find(
+        software.find(
             software_id,
             name,
             description,
@@ -136,7 +133,7 @@ def create(
         if email_config_val is not None:
             created_by = email_config_val
     print(
-        softwares.create(
+        software.create(
             name,
             description,
             repository_url,
@@ -163,7 +160,7 @@ def update(
 ):
     """Update software definition with ID with the specified parameters"""
     print(
-        softwares.update(
+        software.update(
             id,
             name,
             description

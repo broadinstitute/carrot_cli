@@ -5,7 +5,7 @@ LOGGER = logging.getLogger(__name__)
 
 def find_by_id(software_id):
     """Submits a request to CARROT's software find_by_id mapping"""
-    return request_handler.find_by_id("softwares", software_id)
+    return request_handler.find_by_id("software", software_id)
 
 def find(
     software_id,
@@ -19,7 +19,7 @@ def find(
     limit,
     offset
 ):
-    """Submits a request to CARROT's softwares find mapping"""
+    """Submits a request to CARROT's software find mapping"""
     # Create parameter list
     params = [
         ("software_id", software_id),
@@ -33,7 +33,7 @@ def find(
         ("limit", limit),
         ("offset", offset)
     ]
-    return request_handler.find("softwares", params)
+    return request_handler.find("software", params)
 
 def create(
     name,
@@ -49,7 +49,7 @@ def create(
         ("repository_url", repository_url),
         ("created_by", created_by)
     ]
-    return request_handler.create("softwares", params)
+    return request_handler.create("software", params)
 
 def update(
     software_id,
@@ -62,5 +62,5 @@ def update(
         ("name", name),
         ("description", description),
     ]
-    return request_handler.update("softwares", software_id, params)
+    return request_handler.update("software", software_id, params)
 

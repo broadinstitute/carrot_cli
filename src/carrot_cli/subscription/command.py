@@ -70,7 +70,7 @@ def find_by_id(id):
 def find(
     subscription_id,
     entity_type,
-    entity_name,
+    entity_id,
     created_before,
     created_after,
     email,
@@ -83,7 +83,7 @@ def find(
         subscriptions.find(
             subscription_id,
             entity_type,
-            entity_name,
+            entity_id,
             created_before,
             created_after,
             email,

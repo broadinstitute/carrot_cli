@@ -1,6 +1,5 @@
 import logging
 import click
-import sys
 
 from ..config import manager as config
 from ..rest import results
@@ -185,8 +184,8 @@ def map_to_template(
     """
     print(
         template_results.create_map(
-            id,
             template_id,
+            id,
             result_key
         )
     )
