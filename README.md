@@ -48,6 +48,8 @@ the following commands:
     # run only linting
     tox -e lint
 
+Note: If you run into "module not found" errors when running tox for testing, verify the modules are listed in test-requirements.txt and delete the .tox folder to force tox to refresh dependencies.
+
 ### Versioning
 
 We use `bumpversion` to maintain version numbers.

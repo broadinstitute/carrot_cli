@@ -250,11 +250,21 @@ def find_runs(
     """
     # Load data from files for test_input and eval_input, if set
     if test_input != "":
-        with open(test_input, 'r') as test_input_file:
-            test_input = test_input_file.read()
+        try:
+            with open(test_input, 'r') as test_input_file:
+                    test_input = test_input_file.read()
+        except FileNotFoundError:
+            LOGGER.error("Encountered FileNotFound error when trying to read %s", test_input)
+            print("Failed to locate file with name %s" % test_input)
+            sys.exit(1)
     if eval_input != "":
-        with open(eval_input, 'r') as eval_input_file:
-            eval_input = eval_input_file.read()
+        try:
+            with open(eval_input, 'r') as eval_input_file:
+                eval_input = eval_input_file.read()
+        except FileNotFoundError:
+            LOGGER.error("Encountered FileNotFound error when trying to read %s", eval_input)
+            print("Failed to locate file with name %s" % eval_input)
+            sys.exit(1)
     print(
         runs.find(
             "pipelines",

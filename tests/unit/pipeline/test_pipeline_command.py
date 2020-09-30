@@ -1,0 +1,544 @@
+import pprint
+from click.testing import CliRunner
+import pytest
+import mockito
+
+from carrot_cli.rest import pipelines, runs
+from carrot_cli.config import manager as config
+from carrot_cli.__main__ import main_entry as carrot
+
+@pytest.fixture(autouse=True)
+def unstub():
+    yield
+    mockito.unstub()
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "find_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                {'created_at': '2020-09-16T18:48:06.371563',
+                'created_by': 'adora@example.com',
+                'description': 'This pipeline will save Etheria',
+                'name': 'Sword of Protection Pipeline',
+                'pipeline_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
+            )
+        },
+        {
+            "args":[
+                "pipeline",
+                "find_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "title": "No pipeline found",
+                "status": 404,
+                "detail": "No pipeline found with the specified ID"
+            })
+        }
+    ]
+)
+def find_by_id_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(pipelines).find_by_id(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(pipelines).find_by_id(request.param["args"][2]).thenReturn(request.param['return'])
+    return request.param
+
+def test_find_by_id(find_by_id_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,find_by_id_data["args"])
+    assert result.output == find_by_id_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "find",
+                "--pipeline_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--name",
+                "Sword of Protection Pipeline",
+                "--description",
+                "This pipeline will save Etheria",
+                "--created_by",
+                "adora@example.com",
+                "--created_before",
+                "2020-10-00T00:00:00.000000",
+                "--created_after",
+                "2020-09-00T00:00:00.000000",
+                "--sort",
+                "asc(name)",
+                "--limit",
+                1,
+                "--offset",
+                0
+            ],
+            "params":[
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "Sword of Protection Pipeline",
+                "This pipeline will save Etheria",
+                "adora@example.com",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "asc(name)",
+                1,
+                0
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                {'created_at': '2020-09-16T18:48:06.371563',
+                'created_by': 'adora@example.com',
+                'description': 'This pipeline will save Etheria',
+                'name': 'Sword of Protection Pipeline',
+                'pipeline_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
+            )
+        },
+        {
+            "args":[
+                "pipeline",
+                "find",
+                "--pipeline_id",
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+            ],
+            "params":[
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                20,
+                0
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "title": "No pipelines found",
+                "status": 404,
+                "detail": "No pipelines found with the specified parameters"
+            })
+        }
+    ]
+)
+def find_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(pipelines).find(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(pipelines).find(
+        request.param["params"][0],
+        request.param["params"][1],
+        request.param["params"][2],
+        request.param["params"][3],
+        request.param["params"][4],
+        request.param["params"][5],
+        request.param["params"][6],
+        request.param["params"][7],
+        request.param["params"][8]
+    ).thenReturn(request.param['return'])
+    return request.param
+
+def test_find(find_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,find_data["args"])
+    assert result.output == find_data["return"] + "\n"
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "create",
+                "--name",
+                "Sword of Protection Pipeline",
+                "--description",
+                "This pipeline will save Etheria",
+                "--created_by",
+                "adora@example.com"
+            ],
+            "params":[
+                "Sword of Protection Pipeline",
+                "This pipeline will save Etheria",
+                "adora@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                {'created_at': '2020-09-16T18:48:06.371563',
+                'created_by': 'adora@example.com',
+                'description': 'This pipeline will save Etheria',
+                'name': 'Sword of Protection Pipeline',
+                'pipeline_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
+            )
+        },
+        {
+            "args":[
+                "pipeline",
+                "create"
+            ],
+            "params":[
+            ],
+            "return":"Usage: carrot_cli pipeline create [OPTIONS]\n"
+                "Try 'carrot_cli pipeline create --help' for help.\n"
+                "\n"
+                "Error: Missing option '--name'."
+        }
+    ]
+)
+def create_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(pipelines).create(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(pipelines).create(
+            request.param["params"][0],
+            request.param["params"][1],
+            request.param["params"][2]
+        ).thenReturn(request.param['return'])
+    return request.param
+
+def test_create(create_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,create_data["args"])
+    assert result.output == create_data["return"] + "\n"
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "update",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--description",
+                "This new pipeline replaced the broken one",
+                "--name",
+                "New Sword of Protection Pipeline"
+            ],
+            "params":[
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "New Sword of Protection Pipeline",
+                "This new pipeline replaced the broken one"
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                {'created_at': '2020-09-16T18:48:06.371563',
+                'created_by': 'adora@example.com',
+                'description': 'This new pipeline replaced the broken one',
+                'name': 'New Sword of Protection Pipeline',
+                'pipeline_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
+            )
+        },
+        {
+            "args":[
+                "pipeline",
+                "update"
+            ],
+            "params":[
+            ],
+            "return":"Usage: carrot_cli pipeline update [OPTIONS] ID\n"
+                "Try 'carrot_cli pipeline update --help' for help.\n"
+                "\n"
+                "Error: Missing argument 'ID'."
+        }
+    ]
+)
+def update_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(pipelines).update(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(pipelines).update(
+            request.param["params"][0],
+            request.param["params"][1],
+            request.param["params"][2]
+        ).thenReturn(request.param['return'])
+    return request.param
+
+def test_update(update_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,update_data["args"])
+    assert result.output == update_data["return"] + "\n"
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "find_runs",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--name",
+                "Queen of Bright Moon run",
+                "--status",
+                "succeeded",
+                "--test_input",
+                "tests/data/mock_test_input.json",
+                "--eval_input",
+                "tests/data/mock_eval_input.json",
+                "--cromwell_job_id",
+                "d9855002-6b71-429c-a4de-8e90222488cd",
+                "--created_before",
+                "2020-10-00T00:00:00.000000",
+                "--created_after",
+                "2020-09-00T00:00:00.000000",
+                "--created_by",
+                "glimmer@example.com",
+                "--finished_before",
+                "2020-10-00T00:00:00.000000",
+                "--finished_after",
+                "2020-09-00T00:00:00.000000",
+                "--sort",
+                "asc(name)",
+                "--limit",
+                1,
+                "--offset",
+                0
+            ],
+            "params":[
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "Queen of Bright Moon run",
+                "succeeded",
+                '{"in_greeted": "Cool Person"}',
+                '{"in_output_filename": "test_greeting.txt"}',
+                "d9855002-6b71-429c-a4de-8e90222488cd",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "glimmer@example.com",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "asc(name)",
+                1,
+                0
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                [{'created_at': '2020-09-16T18:48:06.371563',
+                'finished_at':'2020-09-16T18:58:06.371563',
+                'created_by': 'glimmer@example.com',
+                'test_input': {
+                    "in_mother": "Angella"
+                },
+                'eval_input': {
+                    "in_friend": "Bow"
+                },
+                "status":"succeeded",
+                "results":{},
+                "cromwell_job_id":"d9855002-6b71-429c-a4de-8e90222488cd",
+                'name': 'Queen of Bright Moon run',
+                'test_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
+                'run_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}]
+            )
+        },
+        {
+            "args":[
+                "pipeline",
+                "find_runs",
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819"
+            ],
+            "params":[
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                20,
+                0
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "title": "No run found",
+                "status": 404,
+                "detail": "No runs found with the specified parameters"
+            })
+        },
+        {
+            "args":[
+                "pipeline",
+                "find_runs",
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "--test_input",
+                "nonexistent_file.json"
+            ],
+            "params":[
+            ],
+            "return":"Failed to locate file with name nonexistent_file.json"
+        }
+    ]
+)
+def find_runs_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(runs).find(...).thenReturn(None)
+    # Mock up request response
+    if len(request.param["params"]) > 0:
+        mockito.when(runs).find(
+            "pipelines",
+            request.param["params"][0],
+            request.param["params"][1],
+            request.param["params"][2],
+            request.param["params"][3],
+            request.param["params"][4],
+            request.param["params"][5],
+            request.param["params"][6],
+            request.param["params"][7],
+            request.param["params"][8],
+            request.param["params"][9],
+            request.param["params"][10],
+            request.param["params"][11],
+            request.param["params"][12],
+            request.param["params"][13]
+        ).thenReturn(request.param['return'])
+    return request.param
+
+def test_find_runs(find_runs_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,find_runs_data["args"])
+    assert result.output == find_runs_data["return"] + "\n"
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "subscribe",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--email",
+                "netossa@example.com"
+            ],
+            "params":[
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "netossa@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
+                "entity_type": "pipeline",
+                "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "email": "netossa@example.com",
+                "created_at": "2020-09-23T19:41:46.839880"
+            })
+        },
+        {
+            "args":[
+                "pipeline",
+                "subscribe",
+                "89657859-06fe-4b1a-9e96-47d4f36bf819",
+                "--email",
+                "spinnerella@example.com"
+            ],
+            "params":[
+                "89657859-06fe-4b1a-9e96-47d4f36bf819",
+                "spinnerella@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "title": "No pipeline found",
+                "status": 404,
+                "detail": "No pipeline found with the specified ID"
+            })
+        },
+        {
+            "args":[
+                "pipeline",
+                "subscribe",
+                "89657859-06fe-4b1a-9e96-47d4f36bf819"
+            ],
+            "params":[
+                "89657859-06fe-4b1a-9e96-47d4f36bf819",
+                "frosta@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
+                "entity_type": "pipeline",
+                "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "email": "frosta@example.com",
+                "created_at": "2020-09-23T19:41:46.839880"
+            })
+        },
+    ]
+)
+def subscribe_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(pipelines).subscribe(...).thenReturn(None)
+    mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
+    # Mock up request response
+    mockito.when(pipelines).subscribe(
+        request.param["params"][0],
+        request.param["params"][1]
+    ).thenReturn(request.param['return'])
+    return request.param
+
+def test_subscribe(subscribe_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,subscribe_data["args"])
+    assert result.output == subscribe_data["return"] + "\n"
+
+@pytest.fixture(
+    params=[
+        {
+            "args":[
+                "pipeline",
+                "unsubscribe",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--email",
+                "netossa@example.com"
+            ],
+            "params":[
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "netossa@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                {'message': 'Successfully deleted 1 row(s)'}
+            )
+        },
+        {
+            "args":[
+                "pipeline",
+                "unsubscribe",
+                "89657859-06fe-4b1a-9e96-47d4f36bf819",
+                "--email",
+                "spinnerella@example.com"
+            ],
+            "params":[
+                "89657859-06fe-4b1a-9e96-47d4f36bf819",
+                "spinnerella@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat({
+                "title": "No subscription found",
+                "status": 404,
+                "detail": "No subscription found for the specified parameters"
+            })
+        },
+        {
+            "args":[
+                "pipeline",
+                "unsubscribe",
+                "89657859-06fe-4b1a-9e96-47d4f36bf819"
+            ],
+            "params":[
+                "89657859-06fe-4b1a-9e96-47d4f36bf819",
+                "frosta@example.com"
+            ],
+            "return":pprint.PrettyPrinter().pformat(
+                {'message': 'Successfully deleted 1 row(s)'}
+            )
+        },
+    ]
+)
+def unsubscribe_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(pipelines).unsubscribe(...).thenReturn(None)
+    mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
+    # Mock up request response
+    mockito.when(pipelines).unsubscribe(
+        request.param["params"][0],
+        request.param["params"][1]
+    ).thenReturn(request.param['return'])
+    return request.param
+
+def test_unsubscribe(unsubscribe_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot,unsubscribe_data["args"])
+    assert result.output == unsubscribe_data["return"] + "\n"

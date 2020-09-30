@@ -3,6 +3,7 @@ import click
 
 from ..config import manager as config
 from ..rest import software
+from .software_version import command as software_version
 
 LOGGER = logging.getLogger(__name__)
 
@@ -113,7 +114,8 @@ def find(
 @click.option(
     "--repository_url",
     default="",
-    help="The url of the repository where the software code is hosted"
+    help="The url to use for cloning the repository.",
+    required=True
 )
 @click.option(
     "--created_by",
@@ -166,3 +168,5 @@ def update(
             description
         )
     )
+
+main.add_command(software_version.main)
