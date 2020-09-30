@@ -3,16 +3,15 @@ from sys import argv
 
 import click
 
-# porcelain
+from .config import command as config
+from .config import manager as config_manager
 from .pipeline import command as pipeline
-from .template import command as template
-from .test import command as test
-from .subscription import command as subscription
 from .result import command as result
 from .run import command as run
 from .software import command as software
-from .config import manager as config_manager
-from .config import command as config
+from .subscription import command as subscription
+from .template import command as template
+from .test import command as test
 
 # Version number is automatically set via bumpversion.
 # DO NOT MODIFY:

@@ -1,64 +1,74 @@
 import pprint
-from click.testing import CliRunner
-import pytest
-import mockito
 
-from carrot_cli.rest import software_versions
+import mockito
+import pytest
+from click.testing import CliRunner
+
 from carrot_cli.__main__ import main_entry as carrot
+from carrot_cli.rest import software_versions
+
 
 @pytest.fixture(autouse=True)
 def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "software",
                 "version",
                 "find_by_id",
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'commit': 'ca82a6dff817ec66f44342007202690a93763949',
-                'software_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'software_version_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "commit": "ca82a6dff817ec66f44342007202690a93763949",
+                    "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
+            "args": [
                 "software",
                 "version",
                 "find_by_id",
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No software_version found",
-                "status": 404,
-                "detail": "No software_version found with the specified ID"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No software_version found",
+                    "status": 404,
+                    "detail": "No software_version found with the specified ID",
+                }
+            ),
+        },
     ]
 )
 def find_by_id_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(software_versions).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(software_versions).find_by_id(request.param["args"][3]).thenReturn(request.param['return'])
+    mockito.when(software_versions).find_by_id(request.param["args"][3]).thenReturn(
+        request.param["return"]
+    )
     return request.param
+
 
 def test_find_by_id(find_by_id_data):
     runner = CliRunner()
-    test_software_version = runner.invoke(carrot,find_by_id_data["args"])
+    test_software_version = runner.invoke(carrot, find_by_id_data["args"])
     assert test_software_version.output == find_by_id_data["return"] + "\n"
 
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "software",
                 "version",
                 "find",
@@ -79,9 +89,9 @@ def test_find_by_id(find_by_id_data):
                 "--limit",
                 1,
                 "--offset",
-                0
+                0,
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "ca82a6dff817ec66f44342007202690a93763949",
@@ -90,24 +100,28 @@ def test_find_by_id(find_by_id_data):
                 "2020-09-00T00:00:00.000000",
                 "asc(commit)",
                 1,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                [{'created_at': '2020-09-16T18:48:06.371563',
-                'commit': 'ca82a6dff817ec66f44342007202690a93763949',
-                'software_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'software_version_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}]
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:06.371563",
+                        "commit": "ca82a6dff817ec66f44342007202690a93763949",
+                        "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ]
+            ),
         },
         {
-            "args":[
+            "args": [
                 "software",
                 "version",
                 "find",
                 "--software_version_id",
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
             ],
-            "params":[
+            "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
                 "",
                 "",
@@ -116,14 +130,16 @@ def test_find_by_id(find_by_id_data):
                 "",
                 "",
                 20,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No software_versions found",
-                "status": 404,
-                "detail": "No software_versions found with the specified parameters"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No software_versions found",
+                    "status": 404,
+                    "detail": "No software_versions found with the specified parameters",
+                }
+            ),
+        },
     ]
 )
 def find_data(request):
@@ -139,11 +155,12 @@ def find_data(request):
         request.param["params"][5],
         request.param["params"][6],
         request.param["params"][7],
-        request.param["params"][8]
-    ).thenReturn(request.param['return'])
+        request.param["params"][8],
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find(find_data):
     runner = CliRunner()
-    test_software_version = runner.invoke(carrot,find_data["args"])
+    test_software_version = runner.invoke(carrot, find_data["args"])
     assert test_software_version.output == find_data["return"] + "\n"

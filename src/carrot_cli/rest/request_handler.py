@@ -1,25 +1,34 @@
+import json
 import logging
 import pprint
+
 import requests
-import json
+
 from ..config import manager as config
 
 LOGGER = logging.getLogger(__name__)
 
+
 def find_by_id(entity, id):
     """Submits a request to the find_by_id mapping for the specified entity with the specified id"""
     # Build request address and send
-    address = "http://%s/api/v1/%s/%s" % (config.load_var("carrot_server_address"), entity, id)
-    return send_request('GET', address)
+    address = "http://%s/api/v1/%s/%s" % (
+        config.load_var("carrot_server_address"),
+        entity,
+        id,
+    )
+    return send_request("GET", address)
+
 
 def find(entity, params):
     """Submits a request to the find mapping for the specified entity with the specified params"""
-    #Build request address
+    # Build request address
     address = "http://%s/api/v1/%s" % (config.load_var("carrot_server_address"), entity)
     # Filter out params that are not set
     params = list(filter(lambda param: param[1] != "", params))
     # Create and send request
-    return send_request('GET', address, params=params)
+    return send_request("GET", address, params=params)
+
 
 def create(entity, params):
     """Submits a request to create mapping for the specified entity with the specified params"""
@@ -33,13 +42,18 @@ def create(entity, params):
     # Build and send request
     return send_request("POST", address, body=body)
 
+
 def update(entity, id, params):
     """
-        Submits a request to update mapping for the specified entity with the specified id and 
-        params
+    Submits a request to update mapping for the specified entity with the specified id and
+    params
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s" % (config.load_var("carrot_server_address"), entity, id)
+    address = "http://%s/api/v1/%s/%s" % (
+        config.load_var("carrot_server_address"),
+        entity,
+        id,
+    )
     # Build request json body from params, filtering out empty ones
     body = {}
     for param in params:
@@ -48,39 +62,50 @@ def update(entity, id, params):
     # Build and send request
     return send_request("PUT", address, body=body)
 
+
 def subscribe(entity, id, email):
     """
-        Submits a request to the subscribe mapping for the specified entity with the specified id 
-        and email
+    Submits a request to the subscribe mapping for the specified entity with the specified id
+    and email
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s/subscriptions" % (config.load_var("carrot_server_address"), 
-        entity, id)
+    address = "http://%s/api/v1/%s/%s/subscriptions" % (
+        config.load_var("carrot_server_address"),
+        entity,
+        id,
+    )
     # Build request json body with email
     body = {"email": email}
     # Build and send request
     return send_request("POST", address, body=body)
 
+
 def unsubscribe(entity, id, email):
     """
-        Submits a request to the subscribe mapping for the specified entity with the specified id 
-        and email
+    Submits a request to the subscribe mapping for the specified entity with the specified id
+    and email
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s/subscriptions" % (config.load_var("carrot_server_address"), 
-        entity, id)
+    address = "http://%s/api/v1/%s/%s/subscriptions" % (
+        config.load_var("carrot_server_address"),
+        entity,
+        id,
+    )
     # Build request params with email
-    params =[("email", email)]
+    params = [("email", email)]
     # Build and send request
     return send_request("DELETE", address, params=params)
 
+
 def run(test_id, params):
     """
-        Submits a POST request to the run mapping for the test with the specified id and params
+    Submits a POST request to the run mapping for the test with the specified id and params
     """
     # Build request address
-    address = "http://%s/api/v1/tests/%s/runs" % (config.load_var("carrot_server_address"), 
-        test_id)
+    address = "http://%s/api/v1/tests/%s/runs" % (
+        config.load_var("carrot_server_address"),
+        test_id,
+    )
     # Build request json body from params, filtering out empty ones
     body = {}
     for param in params:
@@ -89,78 +114,110 @@ def run(test_id, params):
     # Build and send request
     return send_request("POST", address, body=body)
 
+
 def find_runs(entity, id, params):
     """
-        Submits a request to the find_runs mapping for the specified entity with the specified id 
-        and filtering by the specified params
+    Submits a request to the find_runs mapping for the specified entity with the specified id
+    and filtering by the specified params
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s/runs" % (config.load_var("carrot_server_address"), 
-        entity, id)
+    address = "http://%s/api/v1/%s/%s/runs" % (
+        config.load_var("carrot_server_address"),
+        entity,
+        id,
+    )
     # Filter out params that are not set
     params = list(filter(lambda param: param[1] != "", params))
     # Create and send request
-    return send_request('GET', address, params=params)
+    return send_request("GET", address, params=params)
+
 
 def create_map(entity1, entity1_id, entity2, entity2_id, params):
     """
-        Submits a request for creating a mapping between entity1 and entity2, with the specified
-        params.
+    Submits a request for creating a mapping between entity1 and entity2, with the specified
+    params.
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s/%s/%s" % (config.load_var("carrot_server_address"), 
-        entity1, entity1_id, entity2, entity2_id)
+    address = "http://%s/api/v1/%s/%s/%s/%s" % (
+        config.load_var("carrot_server_address"),
+        entity1,
+        entity1_id,
+        entity2,
+        entity2_id,
+    )
     # Build request json body from params, filtering out empty ones
     body = {}
     for param in params:
         if param[1] != "":
             body[param[0]] = param[1]
     # Create and send request
-    return send_request('POST', address, body=body)
+    return send_request("POST", address, body=body)
+
 
 def find_map_by_ids(entity1, entity1_id, entity2, entity2_id):
     """
-        Submits a request for finding a mapping between entity1 and entity2, with the specified
-        ids.
+    Submits a request for finding a mapping between entity1 and entity2, with the specified
+    ids.
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s/%s/%s" % (config.load_var("carrot_server_address"), 
-        entity1, entity1_id, entity2, entity2_id)
+    address = "http://%s/api/v1/%s/%s/%s/%s" % (
+        config.load_var("carrot_server_address"),
+        entity1,
+        entity1_id,
+        entity2,
+        entity2_id,
+    )
     # Create and send request
-    return send_request('GET', address)
+    return send_request("GET", address)
+
 
 def find_maps(entity1, entity1_id, entity2, params):
     """
-        Submits a request to the find_maps mapping for the specified entity with the specified id 
-        and filtering by the specified params
+    Submits a request to the find_maps mapping for the specified entity with the specified id
+    and filtering by the specified params
     """
     # Build request address
-    address = "http://%s/api/v1/%s/%s/%s" % (config.load_var("carrot_server_address"), 
-        entity1, entity1_id, entity2)
+    address = "http://%s/api/v1/%s/%s/%s" % (
+        config.load_var("carrot_server_address"),
+        entity1,
+        entity1_id,
+        entity2,
+    )
     # Filter out params that are not set
     params = list(filter(lambda param: param[1] != "", params))
     # Create and send request
-    return send_request('GET', address, params=params)
+    return send_request("GET", address, params=params)
+
 
 def send_request(method, url, params=None, body=None):
     """Sends the specified Request object and handles potential errors"""
     try:
         # Send request
-        LOGGER.debug("Sending %s request to %s with params %s and body %s", method, url, params, body)
+        LOGGER.debug(
+            "Sending %s request to %s with params %s and body %s",
+            method,
+            url,
+            params,
+            body,
+        )
         response = requests.request(method, url, params=params, json=body)
         LOGGER.debug(
             "Received response with status %i and body %s",
             response.status_code,
-            response.text
+            response.text,
         )
         # Parse json body from request and return
         json_body = response.json()
         if json_body is None:
-            return "Received response with status %i and empty body" % response.status_code
+            return (
+                "Received response with status %i and empty body" % response.status_code
+            )
         return pprint.PrettyPrinter().pformat(json_body)
-    except (AttributeError, json.decoder.JSONDecodeError) :
+    except (AttributeError, json.decoder.JSONDecodeError):
         LOGGER.debug("Failed to parse json from response body: %s", response.text)
-        return pprint.PrettyPrinter().pformat({"Status": response.status_code, "Body": response.text})
+        return pprint.PrettyPrinter().pformat(
+            {"Status": response.status_code, "Body": response.text}
+        )
     except requests.ConnectionError as err:
         LOGGER.debug(err)
         if LOGGER.getEffectiveLevel() == logging.DEBUG:

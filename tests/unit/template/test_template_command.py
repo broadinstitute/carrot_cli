@@ -1,67 +1,69 @@
 import pprint
-from click.testing import CliRunner
-import pytest
-import mockito
 
-from carrot_cli.rest import templates, runs, template_results
-from carrot_cli.config import manager as config
+import mockito
+import pytest
+from click.testing import CliRunner
+
 from carrot_cli.__main__ import main_entry as carrot
+from carrot_cli.config import manager as config
+from carrot_cli.rest import runs, template_results, templates
+
 
 @pytest.fixture(autouse=True)
 def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(
     params=[
         {
-            "args":[
-                "template",
-                "find_by_id",
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                'description': 'This template will save Etheria',
-                'test_wdl': 'example.com/she-ra_test.wdl',
-                'eval_wdl': 'example.com/she-ra_eval.wdl',
-                'name': 'Sword of Protection template',
-                'pipeline_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'template_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "args": ["template", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template will save Etheria",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "Sword of Protection template",
+                    "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
-                "template",
-                "find_by_id",
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No template found",
-                "status": 404,
-                "detail": "No template found with the specified ID"
-            })
-        }
+            "args": ["template", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template found",
+                    "status": 404,
+                    "detail": "No template found with the specified ID",
+                }
+            ),
+        },
     ]
 )
 def find_by_id_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(templates).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(templates).find_by_id(request.param["args"][2]).thenReturn(request.param['return'])
+    mockito.when(templates).find_by_id(request.param["args"][2]).thenReturn(
+        request.param["return"]
+    )
     return request.param
+
 
 def test_find_by_id(find_by_id_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,find_by_id_data["args"])
+    result = runner.invoke(carrot, find_by_id_data["args"])
     assert result.output == find_by_id_data["return"] + "\n"
 
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "find",
                 "--template_id",
@@ -89,9 +91,9 @@ def test_find_by_id(find_by_id_data):
                 "--limit",
                 1,
                 "--offset",
-                0
+                0,
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "Sword of Protection template",
@@ -104,27 +106,31 @@ def test_find_by_id(find_by_id_data):
                 "2020-09-00T00:00:00.000000",
                 "asc(name)",
                 1,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat([
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                'description': 'This template will save Etheria',
-                'test_wdl': 'example.com/rebellion_test.wdl',
-                'eval_wdl': 'example.com/rebellion_eval.wdl',
-                'name': 'Sword of Protection template',
-                'pipeline_id': '4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'template_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            ])
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:06.371563",
+                        "created_by": "adora@example.com",
+                        "description": "This template will save Etheria",
+                        "test_wdl": "example.com/rebellion_test.wdl",
+                        "eval_wdl": "example.com/rebellion_eval.wdl",
+                        "name": "Sword of Protection template",
+                        "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ]
+            ),
         },
         {
-            "args":[
+            "args": [
                 "template",
                 "find",
                 "--template_id",
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
             ],
-            "params":[
+            "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
                 "",
                 "",
@@ -137,14 +143,16 @@ def test_find_by_id(find_by_id_data):
                 "",
                 "",
                 20,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No templates found",
-                "status": 404,
-                "detail": "No templates found with the specified parameters"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No templates found",
+                    "status": 404,
+                    "detail": "No templates found with the specified parameters",
+                }
+            ),
+        },
     ]
 )
 def find_data(request):
@@ -164,19 +172,21 @@ def find_data(request):
         request.param["params"][9],
         request.param["params"][10],
         request.param["params"][11],
-        request.param["params"][12]
-    ).thenReturn(request.param['return'])
+        request.param["params"][12],
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find(find_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,find_data["args"])
+    result = runner.invoke(carrot, find_data["args"])
     assert result.output == find_data["return"] + "\n"
-    
+
+
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "create",
                 "--pipeline_id",
@@ -190,39 +200,37 @@ def test_find(find_data):
                 "--eval_wdl",
                 "example.com/she-ra_eval.wdl",
                 "--created_by",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "params":[
+            "params": [
                 "Sword of Protection template",
                 "d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "This template will save Etheria",
                 "example.com/she-ra_test.wdl",
                 "example.com/she-ra_eval.wdl",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                'description': 'This template will save Etheria',
-                'test_wdl': 'example.com/she-ra_test.wdl',
-                'eval_wdl': 'example.com/she-ra_eval.wdl',
-                'name': 'Sword of Protection template',
-                'pipeline_id': '4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'template_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template will save Etheria",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "Sword of Protection template",
+                    "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
-                "template",
-                "create"
-            ],
-            "params":[
-            ],
-            "return":"Usage: carrot_cli template create [OPTIONS]\n"
-                "Try 'carrot_cli template create --help' for help.\n"
-                "\n"
-                "Error: Missing option '--pipeline_id'."
-        }
+            "args": ["template", "create"],
+            "params": [],
+            "return": "Usage: carrot_cli template create [OPTIONS]\n"
+            "Try 'carrot_cli template create --help' for help.\n"
+            "\n"
+            "Error: Missing option '--pipeline_id'.",
+        },
     ]
 )
 def create_data(request):
@@ -236,55 +244,55 @@ def create_data(request):
             request.param["params"][2],
             request.param["params"][3],
             request.param["params"][4],
-            request.param["params"][5]
-        ).thenReturn(request.param['return'])
+            request.param["params"][5],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_create(create_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,create_data["args"])
+    result = runner.invoke(carrot, create_data["args"])
     assert result.output == create_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "update",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "--description",
                 "This new template replaced the broken one",
                 "--name",
-                "New Sword of Protection template"
+                "New Sword of Protection template",
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "New Sword of Protection template",
-                "This new template replaced the broken one"
+                "This new template replaced the broken one",
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                'description': 'This template replaced the broken one',
-                'test_wdl': 'example.com/she-ra_test.wdl',
-                'eval_wdl': 'example.com/she-ra_eval.wdl',
-                'name': 'New Sword of Protection template',
-                'pipeline_id': '4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'template_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template replaced the broken one",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "New Sword of Protection template",
+                    "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
-                "template",
-                "update"
-            ],
-            "params":[
-            ],
-            "return":"Usage: carrot_cli template update [OPTIONS] ID\n"
-                "Try 'carrot_cli template update --help' for help.\n"
-                "\n"
-                "Error: Missing argument 'ID'."
-        }
+            "args": ["template", "update"],
+            "params": [],
+            "return": "Usage: carrot_cli template update [OPTIONS] ID\n"
+            "Try 'carrot_cli template update --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
     ]
 )
 def update_data(request):
@@ -295,19 +303,21 @@ def update_data(request):
         mockito.when(templates).update(
             request.param["params"][0],
             request.param["params"][1],
-            request.param["params"][2]
-        ).thenReturn(request.param['return'])
+            request.param["params"][2],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_update(update_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,update_data["args"])
+    result = runner.invoke(carrot, update_data["args"])
     assert result.output == update_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "find_runs",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -336,9 +346,9 @@ def test_update(update_data):
                 "--limit",
                 1,
                 "--offset",
-                0
+                0,
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "Queen of Bright Moon run",
                 "succeeded",
@@ -352,33 +362,29 @@ def test_update(update_data):
                 "2020-09-00T00:00:00.000000",
                 "asc(name)",
                 1,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                [{'created_at': '2020-09-16T18:48:06.371563',
-                'finished_at':'2020-09-16T18:58:06.371563',
-                'created_by': 'glimmer@example.com',
-                'test_input': {
-                    "in_mother": "Angella"
-                },
-                'eval_input': {
-                    "in_friend": "Bow"
-                },
-                "status":"succeeded",
-                "results":{},
-                "cromwell_job_id":"d9855002-6b71-429c-a4de-8e90222488cd",
-                'name': 'Queen of Bright Moon run',
-                'test_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'run_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}]
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:06.371563",
+                        "finished_at": "2020-09-16T18:58:06.371563",
+                        "created_by": "glimmer@example.com",
+                        "test_input": {"in_mother": "Angella"},
+                        "eval_input": {"in_friend": "Bow"},
+                        "status": "succeeded",
+                        "results": {},
+                        "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                        "name": "Queen of Bright Moon run",
+                        "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ]
+            ),
         },
         {
-            "args":[
-                "template",
-                "find_runs",
-                "986325ba-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "params":[
+            "args": ["template", "find_runs", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
+            "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
                 "",
                 "",
@@ -392,26 +398,27 @@ def test_update(update_data):
                 "",
                 "",
                 20,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No run found",
-                "status": 404,
-                "detail": "No runs found with the specified parameters"
-            })
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No run found",
+                    "status": 404,
+                    "detail": "No runs found with the specified parameters",
+                }
+            ),
         },
         {
-            "args":[
+            "args": [
                 "template",
                 "find_runs",
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
                 "--test_input",
-                "nonexistent_file.json"
+                "nonexistent_file.json",
             ],
-            "params":[
-            ],
-            "return":"Failed to locate file with name nonexistent_file.json"
-        }
+            "params": [],
+            "return": "Failed to locate file with name nonexistent_file.json",
+        },
     ]
 )
 def find_runs_data(request):
@@ -434,72 +441,70 @@ def find_runs_data(request):
             request.param["params"][10],
             request.param["params"][11],
             request.param["params"][12],
-            request.param["params"][13]
-        ).thenReturn(request.param['return'])
+            request.param["params"][13],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find_runs(find_runs_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,find_runs_data["args"])
+    result = runner.invoke(carrot, find_runs_data["args"])
     assert result.output == find_runs_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "subscribe",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "--email",
-                "netossa@example.com"
+                "netossa@example.com",
             ],
-            "params":[
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                "netossa@example.com"
-            ],
-            "return":pprint.PrettyPrinter().pformat({
-                "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
-                "entity_type": "template",
-                "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                "email": "netossa@example.com",
-                "created_at": "2020-09-23T19:41:46.839880"
-            })
+            "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
+                    "entity_type": "template",
+                    "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "email": "netossa@example.com",
+                    "created_at": "2020-09-23T19:41:46.839880",
+                }
+            ),
         },
         {
-            "args":[
+            "args": [
                 "template",
                 "subscribe",
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "--email",
-                "spinnerella@example.com"
+                "spinnerella@example.com",
             ],
-            "params":[
+            "params": [
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
-                "spinnerella@example.com"
+                "spinnerella@example.com",
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No template found",
-                "status": 404,
-                "detail": "No template found with the specified ID"
-            })
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template found",
+                    "status": 404,
+                    "detail": "No template found with the specified ID",
+                }
+            ),
         },
         {
-            "args":[
-                "template",
-                "subscribe",
-                "89657859-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "params":[
-                "89657859-06fe-4b1a-9e96-47d4f36bf819",
-                "frosta@example.com"
-            ],
-            "return":pprint.PrettyPrinter().pformat({
-                "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
-                "entity_type": "template",
-                "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                "email": "frosta@example.com",
-                "created_at": "2020-09-23T19:41:46.839880"
-            })
+            "args": ["template", "subscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
+            "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
+                    "entity_type": "template",
+                    "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "email": "frosta@example.com",
+                    "created_at": "2020-09-23T19:41:46.839880",
+                }
+            ),
         },
     ]
 )
@@ -509,65 +514,58 @@ def subscribe_data(request):
     mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
     # Mock up request response
     mockito.when(templates).subscribe(
-        request.param["params"][0],
-        request.param["params"][1]
-    ).thenReturn(request.param['return'])
+        request.param["params"][0], request.param["params"][1]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_subscribe(subscribe_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,subscribe_data["args"])
+    result = runner.invoke(carrot, subscribe_data["args"])
     assert result.output == subscribe_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "unsubscribe",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "--email",
-                "netossa@example.com"
+                "netossa@example.com",
             ],
-            "params":[
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                "netossa@example.com"
-            ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'message': 'Successfully deleted 1 row(s)'}
-            )
+            "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
+            "return": pprint.PrettyPrinter().pformat(
+                {"message": "Successfully deleted 1 row(s)"}
+            ),
         },
         {
-            "args":[
+            "args": [
                 "template",
                 "unsubscribe",
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "--email",
-                "spinnerella@example.com"
+                "spinnerella@example.com",
             ],
-            "params":[
+            "params": [
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
-                "spinnerella@example.com"
+                "spinnerella@example.com",
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No subscription found",
-                "status": 404,
-                "detail": "No subscription found for the specified parameters"
-            })
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No subscription found",
+                    "status": 404,
+                    "detail": "No subscription found for the specified parameters",
+                }
+            ),
         },
         {
-            "args":[
-                "template",
-                "unsubscribe",
-                "89657859-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "params":[
-                "89657859-06fe-4b1a-9e96-47d4f36bf819",
-                "frosta@example.com"
-            ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'message': 'Successfully deleted 1 row(s)'}
-            )
+            "args": ["template", "unsubscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
+            "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
+            "return": pprint.PrettyPrinter().pformat(
+                {"message": "Successfully deleted 1 row(s)"}
+            ),
         },
     ]
 )
@@ -577,54 +575,53 @@ def unsubscribe_data(request):
     mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
     # Mock up request response
     mockito.when(templates).unsubscribe(
-        request.param["params"][0],
-        request.param["params"][1]
-    ).thenReturn(request.param['return'])
+        request.param["params"][0], request.param["params"][1]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_unsubscribe(unsubscribe_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,unsubscribe_data["args"])
+    result = runner.invoke(carrot, unsubscribe_data["args"])
     assert result.output == unsubscribe_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "template",
                 "map_to_result",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "out_horde_tanks",
                 "--created_by",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "out_horde_tanks",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                "result_key": "out_horde_tanks",
-                "created_at": "2020-09-24T19:07:59.311462",
-                "created_by": "rogelio@example.com"
-            })
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "out_horde_tanks",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                }
+            ),
         },
         {
-            "args":[
-                "template",
-                "map_to_result"
-            ],
-            "params":[
-            ],
-            "return":"Usage: carrot_cli template map_to_result [OPTIONS] ID RESULT_ID RESULT_KEY\n"
-                "Try 'carrot_cli template map_to_result --help' for help.\n"
-                "\n"
-                "Error: Missing argument 'ID'."
-        }
+            "args": ["template", "map_to_result"],
+            "params": [],
+            "return": "Usage: carrot_cli template map_to_result [OPTIONS] ID RESULT_ID RESULT_KEY\n"
+            "Try 'carrot_cli template map_to_result --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
     ]
 )
 def map_to_result_data(request):
@@ -636,11 +633,12 @@ def map_to_result_data(request):
             request.param["params"][0],
             request.param["params"][1],
             request.param["params"][2],
-            request.param["params"][3]
-        ).thenReturn(request.param['return'])
+            request.param["params"][3],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_map_to_result(map_to_result_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,map_to_result_data["args"])
+    result = runner.invoke(carrot, map_to_result_data["args"])
     assert result.output == map_to_result_data["return"] + "\n"

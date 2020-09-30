@@ -1,65 +1,66 @@
 import pprint
-from click.testing import CliRunner
-import pytest
-import mockito
 
-from carrot_cli.rest import results, template_results
-from carrot_cli.config import manager as config
+import mockito
+import pytest
+from click.testing import CliRunner
+
 from carrot_cli.__main__ import main_entry as carrot
+from carrot_cli.rest import results, template_results
+
 
 @pytest.fixture(autouse=True)
 def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(
     params=[
         {
-            "args":[
-                "result",
-                "find_by_id",
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                'result_type': 'file',
-                'description': 'This result will save Etheria',
-                'name': 'Sword of Protection result',
-                'result_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "args": ["result", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "result_type": "file",
+                    "description": "This result will save Etheria",
+                    "name": "Sword of Protection result",
+                    "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
-                "result",
-                "find_by_id",
-                "cd987859-06fe-4b1a-9e96-47d4f36bf819"
-            ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No result found",
-                "status": 404,
-                "detail": "No result found with the specified ID"
-            })
-        }
+            "args": ["result", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No result found",
+                    "status": 404,
+                    "detail": "No result found with the specified ID",
+                }
+            ),
+        },
     ]
 )
 def find_by_id_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(results).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(results).find_by_id(request.param["args"][2]).thenReturn(request.param['return'])
+    mockito.when(results).find_by_id(request.param["args"][2]).thenReturn(
+        request.param["return"]
+    )
     return request.param
+
 
 def test_find_by_id(find_by_id_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,find_by_id_data["args"])
+    result = runner.invoke(carrot, find_by_id_data["args"])
     assert result.output == find_by_id_data["return"] + "\n"
 
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "result",
                 "find",
                 "--result_id",
@@ -81,9 +82,9 @@ def test_find_by_id(find_by_id_data):
                 "--limit",
                 1,
                 "--offset",
-                0
+                0,
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "Sword of Protection result",
                 "This result will save Etheria",
@@ -93,25 +94,27 @@ def test_find_by_id(find_by_id_data):
                 "2020-09-00T00:00:00.000000",
                 "asc(name)",
                 1,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                "result_type": "numeric",
-                'description': 'This result will save Etheria',
-                'name': 'Sword of Protection result',
-                'result_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "result_type": "numeric",
+                    "description": "This result will save Etheria",
+                    "name": "Sword of Protection result",
+                    "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
+            "args": [
                 "result",
                 "find",
                 "--result_id",
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
             ],
-            "params":[
+            "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
                 "",
                 "",
@@ -121,14 +124,16 @@ def test_find_by_id(find_by_id_data):
                 "",
                 "",
                 20,
-                0
+                0,
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No results found",
-                "status": 404,
-                "detail": "No results found with the specified parameters"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No results found",
+                    "status": 404,
+                    "detail": "No results found with the specified parameters",
+                }
+            ),
+        },
     ]
 )
 def find_data(request):
@@ -145,19 +150,21 @@ def find_data(request):
         request.param["params"][6],
         request.param["params"][7],
         request.param["params"][8],
-        request.param["params"][9]
-    ).thenReturn(request.param['return'])
+        request.param["params"][9],
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find(find_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,find_data["args"])
+    result = runner.invoke(carrot, find_data["args"])
     assert result.output == find_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "result",
                 "create",
                 "--name",
@@ -167,35 +174,33 @@ def test_find(find_data):
                 "--result_type",
                 "numeric",
                 "--created_by",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "params":[
+            "params": [
                 "Sword of Protection result",
                 "This result will save Etheria",
                 "numeric",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                "result_type": "numeric",
-                'description': 'This result will save Etheria',
-                'name': 'Sword of Protection result',
-                'result_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "result_type": "numeric",
+                    "description": "This result will save Etheria",
+                    "name": "Sword of Protection result",
+                    "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
-                "result",
-                "create"
-            ],
-            "params":[
-            ],
-            "return":"Usage: carrot_cli result create [OPTIONS]\n"
-                "Try 'carrot_cli result create --help' for help.\n"
-                "\n"
-                "Error: Missing option '--name'."
-        }
+            "args": ["result", "create"],
+            "params": [],
+            "return": "Usage: carrot_cli result create [OPTIONS]\n"
+            "Try 'carrot_cli result create --help' for help.\n"
+            "\n"
+            "Error: Missing option '--name'.",
+        },
     ]
 )
 def create_data(request):
@@ -207,53 +212,53 @@ def create_data(request):
             request.param["params"][0],
             request.param["params"][1],
             request.param["params"][2],
-            request.param["params"][3]
-        ).thenReturn(request.param['return'])
+            request.param["params"][3],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_create(create_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,create_data["args"])
+    result = runner.invoke(carrot, create_data["args"])
     assert result.output == create_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "result",
                 "update",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "--description",
                 "This new result replaced the broken one",
                 "--name",
-                "New Sword of Protection result"
+                "New Sword of Protection result",
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "New Sword of Protection result",
-                "This new result replaced the broken one"
+                "This new result replaced the broken one",
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                "result_type": "file",
-                'description': 'This new result replaced the broken one',
-                'name': 'New Sword of Protection result',
-                'result_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "result_type": "file",
+                    "description": "This new result replaced the broken one",
+                    "name": "New Sword of Protection result",
+                    "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "args":[
-                "result",
-                "update"
-            ],
-            "params":[
-            ],
-            "return":"Usage: carrot_cli result update [OPTIONS] ID\n"
-                "Try 'carrot_cli result update --help' for help.\n"
-                "\n"
-                "Error: Missing argument 'ID'."
-        }
+            "args": ["result", "update"],
+            "params": [],
+            "return": "Usage: carrot_cli result update [OPTIONS] ID\n"
+            "Try 'carrot_cli result update --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
     ]
 )
 def update_data(request):
@@ -264,53 +269,53 @@ def update_data(request):
         mockito.when(results).update(
             request.param["params"][0],
             request.param["params"][1],
-            request.param["params"][2]
-        ).thenReturn(request.param['return'])
+            request.param["params"][2],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_update(update_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,update_data["args"])
+    result = runner.invoke(carrot, update_data["args"])
     assert result.output == update_data["return"] + "\n"
+
 
 @pytest.fixture(
     params=[
         {
-            "args":[
+            "args": [
                 "result",
                 "map_to_template",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "out_horde_tanks",
                 "--created_by",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "params":[
+            "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "out_horde_tanks",
-                "adora@example.com"
+                "adora@example.com",
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                "result_key": "out_horde_tanks",
-                "created_at": "2020-09-24T19:07:59.311462",
-                "created_by": "rogelio@example.com"
-            })
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "out_horde_tanks",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                }
+            ),
         },
         {
-            "args":[
-                "result",
-                "map_to_template"
-            ],
-            "params":[
-            ],
-            "return":"Usage: carrot_cli result map_to_template [OPTIONS] ID TEMPLATE_ID RESULT_KEY\n"
-                "Try 'carrot_cli result map_to_template --help' for help.\n"
-                "\n"
-                "Error: Missing argument 'ID'."
-        }
+            "args": ["result", "map_to_template"],
+            "params": [],
+            "return": "Usage: carrot_cli result map_to_template [OPTIONS] ID TEMPLATE_ID RESULT_KEY\n"
+            "Try 'carrot_cli result map_to_template --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
     ]
 )
 def map_to_template_data(request):
@@ -322,11 +327,12 @@ def map_to_template_data(request):
             request.param["params"][0],
             request.param["params"][1],
             request.param["params"][2],
-            request.param["params"][3]
-        ).thenReturn(request.param['return'])
+            request.param["params"][3],
+        ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_map_to_template(map_to_template_data):
     runner = CliRunner()
-    result = runner.invoke(carrot,map_to_template_data["args"])
+    result = runner.invoke(carrot, map_to_template_data["args"])
     assert result.output == map_to_template_data["return"] + "\n"

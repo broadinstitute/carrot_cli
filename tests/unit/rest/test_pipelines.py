@@ -1,96 +1,115 @@
-import requests
-import pytest
-import mockito
 import pprint
 
-from carrot_cli.rest import request_handler, pipelines
+import mockito
+import pytest
+
+from carrot_cli.rest import pipelines, request_handler
+
 
 @pytest.fixture(autouse=True)
 def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(
     params=[
         {
-            "id":"cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'created_by': 'adora@example.com',
-                'description': 'This pipeline will save Etheria',
-                'name': 'Sword of Protection Pipeline',
-                'pipeline_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This pipeline will save Etheria",
+                    "name": "Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "id":"3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No pipeline found",
-                "status": 404,
-                "detail": "No pipeline found with the specified ID"
-            })
-        }
+            "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No pipeline found",
+                    "status": 404,
+                    "detail": "No pipeline found with the specified ID",
+                }
+            ),
+        },
     ]
 )
 def find_by_id_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).find_by_id('pipelines', request.param["id"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).find_by_id(
+        "pipelines", request.param["id"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find_by_id(find_by_id_data):
     result = pipelines.find_by_id(find_by_id_data["id"])
     assert result == find_by_id_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
-            "params":[
+            "params": [
                 ("pipeline_id", ""),
-                ("name",'Queen of Bright Moon Pipeline'),
+                ("name", "Queen of Bright Moon Pipeline"),
                 ("description", ""),
                 ("created_by", ""),
                 ("created_before", ""),
-                ("created_after",""),
+                ("created_after", ""),
                 ("sort", ""),
                 ("limit", ""),
-                ("offset", "")
+                ("offset", ""),
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                [{'created_at': '2020-09-16T18:48:08.371563',
-                'created_by': 'glimmer@example.com',
-                'description': 'This pipeline leads the Rebellion',
-                'name': 'Queen of Bright Moon Pipeline',
-                'pipeline_id': 'bd132568-06fe-4b1a-9e96-47d4f36bf819'}]
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:08.371563",
+                        "created_by": "glimmer@example.com",
+                        "description": "This pipeline leads the Rebellion",
+                        "name": "Queen of Bright Moon Pipeline",
+                        "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ]
+            ),
         },
         {
-            "params":[
-                ("pipeline_id","3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
-                ("name",''),
+            "params": [
+                ("pipeline_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
+                ("name", ""),
                 ("description", ""),
                 ("created_by", ""),
                 ("created_before", ""),
-                ("created_after",""),
+                ("created_after", ""),
                 ("sort", ""),
                 ("limit", ""),
-                ("offset", "")
+                ("offset", ""),
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No pipelines found",
-                "status": 404,
-                "detail": "No pipelines found with the specified parameters"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No pipelines found",
+                    "status": 404,
+                    "detail": "No pipelines found with the specified parameters",
+                }
+            ),
+        },
     ]
 )
 def find_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).find(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).find('pipelines', request.param["params"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).find("pipelines", request.param["params"]).thenReturn(
+        request.param["return"]
+    )
     return request.param
+
 
 def test_find(find_data):
     result = pipelines.find(
@@ -102,46 +121,54 @@ def test_find(find_data):
         find_data["params"][5][1],
         find_data["params"][6][1],
         find_data["params"][7][1],
-        find_data["params"][8][1]
+        find_data["params"][8][1],
     )
     assert result == find_data["return"]
+
 
 @pytest.fixture(
     params=[
         {
-            "params":[
-                ("name",'Horde Emperor Pipeline'),
+            "params": [
+                ("name", "Horde Emperor Pipeline"),
                 ("description", "This pipeline rules the known universe"),
-                ("created_by", "hordeprime@example.com")
+                ("created_by", "hordeprime@example.com"),
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:08.371563',
-                'created_by': 'hordeprime@example.com',
-                'description': 'This pipeline rules the known universe',
-                'name': 'Horde Emperor Pipeline',
-                'pipeline_id': 'bd132568-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:08.371563",
+                    "created_by": "hordeprime@example.com",
+                    "description": "This pipeline rules the known universe",
+                    "name": "Horde Emperor Pipeline",
+                    "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "params":[
-                ("name",'Horde Emperor Pipeline'),
+            "params": [
+                ("name", "Horde Emperor Pipeline"),
                 ("description", "This pipeline rules the known universe"),
-                ("created_by", "hordeprime@example.com")
+                ("created_by", "hordeprime@example.com"),
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "Server error",
-                "status": 500,
-                "detail": "Error while attempting to insert new pipeline"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "Server error",
+                    "status": 500,
+                    "detail": "Error while attempting to insert new pipeline",
+                }
+            ),
+        },
     ]
 )
 def create_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).create(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).create('pipelines', request.param["params"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).create(
+        "pipelines", request.param["params"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_create(create_data):
     result = pipelines.create(
@@ -151,42 +178,50 @@ def test_create(create_data):
     )
     assert result == create_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
-            "id":"bd132568-06fe-4b1a-9e96-47d4f36bf819",
-            "params":[
-                ("name",'Catra Pipeline'),
-                ("description", "This pipeline is trying to learn to process anger better")
+            "id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
+            "params": [
+                ("name", "Catra Pipeline"),
+                (
+                    "description",
+                    "This pipeline is trying to learn to process anger better",
+                ),
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:08.371563',
-                'created_by': 'catra@example.com',
-                'description': 'This pipeline is trying to learn to process anger better',
-                'name': 'Catra Pipeline',
-                'pipeline_id': 'bd132568-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:08.371563",
+                    "created_by": "catra@example.com",
+                    "description": "This pipeline is trying to learn to process anger better",
+                    "name": "Catra Pipeline",
+                    "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "id":"98536487-06fe-4b1a-9e96-47d4f36bf819",
-            "params":[
-                ("name",'Angella Pipeline'),
-                ("description", "")
-            ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "Server error",
-                "status": 500,
-                "detail": "Error while attempting to update new pipeline"
-            })
-        }
+            "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
+            "params": [("name", "Angella Pipeline"), ("description", "")],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "Server error",
+                    "status": 500,
+                    "detail": "Error while attempting to update new pipeline",
+                }
+            ),
+        },
     ]
 )
 def update_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).update(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).update('pipelines', request.param["id"], request.param["params"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).update(
+        "pipelines", request.param["id"], request.param["params"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_update(update_data):
     result = pipelines.update(
@@ -196,36 +231,44 @@ def test_update(update_data):
     )
     assert result == update_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
-            "id":"047e27ad-2890-4372-b2cb-dfec57347eb9",
-            "email":"bow@example.com",
-            "return":pprint.PrettyPrinter().pformat({
-                "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
-                "entity_type": "pipeline",
-                "entity_id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
-                "email": "bow@example.com",
-                "created_at": "2020-09-23T19:41:46.839880"
-            })
+            "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
+            "email": "bow@example.com",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
+                    "entity_type": "pipeline",
+                    "entity_id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
+                    "email": "bow@example.com",
+                    "created_at": "2020-09-23T19:41:46.839880",
+                }
+            ),
         },
         {
-            "id":"98536487-06fe-4b1a-9e96-47d4f36bf819",
-            "email":"huntara@example.com",
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No pipeline found",
-                "status": 404,
-                "detail": "No pipeline found with the specified ID"
-            })
-        }
+            "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
+            "email": "huntara@example.com",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No pipeline found",
+                    "status": 404,
+                    "detail": "No pipeline found with the specified ID",
+                }
+            ),
+        },
     ]
 )
 def subscribe_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).update(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).subscribe('pipelines', request.param["id"], request.param["email"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).subscribe(
+        "pipelines", request.param["id"], request.param["email"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_subscribe(subscribe_data):
     result = pipelines.subscribe(
@@ -234,32 +277,38 @@ def test_subscribe(subscribe_data):
     )
     assert result == subscribe_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
-            "id":"047e27ad-2890-4372-b2cb-dfec57347eb9",
-            "email":"mermista@example.com",
-            "return":pprint.PrettyPrinter().pformat(
-                {'message': 'Successfully deleted 1 row(s)'}
-            )
+            "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
+            "email": "mermista@example.com",
+            "return": pprint.PrettyPrinter().pformat(
+                {"message": "Successfully deleted 1 row(s)"}
+            ),
         },
         {
-            "id":"98536487-06fe-4b1a-9e96-47d4f36bf819",
-            "email":"castaspella@example.com",
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No subscription found",
-                "status": 404,
-                "detail": "No subscription found for the specified parameters"
-            })
-        }
+            "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
+            "email": "castaspella@example.com",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No subscription found",
+                    "status": 404,
+                    "detail": "No subscription found for the specified parameters",
+                }
+            ),
+        },
     ]
 )
 def unsubscribe_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).update(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).unsubscribe('pipelines', request.param["id"], request.param["email"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).unsubscribe(
+        "pipelines", request.param["id"], request.param["email"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_unsubscribe(unsubscribe_data):
     result = pipelines.unsubscribe(

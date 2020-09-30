@@ -1,11 +1,14 @@
 import logging
+
 from . import request_handler
 
 LOGGER = logging.getLogger(__name__)
 
+
 def find_by_id(software_build_id):
     """Submits a request to CARROT's software_builds find_by_id mapping"""
     return request_handler.find_by_id("software_builds", software_build_id)
+
 
 def find(
     software_build_id,
@@ -19,7 +22,7 @@ def find(
     finished_after,
     sort,
     limit,
-    offset
+    offset,
 ):
     """Submits a request to CARROT's software_builds find mapping"""
     # Create parameter list
@@ -35,6 +38,6 @@ def find(
         ("finished_after", finished_after),
         ("sort", sort),
         ("limit", limit),
-        ("offset", offset)
+        ("offset", offset),
     ]
     return request_handler.find("software_builds", params)

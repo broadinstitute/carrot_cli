@@ -1,11 +1,14 @@
 import logging
+
 from . import request_handler
 
 LOGGER = logging.getLogger(__name__)
 
+
 def find_by_id(pipeline_id):
     """Submits a request to CARROT's pipelines find_by_id mapping"""
     return request_handler.find_by_id("pipelines", pipeline_id)
+
 
 def find(
     pipeline_id,
@@ -16,7 +19,7 @@ def find(
     created_after,
     sort,
     limit,
-    offset
+    offset,
 ):
     """Submits a request to CARROT's pipelines find mapping"""
     # Create parameter list
@@ -29,29 +32,19 @@ def find(
         ("created_after", created_after),
         ("sort", sort),
         ("limit", limit),
-        ("offset", offset)
+        ("offset", offset),
     ]
     return request_handler.find("pipelines", params)
 
-def create(
-    name,
-    description,
-    created_by
-):
+
+def create(name, description, created_by):
     """Submits a request to CARROT's pipelines create mapping"""
     # Create parameter list
-    params = [
-        ("name", name),
-        ("description", description),
-        ("created_by", created_by)
-    ]
+    params = [("name", name), ("description", description), ("created_by", created_by)]
     return request_handler.create("pipelines", params)
 
-def update(
-    pipeline_id,
-    name,
-    description
-):
+
+def update(pipeline_id, name, description):
     """Submits a request to CARROT's pipelines update mapping"""
     # Create parameter list
     params = [
@@ -60,16 +53,12 @@ def update(
     ]
     return request_handler.update("pipelines", pipeline_id, params)
 
-def subscribe(
-    pipeline_id,
-    email
-):
+
+def subscribe(pipeline_id, email):
     """Submits a request to CARROT's pipelines subscribe mapping"""
     return request_handler.subscribe("pipelines", pipeline_id, email)
 
-def unsubscribe(
-    pipeline_id,
-    email
-):
+
+def unsubscribe(pipeline_id, email):
     """Submits a request to CARROT's pipelines unsubscribe mapping"""
     return request_handler.unsubscribe("pipelines", pipeline_id, email)

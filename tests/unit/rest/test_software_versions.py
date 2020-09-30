@@ -1,94 +1,113 @@
-import requests
-import pytest
-import mockito
 import pprint
 
+import mockito
+import pytest
+
 from carrot_cli.rest import request_handler, software_versions
+
 
 @pytest.fixture(autouse=True)
 def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(
     params=[
         {
-            "id":"cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return":pprint.PrettyPrinter().pformat(
-                {'created_at': '2020-09-16T18:48:06.371563',
-                'commit': 'ca82a6dff817ec66f44342007202690a93763949',
-                'software_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'software_version_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}
-            )
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "commit": "ca82a6dff817ec66f44342007202690a93763949",
+                    "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
         },
         {
-            "id":"3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No software_version found",
-                "status": 404,
-                "detail": "No software_version found with the specified ID"
-            })
-        }
+            "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No software_version found",
+                    "status": 404,
+                    "detail": "No software_version found with the specified ID",
+                }
+            ),
+        },
     ]
 )
 def find_by_id_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).find_by_id('software_versions', request.param["id"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).find_by_id(
+        "software_versions", request.param["id"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find_by_id(find_by_id_data):
     result = software_versions.find_by_id(find_by_id_data["id"])
     assert result == find_by_id_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
-            "params":[
+            "params": [
                 ("software_version_id", ""),
                 ("software_id", ""),
-                ("commit",'ca82a6dff817ec66f44342007202690a93763949'),
+                ("commit", "ca82a6dff817ec66f44342007202690a93763949"),
                 ("software_name", ""),
                 ("created_before", ""),
-                ("created_after",""),
+                ("created_after", ""),
                 ("sort", ""),
                 ("limit", ""),
-                ("offset", "")
+                ("offset", ""),
             ],
-            "return":pprint.PrettyPrinter().pformat(
-                [{'created_at': '2020-09-16T18:48:06.371563',
-                'commit': 'ca82a6dff817ec66f44342007202690a93763949',
-                'software_id': '3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8',
-                'software_version_id': 'cd987859-06fe-4b1a-9e96-47d4f36bf819'}]
-            )
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:06.371563",
+                        "commit": "ca82a6dff817ec66f44342007202690a93763949",
+                        "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ]
+            ),
         },
         {
-            "params":[
+            "params": [
                 ("software_version_id", ""),
                 ("software_id", ""),
-                ("commit",'ca82a6dff817ec66f44342007202690a93763949'),
+                ("commit", "ca82a6dff817ec66f44342007202690a93763949"),
                 ("software_name", ""),
                 ("created_before", ""),
-                ("created_after",""),
+                ("created_after", ""),
                 ("sort", ""),
                 ("limit", ""),
-                ("offset", "")
+                ("offset", ""),
             ],
-            "return":pprint.PrettyPrinter().pformat({
-                "title": "No software_versions found",
-                "status": 404,
-                "detail": "No software_versions found with the specified parameters"
-            })
-        }
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No software_versions found",
+                    "status": 404,
+                    "detail": "No software_versions found with the specified parameters",
+                }
+            ),
+        },
     ]
 )
 def find_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).find(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).find('software_versions', request.param["params"]).thenReturn(request.param['return'])
+    mockito.when(request_handler).find(
+        "software_versions", request.param["params"]
+    ).thenReturn(request.param["return"])
     return request.param
+
 
 def test_find(find_data):
     result = software_versions.find(
@@ -100,6 +119,6 @@ def test_find(find_data):
         find_data["params"][5][1],
         find_data["params"][6][1],
         find_data["params"][7][1],
-        find_data["params"][8][1]
+        find_data["params"][8][1],
     )
     assert result == find_data["return"]
