@@ -14,6 +14,9 @@ def unstub():
     yield
     mockito.unstub()
 
+@pytest.fixture(autouse=True)
+def no_email():
+    mockito.when(config).load_var_no_error("email").thenReturn(None)
 
 @pytest.fixture(
     params=[
@@ -222,6 +225,25 @@ def test_find(find_data):
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 }
             ),
+        },
+        {
+            "args": [
+                "template",
+                "create",
+                "--pipeline_id",
+                "d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "--name",
+                "Sword of Protection template",
+                "--description",
+                "This template will save Etheria",
+                "--test_wdl",
+                "example.com/she-ra_test.wdl",
+                "--eval_wdl",
+                "example.com/she-ra_eval.wdl",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
         },
         {
             "args": ["template", "create"],
@@ -613,6 +635,18 @@ def test_unsubscribe(unsubscribe_data):
                     "created_by": "rogelio@example.com",
                 }
             ),
+        },
+        {
+            "args": [
+                "template",
+                "map_to_result",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "out_horde_tanks",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
         },
         {
             "args": ["template", "map_to_result"],

@@ -170,6 +170,12 @@ def create(
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     # Load data from files for test_input_defaults and eval_input_defaults, if set
     if test_input_defaults != "":
         try:
@@ -243,6 +249,12 @@ def run(id, name, test_input, eval_input, created_by):
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     # Load data from files for test_input and eval_input, if set
     if test_input != "":
         try:

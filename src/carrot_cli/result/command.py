@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import click
 
@@ -113,6 +114,12 @@ def create(name, description, result_type, created_by):
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     print(results.create(name, description, result_type, created_by))
 
 
@@ -144,4 +151,10 @@ def map_to_template(id, template_id, result_key, created_by):
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     print(template_results.create_map(template_id, id, result_key, created_by))

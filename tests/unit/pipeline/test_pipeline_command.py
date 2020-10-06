@@ -14,7 +14,10 @@ def unstub():
     yield
     mockito.unstub()
 
-
+@pytest.fixture(autouse=True)
+def no_email():
+    mockito.when(config).load_var_no_error("email").thenReturn(None)
+   
 @pytest.fixture(
     params=[
         {
@@ -182,6 +185,19 @@ def test_find(find_data):
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 }
             ),
+        },
+        {
+            "args": [
+                "pipeline",
+                "create",
+                "--name",
+                "Sword of Protection Pipeline",
+                "--description",
+                "This pipeline will save Etheria",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
         },
         {
             "args": ["pipeline", "create"],

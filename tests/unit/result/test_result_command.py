@@ -5,6 +5,7 @@ import pytest
 from click.testing import CliRunner
 
 from carrot_cli.__main__ import main_entry as carrot
+from carrot_cli.config import manager as config
 from carrot_cli.rest import results, template_results
 
 
@@ -13,6 +14,9 @@ def unstub():
     yield
     mockito.unstub()
 
+@pytest.fixture(autouse=True)
+def no_email():
+    mockito.when(config).load_var_no_error("email").thenReturn(None)
 
 @pytest.fixture(
     params=[
@@ -194,6 +198,21 @@ def test_find(find_data):
             ),
         },
         {
+            "args": [
+                "result",
+                "create",
+                "--name",
+                "Sword of Protection result",
+                "--description",
+                "This result will save Etheria",
+                "--result_type",
+                "numeric",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+        },
+        {
             "args": ["result", "create"],
             "params": [],
             "return": "Usage: carrot_cli result create [OPTIONS]\n"
@@ -307,6 +326,18 @@ def test_update(update_data):
                     "created_by": "rogelio@example.com",
                 }
             ),
+        },
+        {
+            "args": [
+                "result",
+                "map_to_template",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "out_horde_tanks",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
         },
         {
             "args": ["result", "map_to_template"],

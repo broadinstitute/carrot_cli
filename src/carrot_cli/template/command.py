@@ -149,6 +149,12 @@ def create(name, pipeline_id, description, test_wdl, eval_wdl, created_by):
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     print(
         templates.create(name, pipeline_id, description, test_wdl, eval_wdl, created_by)
     )
@@ -354,6 +360,12 @@ def map_to_result(id, result_id, result_key, created_by):
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     print(template_results.create_map(id, result_id, result_key, created_by))
 
 

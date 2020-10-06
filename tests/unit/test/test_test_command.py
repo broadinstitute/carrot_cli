@@ -14,6 +14,9 @@ def unstub():
     yield
     mockito.unstub()
 
+@pytest.fixture(autouse=True)
+def no_email():
+    mockito.when(config).load_var_no_error("email").thenReturn(None)
 
 @pytest.fixture(
     params=[
@@ -226,6 +229,25 @@ def test_find(find_data):
             ),
         },
         {
+            "args": [
+                "test",
+                "create",
+                "--template_id",
+                "d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "--name",
+                "Sword of Protection test",
+                "--description",
+                "This test will save Etheria",
+                "--test_input_defaults",
+                "tests/data/mock_test_input.json",
+                "--eval_input_defaults",
+                "tests/data/mock_eval_input.json",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+        },
+        {
             "args": ["test", "create"],
             "params": [],
             "return": "Usage: carrot_cli test create [OPTIONS]\n"
@@ -358,7 +380,13 @@ def test_update(update_data):
             ),
         },
         {
-            "args": ["test", "run", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
+            "args": [
+                "test", 
+                "run", 
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "--created_by",
+                "frosta@example.com",
+            ],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
                 "",
@@ -382,6 +410,22 @@ def test_update(update_data):
                 "--name",
                 "Queen of Bright Moon run",
                 "--test_input",
+                "tests/data/mock_test_input.json",
+                "--eval_input",
+                "tests/data/mock_eval_input.json",
+            ],
+            "params": [],
+            "return": "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+        },
+        {
+            "args": [
+                "test",
+                "run",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--name",
+                "Queen of Bright Moon run",
+                "--test_input",
                 "nonexistent_file.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
@@ -396,7 +440,6 @@ def test_update(update_data):
 def run_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(tests).run(...).thenReturn(None)
-    mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
     # Mock up request response
     if len(request.param["params"]) > 0:
         mockito.when(tests).run(

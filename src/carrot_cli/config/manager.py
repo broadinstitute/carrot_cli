@@ -14,12 +14,20 @@ def create_config_dir_if_not_exists():
     config_dir_path = os.path.expanduser("~/.carrot_cli")
     if not os.path.exists(config_dir_path):
         LOGGER.info("Config directory not found. Creating at %s", config_dir_path)
-        os.makedirs(config_dir_path)
+        try:
+            os.makedirs(config_dir_path)
+        except:
+            LOGGER.error("Failed to create config directory at %s", config_dir_path)
+            sys.exit(1)
     config_file_path = os.path.expanduser("~/.carrot_cli/config.json")
     if not os.path.exists(config_file_path):
         LOGGER.info("Config file not found. Creating at %s", config_file_path)
-        with open(config_file_path, "w") as config_file:
-            json.dump({}, config_file)
+        try:
+            with open(config_file_path, "w") as config_file:
+                json.dump({}, config_file)
+        except:
+            LOGGER.error("Failed to created config file at %s", config_file_path)
+            sys.exit(1)
 
 
 def load_var(var_name):

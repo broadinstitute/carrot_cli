@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import click
 
@@ -117,6 +118,12 @@ def create(name, description, repository_url, created_by):
         email_config_val = config.load_var_no_error("email")
         if email_config_val is not None:
             created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
     print(software.create(name, description, repository_url, created_by))
 
 
