@@ -3,10 +3,15 @@ from sys import argv
 
 import click
 
-# porcelain
-from .sub_command_1 import command as sub_command_1
-from .sub_command_2 import command as sub_command_2
-from .sub_command_3 import command as sub_command_3
+from .config import command as config
+from .config import manager as config_manager
+from .pipeline import command as pipeline
+from .result import command as result
+from .run import command as run
+from .software import command as software
+from .subscription import command as subscription
+from .template import command as template
+from .test import command as test
 
 # Version number is automatically set via bumpversion.
 # DO NOT MODIFY:
@@ -43,6 +48,9 @@ def main_entry(verbosity):
 
     log.configure_logging(verbosity)
 
+    # Make sure we have a config file
+    config_manager.create_config_dir_if_not_exists()
+
     # Log our command-line and log level so we can have it in the log file:
     LOGGER.info("Invoked by: %s", " ".join(argv))
     LOGGER.info("Log level set to: %s", logging.getLevelName(logging.getLogger().level))
@@ -55,9 +63,14 @@ def version():
 
 
 # Update with new sub-commands:
-main_entry.add_command(sub_command_1.main)
-main_entry.add_command(sub_command_2.main)
-main_entry.add_command(sub_command_3.main)
+main_entry.add_command(pipeline.main)
+main_entry.add_command(template.main)
+main_entry.add_command(test.main)
+main_entry.add_command(subscription.main)
+main_entry.add_command(result.main)
+main_entry.add_command(run.main)
+main_entry.add_command(software.main)
+main_entry.add_command(config.main)
 
 
 if __name__ == "__main__":
