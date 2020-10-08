@@ -16,7 +16,7 @@ def create_config_dir_if_not_exists():
         LOGGER.info("Config directory not found. Creating at %s", config_dir_path)
         try:
             os.makedirs(config_dir_path)
-        except:
+        except OSError:
             LOGGER.error("Failed to create config directory at %s", config_dir_path)
             sys.exit(1)
     config_file_path = os.path.expanduser("~/.carrot_cli/config.json")
@@ -25,7 +25,7 @@ def create_config_dir_if_not_exists():
         try:
             with open(config_file_path, "w") as config_file:
                 json.dump({}, config_file)
-        except:
+        except OSError:
             LOGGER.error("Failed to created config file at %s", config_file_path)
             sys.exit(1)
 
