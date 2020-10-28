@@ -3,6 +3,7 @@ import sys
 
 import click
 
+from .. import file_util
 from ..config import manager as config
 from ..rest import runs, template_results, templates
 
@@ -254,26 +255,8 @@ def find_runs(
     Retrieve runs related to the template specified by ID, filtered by the specified parameters
     """
     # Load data from files for test_input and eval_input, if set
-    if test_input != "":
-        try:
-            with open(test_input, "r") as test_input_file:
-                test_input = test_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s", test_input
-            )
-            print("Failed to locate file with name %s" % test_input)
-            sys.exit(1)
-    if eval_input != "":
-        try:
-            with open(eval_input, "r") as eval_input_file:
-                eval_input = eval_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s", eval_input
-            )
-            print("Failed to locate file with name %s" % eval_input)
-            sys.exit(1)
+    test_input = file_util.read_file_to_json(test_input)
+    eval_input = file_util.read_file_to_json(eval_input)
     print(
         runs.find(
             "templates",
