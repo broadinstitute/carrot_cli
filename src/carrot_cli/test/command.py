@@ -3,6 +3,7 @@ import sys
 
 import click
 
+from .. import file_util
 from ..config import manager as config
 from ..rest import runs, tests
 
@@ -97,28 +98,9 @@ def find(
 ):
     """Retrieve tests filtered to match the specified parameters"""
     # Load data from files for test_input_defaults and eval_input_defaults, if set
-    if test_input_defaults != "":
-        try:
-            with open(test_input_defaults, "r") as test_input_file:
-                test_input_defaults = test_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s",
-                test_input_defaults,
-            )
-            print("Failed to locate file with name %s" % test_input_defaults)
-            sys.exit(1)
-    if eval_input_defaults != "":
-        try:
-            with open(eval_input_defaults, "r") as eval_input_file:
-                eval_input_defaults = eval_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s",
-                eval_input_defaults,
-            )
-            print("Failed to locate file with name %s" % eval_input_defaults)
-            sys.exit(1)
+    test_input_defaults = file_util.read_file_to_json(test_input_defaults)
+    eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
+    
     print(
         tests.find(
             test_id,
@@ -177,28 +159,8 @@ def create(
             )
             sys.exit(1)
     # Load data from files for test_input_defaults and eval_input_defaults, if set
-    if test_input_defaults != "":
-        try:
-            with open(test_input_defaults, "r") as test_input_file:
-                test_input_defaults = test_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s",
-                test_input_defaults,
-            )
-            print("Failed to locate file with name %s" % test_input_defaults)
-            sys.exit(1)
-    if eval_input_defaults != "":
-        try:
-            with open(eval_input_defaults, "r") as eval_input_file:
-                eval_input_defaults = eval_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s",
-                eval_input_defaults,
-            )
-            print("Failed to locate file with name %s" % eval_input_defaults)
-            sys.exit(1)
+    test_input_defaults = file_util.read_file_to_json(test_input_defaults)
+    eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
     print(
         tests.create(
             name,
@@ -256,26 +218,8 @@ def run(id, name, test_input, eval_input, created_by):
             )
             sys.exit(1)
     # Load data from files for test_input and eval_input, if set
-    if test_input != "":
-        try:
-            with open(test_input, "r") as test_input_file:
-                test_input = test_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s", test_input
-            )
-            print("Failed to locate file with name %s" % test_input)
-            sys.exit(1)
-    if eval_input != "":
-        try:
-            with open(eval_input, "r") as eval_input_file:
-                eval_input = eval_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s", eval_input
-            )
-            print("Failed to locate file with name %s" % eval_input)
-            sys.exit(1)
+    test_input = file_util.read_file_to_json(test_input)
+    eval_input = file_util.read_file_to_json(eval_input)
     print(tests.run(id, name, test_input, eval_input, created_by))
 
 
@@ -362,26 +306,8 @@ def find_runs(
 ):
     """Retrieve runs of the test specified by ID, filtered by the specified parameters"""
     # Load data from files for test_input and eval_input, if set
-    if test_input != "":
-        try:
-            with open(test_input, "r") as test_input_file:
-                test_input = test_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s", test_input
-            )
-            print("Failed to locate file with name %s" % test_input)
-            sys.exit(1)
-    if eval_input != "":
-        try:
-            with open(eval_input, "r") as eval_input_file:
-                eval_input = eval_input_file.read()
-        except FileNotFoundError:
-            LOGGER.error(
-                "Encountered FileNotFound error when trying to read %s", eval_input
-            )
-            print("Failed to locate file with name %s" % eval_input)
-            sys.exit(1)
+    test_input = file_util.read_file_to_json(test_input)
+    eval_input = file_util.read_file_to_json(eval_input)
     print(
         runs.find(
             "tests",
