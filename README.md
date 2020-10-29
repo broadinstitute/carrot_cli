@@ -1,3 +1,4 @@
+![CARROT CLI](https://github.com/broadinstitute/carrot_cli/blob/master/logo.png?raw=true)
 # carrot\_cli
 Command Line Interface for CARROT
 
