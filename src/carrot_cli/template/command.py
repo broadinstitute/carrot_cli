@@ -190,9 +190,14 @@ def update(id, name, description):
     help="A JSON file containing the inputs to the eval WDL for the run",
 )
 @click.option(
-    "--cromwell_job_id",
+    "--test_cromwell_job_id",
     default="",
-    help="The unique ID assigned to the Cromwell job in which the test ran",
+    help="The unique ID assigned to the Cromwell job in which the test WDL ran",
+)
+@click.option(
+    "--eval_cromwell_job_id",
+    default="",
+    help="The unique ID assigned to the Cromwell job in which the eval WDL ran",
 )
 @click.option(
     "--created_before",
@@ -241,7 +246,8 @@ def find_runs(
     status,
     test_input,
     eval_input,
-    cromwell_job_id,
+    test_cromwell_job_id,
+    eval_cromwell_job_id,
     created_before,
     created_after,
     created_by,
@@ -265,7 +271,8 @@ def find_runs(
             status,
             test_input,
             eval_input,
-            cromwell_job_id,
+            test_cromwell_job_id,
+            eval_cromwell_job_id,
             created_before,
             created_after,
             created_by,
