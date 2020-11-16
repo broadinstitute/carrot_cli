@@ -2,7 +2,7 @@
 # carrot\_cli
 Command Line Interface for CARROT
 
-Current version: 0.0.1
+Current version: 0.1.0
 
 ## Installation
 
