@@ -473,8 +473,10 @@ def test_run(run_data):
                 "tests/data/mock_test_input.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
-                "--cromwell_job_id",
+                "--test_cromwell_job_id",
                 "d9855002-6b71-429c-a4de-8e90222488cd",
+                "--eval_cromwell_job_id",
+                "03958293-6b71-429c-a4de-8e90222488cd",
                 "--created_before",
                 "2020-10-00T00:00:00.000000",
                 "--created_after",
@@ -499,6 +501,7 @@ def test_run(run_data):
                 {"in_greeted": "Cool Person"},
                 {"in_output_filename": "test_greeting.txt"},
                 "d9855002-6b71-429c-a4de-8e90222488cd",
+                "03958293-6b71-429c-a4de-8e90222488cd",
                 "2020-10-00T00:00:00.000000",
                 "2020-09-00T00:00:00.000000",
                 "glimmer@example.com",
@@ -518,7 +521,8 @@ def test_run(run_data):
                         "eval_input": {"in_friend": "Bow"},
                         "status": "succeeded",
                         "results": {},
-                        "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                        "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                        "eval_cromwell_job_id": "03958293-6b71-429c-a4de-8e90222488cd",
                         "name": "Queen of Bright Moon run",
                         "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -530,6 +534,7 @@ def test_run(run_data):
             "args": ["test", "find_runs", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
                 "",
                 "",
                 "",
@@ -586,6 +591,7 @@ def find_runs_data(request):
             request.param["params"][11],
             request.param["params"][12],
             request.param["params"][13],
+            request.param["params"][14],
         ).thenReturn(request.param["return"])
     return request.param
 
