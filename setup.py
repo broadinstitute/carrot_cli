@@ -17,6 +17,7 @@ setup(
     numpy
     pysam
     dataclasses
+    click
     """.split(
         "\n"
     ),
