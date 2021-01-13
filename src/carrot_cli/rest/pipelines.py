@@ -53,6 +53,10 @@ def update(pipeline_id, name, description):
     ]
     return request_handler.update("pipelines", pipeline_id, params)
 
+def delete(pipeline_id):
+    """Submits a request to CARROT's pipelines delete mapping"""
+    return request_handler.delete("pipelines", pipeline_id)
+
 
 def subscribe(pipeline_id, email):
     """Submits a request to CARROT's pipelines subscribe mapping"""

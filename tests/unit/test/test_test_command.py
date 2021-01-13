@@ -290,11 +290,17 @@ def test_create(create_data):
                 "This new test replaced the broken one",
                 "--name",
                 "New Sword of Protection test",
+                "--test_input_defaults",
+                "tests/data/mock_test_input.json",
+                "--eval_input_defaults",
+                "tests/data/mock_eval_input.json",
             ],
             "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "New Sword of Protection test",
                 "This new test replaced the broken one",
+                {"in_greeted": "Cool Person"},
+                {"in_output_filename": "test_greeting.txt"}
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
@@ -328,6 +334,8 @@ def update_data(request):
             request.param["params"][0],
             request.param["params"][1],
             request.param["params"][2],
+            request.param["params"][3],
+            request.param["params"][4],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -336,6 +344,44 @@ def test_update(update_data):
     runner = CliRunner()
     result = runner.invoke(carrot, update_data["args"])
     assert result.output == update_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No run found",
+                    "status": 404,
+                    "detail": "No run found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(runs).delete(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(runs).delete(request.param["args"][2]).thenReturn(
+        request.param["return"]
+    )
+    return request.param
+
+
+def test_delete(delete_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, delete_data["args"])
+    assert result.output == delete_data["return"] + "\n"
 
 
 @pytest.fixture(

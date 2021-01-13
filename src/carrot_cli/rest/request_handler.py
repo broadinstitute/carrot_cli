@@ -58,6 +58,15 @@ def update(entity, id, params):
     # Build and send request
     return send_request("PUT", address, body=body)
 
+def delete(entity, id):
+    """
+    Submits a request to the delete mapping for the specified entity with the specified id
+    """
+    # Build request address and send
+    server_address = config.load_var("carrot_server_address")
+    address = f"http://{server_address}/api/v1/{entity}/{id}"
+    return send_request("DELETE", address)
+
 
 def subscribe(entity, id, email):
     """
@@ -162,6 +171,19 @@ def find_maps(entity1, entity1_id, entity2, params):
     params = list(filter(lambda param: param[1] != "", params))
     # Create and send request
     return send_request("GET", address, params=params)
+
+def delete_map_by_ids(entity1, entity1_id, entity2, entity2_id):
+    """
+    Submits a request for deleting a mapping between entity1 and entity2, with the specified
+    ids.
+    """
+    # Build request address
+    server_address = config.load_var("carrot_server_address")
+    address = (
+        f"http://{server_address}/api/v1/{entity1}/{entity1_id}/{entity2}/{entity2_id}"
+    )
+    # Create and send request
+    return send_request("DELETE", address)
 
 
 def send_request(method, url, params=None, body=None):

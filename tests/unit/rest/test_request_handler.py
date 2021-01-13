@@ -233,6 +233,53 @@ def test_update(update_data):
     params=[
         {
             "entity": "pipelines",
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "entity": "templates",
+            "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template found",
+                    "status": 404,
+                    "detail": "No template found for the specified id"
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(request_handler).send_request(...).thenReturn(None)
+    # Instead of setting and loading config from a file, we'll just mock this
+    mockito.when(config).load_var("carrot_server_address").thenReturn("example.com")
+    # Mock up request response
+    address = "http://%s/api/v1/%s/%s" % (
+        "example.com",
+        request.param["entity"],
+        request.param["id"],
+    )
+    mockito.when(request_handler).send_request("DELETE", address).thenReturn(
+        request.param["return"]
+    )
+    return request.param
+
+
+def test_delete(delete_data):
+    result = request_handler.delete(
+        delete_data["entity"], delete_data["id"]
+    )
+    assert result == delete_data["return"]
+
+@pytest.fixture(
+    params=[
+        {
+            "entity": "pipelines",
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "bow@example.com",
             "return": pprint.PrettyPrinter().pformat(
@@ -597,6 +644,62 @@ def test_find_map_by_ids(find_map_by_ids_data):
     )
     assert result == find_map_by_ids_data["return"]
 
+
+@pytest.fixture(
+    params=[
+        {
+            "entity1": "templates",
+            "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
+            "entity2": "results",
+            "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "entity1": "templates",
+            "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
+            "entity2": "results",
+            "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template_result mapping found",
+                    "status": 404,
+                    "detail": "No template_result mapping found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_map_by_ids_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(request_handler).send_request(...).thenReturn(None)
+    # Instead of setting and loading config from a file, we'll just mock this
+    mockito.when(config).load_var("carrot_server_address").thenReturn("example.com")
+    # Mock up request response
+    address = "http://%s/api/v1/%s/%s/%s/%s" % (
+        "example.com",
+        request.param["entity1"],
+        request.param["entity1_id"],
+        request.param["entity2"],
+        request.param["entity2_id"],
+    )
+    mockito.when(request_handler).send_request("DELETE", address).thenReturn(
+        request.param["return"]
+    )
+    return request.param
+
+
+def test_delete_map_by_ids(delete_map_by_ids_data):
+    result = request_handler.delete_map_by_ids(
+        delete_map_by_ids_data["entity1"],
+        delete_map_by_ids_data["entity1_id"],
+        delete_map_by_ids_data["entity2"],
+        delete_map_by_ids_data["entity2_id"],
+    )
+    assert result == delete_map_by_ids_data["return"]
 
 @pytest.fixture(
     params=[
