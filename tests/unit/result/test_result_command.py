@@ -302,6 +302,44 @@ def test_update(update_data):
 @pytest.fixture(
     params=[
         {
+            "args": ["result", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "args": ["result", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No result found",
+                    "status": 404,
+                    "detail": "No result found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(results).delete(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(results).delete(request.param["args"][2]).thenReturn(
+        request.param["return"]
+    )
+    return request.param
+
+
+def test_delete(delete_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, delete_data["args"])
+    assert result.output == delete_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
             "args": [
                 "result",
                 "map_to_template",

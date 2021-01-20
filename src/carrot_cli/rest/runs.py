@@ -50,3 +50,7 @@ def find(
         ("offset", offset),
     ]
     return request_handler.find_runs(parent_entity, parent_entity_id, params)
+
+def delete(run_id):
+    """Submits a request to CARROT's runs delete mapping"""
+    return request_handler.delete("runs", run_id)

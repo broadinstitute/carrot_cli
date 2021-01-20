@@ -219,6 +219,8 @@ def test_create(create_data):
                     "description",
                     "This template is trying to learn to process anger better",
                 ),
+                ("test_wdl", "example.com/horde_test.wdl"),
+                ("eval_wdl", "example.com/horde_eval.wdl"),
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
@@ -235,12 +237,17 @@ def test_create(create_data):
         },
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
-            "params": [("name", "Angella template"), ("description", "")],
+            "params": [
+                ("name", "Angella template"),
+                ("description", ""),
+                ("test_wdl", ""),
+                ("eval_wdl", ""),
+            ],
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "title": "Server error",
                     "status": 500,
-                    "detail": "Error while attempting to update new template",
+                    "detail": "Error while attempting to update template",
                 }
             ),
         },
@@ -261,9 +268,46 @@ def test_update(update_data):
         update_data["id"],
         update_data["params"][0][1],
         update_data["params"][1][1],
+        update_data["params"][2][1],
+        update_data["params"][3][1],
     )
     assert result == update_data["return"]
 
+@pytest.fixture(
+    params=[
+        {
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template found",
+                    "status": 404,
+                    "detail": "No template found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(request_handler).delete(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(request_handler).delete(
+        "templates", request.param["id"]
+    ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_delete(delete_data):
+    result = templates.delete(delete_data["id"])
+    assert result == delete_data["return"]
 
 @pytest.fixture(
     params=[

@@ -123,6 +123,12 @@ def update(id, name, description):
     print(pipelines.update(id, name, description))
 
 
+@main.command(name="delete")
+@click.argument("id")
+def delete(id):
+    """Delete a pipeline by its ID, if the pipeline has no templates associated with it."""
+    print(pipelines.delete(id))
+
 @main.command(name="find_runs")
 @click.argument("id")
 @click.option("--name", default="", help="The name of the run")

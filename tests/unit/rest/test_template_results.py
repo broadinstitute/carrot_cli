@@ -180,3 +180,43 @@ def test_find_maps_by_id(find_map_by_ids_data):
         find_map_by_ids_data["template_id"], find_map_by_ids_data["result_id"]
     )
     assert result == find_map_by_ids_data["return"]
+
+@pytest.fixture(
+    params=[
+        {
+            "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template_result mapping found",
+                    "status": 404,
+                    "detail": "No template_result mapping found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_map_by_ids_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(request_handler).delete_map_by_ids(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(request_handler).delete_map_by_ids(
+        "templates", request.param["template_id"], "results", request.param["result_id"]
+    ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_delete_maps_by_id(delete_map_by_ids_data):
+    result = template_results.delete_map_by_ids(
+        delete_map_by_ids_data["template_id"], delete_map_by_ids_data["result_id"]
+    )
+    assert result == delete_map_by_ids_data["return"]

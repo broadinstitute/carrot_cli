@@ -61,12 +61,14 @@ def create(
     return request_handler.create("tests", params)
 
 
-def update(test_id, name, description):
+def update(test_id, name, description, test_input_defaults, eval_input_defaults):
     """Submits a request to CARROT's tests update mapping"""
     # Create parameter list
     params = [
         ("name", name),
         ("description", description),
+        ("test_input_defaults", test_input_defaults),
+        ("eval_input_defaults", eval_input_defaults),
     ]
     return request_handler.update("tests", test_id, params)
 
@@ -82,6 +84,9 @@ def run(test_id, name, test_input, eval_input, created_by):
     ]
     return request_handler.run(test_id, params)
 
+def delete(test_id):
+    """Submits a request to CARROT's tests delete mapping"""
+    return request_handler.delete("tests", test_id)
 
 def subscribe(test_id, email):
     """Submits a request to CARROT's tests subscribe mapping"""

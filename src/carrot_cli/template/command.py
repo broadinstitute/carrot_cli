@@ -165,10 +165,29 @@ def create(name, pipeline_id, description, test_wdl, eval_wdl, created_by):
 @click.argument("id")
 @click.option("--name", default="", help="The name of the template")
 @click.option("--description", default="", help="The description of the template")
-def update(id, name, description):
+@click.option(
+    "--test_wdl",
+    default="",
+    help="The location where the test WDL for the template is hosted.  Updating this parameter "
+    "is allowed only if the specified template has no non-failed (i.e. successful or currently "
+    "running) runs associated with it",
+)
+@click.option(
+    "--eval_wdl",
+    default="",
+    help="The location where the eval WDL for the template is hosted.  Updating this parameter "
+    "is allowed only if the specified template has no non-failed (i.e. successful or currently "
+    "running) runs associated with it",
+)
+def update(id, name, description, test_wdl, eval_wdl):
     """Update template with ID with the specified parameters"""
-    print(templates.update(id, name, description))
+    print(templates.update(id, name, description, test_wdl, eval_wdl))
 
+@main.command(name="delete")
+@click.argument("id")
+def delete(id):
+    """Delete a template by its ID, if it has no tests associated with it"""
+    print(templates.delete(id))
 
 @main.command(name="find_runs")
 @click.argument("id")
@@ -439,3 +458,14 @@ def find_result_maps(
             offset,
         )
     )
+
+@main.command(name="delete_result_map_by_id")
+@click.argument("id")
+@click.argument("result_id")
+def delete_result_map_by_id(id, result_id):
+    """
+    Delete the mapping record from the template specified by ID to the result specified by
+    RESULT_ID, if the specified template has no non-failed (i.e. successful or currently running)
+    runs associated with it
+    """
+    print(template_results.delete_map_by_ids(id, result_id))

@@ -177,9 +177,33 @@ def create(
 @click.argument("id")
 @click.option("--name", default="", help="The name of the test")
 @click.option("--description", default="", help="The description of the test")
-def update(id, name, description):
+@click.option(
+    "--test_input_defaults",
+    default="",
+    help="A JSON file containing the default inputs to the test WDL for the test. Updating this "
+    "parameter is allowed only if the specified test has no non-failed (i.e. successful or "
+    "currently running) runs associated with it",
+)
+@click.option(
+    "--eval_input_defaults",
+    default="",
+    help="A JSON file containing the default inputs to the eval WDL for the test. Updating this "
+    "parameter is allowed only if the specified test has no non-failed (i.e. successful or "
+    "currently running) runs associated with it",
+)
+def update(id, name, description, test_input_defaults, eval_input_defaults):
     """Update test with ID with the specified parameters"""
-    print(tests.update(id, name, description))
+    # Load data from files for test_input_defaults and eval_input_defaults, if set
+    test_input_defaults = file_util.read_file_to_json(test_input_defaults)
+    eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
+    print(tests.update(id, name, description, test_input_defaults, eval_input_defaults))
+
+
+@main.command(name="delete")
+@click.argument("id")
+def delete(id):
+    """Delete a test by its ID, if the test has no runs associated with it"""
+    print(tests.delete(id))
 
 
 @main.command(name="run")

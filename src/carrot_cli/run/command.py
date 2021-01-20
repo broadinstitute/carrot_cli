@@ -17,3 +17,9 @@ def main():
 def find_by_id(id):
     """Retrieve a run by its ID"""
     print(runs.find_by_id(id))
+
+@main.command(name="delete")
+@click.argument("id")
+def delete(id):
+    """Delete a run by its ID, if the run has a failed status"""
+    print(runs.delete(id))

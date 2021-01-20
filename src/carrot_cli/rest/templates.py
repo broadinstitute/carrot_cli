@@ -59,15 +59,20 @@ def create(name, pipeline_id, description, test_wdl, eval_wdl, created_by):
     return request_handler.create("templates", params)
 
 
-def update(template_id, name, description):
+def update(template_id, name, description, test_wdl, eval_wdl):
     """Submits a request to CARROT's templates update mapping"""
     # Create parameter list
     params = [
         ("name", name),
         ("description", description),
+        ("test_wdl", test_wdl),
+        ("eval_wdl", eval_wdl)
     ]
     return request_handler.update("templates", template_id, params)
 
+def delete(template_id):
+    """Submits a request to CARROT's templates delete mapping"""
+    return request_handler.delete("templates", template_id)
 
 def subscribe(template_id, email):
     """Submits a request to CARROT's templates subscribe mapping"""

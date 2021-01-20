@@ -288,11 +288,17 @@ def test_create(create_data):
                 "This new template replaced the broken one",
                 "--name",
                 "New Sword of Protection template",
+                "--test_wdl",
+                "example.com/she-ra_test.wdl",
+                "--eval_wdl",
+                "example.com/she-ra_eval.wdl",
             ],
             "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "New Sword of Protection template",
                 "This new template replaced the broken one",
+                "example.com/she-ra_test.wdl",
+                "example.com/she-ra_eval.wdl",
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
@@ -326,6 +332,8 @@ def update_data(request):
             request.param["params"][0],
             request.param["params"][1],
             request.param["params"][2],
+            request.param["params"][3],
+            request.param["params"][4],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -334,6 +342,44 @@ def test_update(update_data):
     runner = CliRunner()
     result = runner.invoke(carrot, update_data["args"])
     assert result.output == update_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template found",
+                    "status": 404,
+                    "detail": "No template found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(templates).delete(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(templates).delete(request.param["args"][2]).thenReturn(
+        request.param["return"]
+    )
+    return request.param
+
+
+def test_delete(delete_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, delete_data["args"])
+    assert result.output == delete_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -682,3 +728,199 @@ def test_map_to_result(map_to_result_data):
     runner = CliRunner()
     result = runner.invoke(carrot, map_to_result_data["args"])
     assert result.output == map_to_result_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "find_result_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "out_horde_tanks",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                }
+            ),
+        },
+        {
+            "args": ["template", "find_result_map_by_id"],
+            "params": [],
+            "return": "Usage: carrot_cli template find_result_map_by_id [OPTIONS] ID RESULT_ID\n"
+            "Try 'carrot_cli template find_result_map_by_id --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
+    ]
+)
+def find_result_map_by_id_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_results).find_map_by_ids(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(template_results).find_map_by_ids(
+            request.param["params"][0],
+            request.param["params"][1],
+        ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_find_result_map_by_id(find_result_map_by_id_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, find_result_map_by_id_data["args"])
+    assert result.output == find_result_map_by_id_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "find_result_maps",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--result_id",
+                "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "--result_key",
+                "sword_of_protection_key",
+                "--created_by",
+                "adora@example.com",
+                "--created_before",
+                "2020-10-00T00:00:00.000000",
+                "--created_after",
+                "2020-09-00T00:00:00.000000",
+                "--sort",
+                "asc(result_key)",
+                "--limit",
+                1,
+                "--offset",
+                0,
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "sword_of_protection_key",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "adora@example.com",
+                "asc(result_key)",
+                1,
+                0,
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        "result_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "result_key": "sword_of_protection_key",
+                        "created_at": "2020-09-24T19:07:59.311462",
+                        "created_by": "adora@example.com",
+                    }
+                ]
+            ),
+        },
+        {
+            "args": [
+                "template",
+                "find_result_maps",
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+            ],
+            "params": [
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                20,
+                0,
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template_results found",
+                    "status": 404,
+                    "detail": "No template_results found with the specified parameters",
+                }
+            ),
+        },
+    ]
+)
+def find_result_maps_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_results).find_maps(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(template_results).find_maps(
+        request.param["params"][0],
+        request.param["params"][1],
+        request.param["params"][2],
+        request.param["params"][3],
+        request.param["params"][4],
+        request.param["params"][5],
+        request.param["params"][6],
+        request.param["params"][7],
+        request.param["params"][8],
+    ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_find_result_maps(find_result_maps_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, find_result_maps_data["args"])
+    assert result.output == find_result_maps_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "delete_result_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "args": ["template", "delete_result_map_by_id"],
+            "params": [],
+            "return": "Usage: carrot_cli template delete_result_map_by_id [OPTIONS] ID RESULT_ID\n"
+            "Try 'carrot_cli template delete_result_map_by_id --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
+    ]
+)
+def delete_result_map_by_id_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_results).delete_map_by_ids(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(template_results).delete_map_by_ids(
+            request.param["params"][0],
+            request.param["params"][1],
+        ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_delete_result_map_by_id(delete_result_map_by_id_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, delete_result_map_by_id_data["args"])
+    assert result.output == delete_result_map_by_id_data["return"] + "\n"

@@ -59,3 +59,7 @@ def update(result_id, name, description):
         ("description", description),
     ]
     return request_handler.update("results", result_id, params)
+
+def delete(result_id):
+    """Submits a request to CARROT's results delete mapping"""
+    return request_handler.delete("results", result_id)

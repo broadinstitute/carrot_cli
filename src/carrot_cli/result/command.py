@@ -131,6 +131,11 @@ def update(id, name, description):
     """Update result with ID with the specified parameters"""
     print(results.update(id, name, description))
 
+@main.command(name="delete")
+@click.argument("id")
+def find_by_id(id):
+    """Delete a result definition by its ID, if the result is not mapped to any templates"""
+    print(results.delete(id))
 
 @main.command(name="map_to_template")
 @click.argument("id")

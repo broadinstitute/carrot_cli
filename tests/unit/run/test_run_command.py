@@ -61,3 +61,40 @@ def test_find_by_id(find_by_id_data):
     runner = CliRunner()
     result = runner.invoke(carrot, find_by_id_data["args"])
     assert result.output == find_by_id_data["return"] + "\n"
+
+@pytest.fixture(
+    params=[
+        {
+            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No run found",
+                    "status": 404,
+                    "detail": "No run found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(runs).delete(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(runs).delete(request.param["args"][2]).thenReturn(
+        request.param["return"]
+    )
+    return request.param
+
+
+def test_delete(delete_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, delete_data["args"])
+    assert result.output == delete_data["return"] + "\n"

@@ -235,6 +235,42 @@ def test_update(update_data):
 @pytest.fixture(
     params=[
         {
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "message": "Successfully deleted 1 row"
+                }
+            ),
+        },
+        {
+            "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No pipeline found",
+                    "status": 404,
+                    "detail": "No pipeline found with the specified ID",
+                }
+            ),
+        },
+    ]
+)
+def delete_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(request_handler).delete(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(request_handler).delete(
+        "pipelines", request.param["id"]
+    ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_delete(delete_data):
+    result = pipelines.delete(delete_data["id"])
+    assert result == delete_data["return"]
+
+@pytest.fixture(
+    params=[
+        {
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "bow@example.com",
             "return": pprint.PrettyPrinter().pformat(

@@ -47,3 +47,10 @@ def find_map_by_ids(template_id, result_id):
     return request_handler.find_map_by_ids(
         "templates", template_id, "results", result_id
     )
+
+def delete_map_by_ids(template_id, result_id):
+    """Submits a request to CARROT's template_result delete mapping"""
+    return request_handler.delete_map_by_ids(
+        "templates", template_id, "results", result_id
+    )
+    
