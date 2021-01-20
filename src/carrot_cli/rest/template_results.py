@@ -53,3 +53,4 @@ def delete_map_by_ids(template_id, result_id):
     return request_handler.delete_map_by_ids(
         "templates", template_id, "results", result_id
     )
+    
