@@ -2,6 +2,7 @@ import json
 import logging
 import pprint
 
+import urllib
 import requests
 
 from ..config import manager as config
@@ -185,6 +186,33 @@ def delete_map_by_ids(entity1, entity1_id, entity2, entity2_id):
     # Create and send request
     return send_request("DELETE", address)
 
+def find_map_by_ids_and_name(entity1, entity1_id, entity2, entity2_id, name):
+    """
+    Submits a request for finding a mapping between entity1 and entity2, with the specified
+    ids and name
+    """
+    # Build request address
+    server_address = config.load_var("carrot_server_address")
+    encoded_name = urllib.parse.quote(name) # Names are allowed to have spaces so we need to encode them
+    address = (
+        f"http://{server_address}/api/v1/{entity1}/{entity1_id}/{entity2}/{entity2_id}/{encoded_name}"
+    )
+    # Create and send request
+    return send_request("GET", address)
+
+def delete_map_by_ids_and_name(entity1, entity1_id, entity2, entity2_id, name):
+    """
+    Submits a request for deleting a mapping between entity1 and entity2, with the specified
+    ids and name
+    """
+    # Build request address
+    server_address = config.load_var("carrot_server_address")
+    encoded_name = urllib.parse.quote(name) # Names are allowed to have spaces so we need to encode them
+    address = (
+        f"http://{server_address}/api/v1/{entity1}/{entity1_id}/{entity2}/{entity2_id}/{encoded_name}"
+    )
+    # Create and send request
+    return send_request("DELETE", address)
 
 def send_request(method, url, params=None, body=None):
     """Sends the specified Request object and handles potential errors"""
