@@ -568,7 +568,7 @@ def create_map_data(request):
     )
     # Get params converted to dict
     params = dict(request.param["params"])
-    mockito.when(request_handler).send_request("POST", address, body=params).thenReturn(
+    mockito.when(request_handler).send_request("POST", address, body=params, params=None).thenReturn(
         request.param["return"]
     )
     return request.param

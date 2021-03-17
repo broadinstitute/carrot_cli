@@ -127,7 +127,7 @@ def find_runs(entity, id, params):
     return send_request("GET", address, params=params)
 
 
-def create_map(entity1, entity1_id, entity2, entity2_id, params):
+def create_map(entity1, entity1_id, entity2, entity2_id, params, query_params=None):
     """
     Submits a request for creating a mapping between entity1 and entity2, with the specified
     params.
@@ -143,7 +143,7 @@ def create_map(entity1, entity1_id, entity2, entity2_id, params):
         if param[1] != "":
             body[param[0]] = param[1]
     # Create and send request
-    return send_request("POST", address, body=body)
+    return send_request("POST", address, body=body, params=query_params)
 
 
 def find_map_by_ids(entity1, entity1_id, entity2, entity2_id):

@@ -12,13 +12,17 @@ from carrot_cli.rest import request_handler, run_reports
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "created_by": "rogelio@example.com",
+            "delete_failed": True,
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "status": "created",
                     "results": {},
+                    "cromwell_job_id": "8f1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
+                    "finished_at": None,
                 }
             ),
         },
@@ -26,6 +30,7 @@ from carrot_cli.rest import request_handler, run_reports
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "created_by": "rogelio@example.com",
+            "delete_failed": False,
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "title": "Server error",
@@ -43,12 +48,16 @@ def create_map_data(request):
     params = [
         ("created_by", request.param["created_by"]),
     ]
+    query_params = [
+        ("delete_failed", request.param["delete_failed"])
+    ]
     mockito.when(request_handler).create_map(
         "runs",
         request.param["run_id"],
         "reports",
         request.param["report_id"],
         params,
+        query_params
     ).thenReturn(request.param["return"])
     return request.param
 
@@ -58,6 +67,7 @@ def test_create_map(create_map_data):
         create_map_data["run_id"],
         create_map_data["report_id"],
         create_map_data["created_by"],
+        create_map_data["delete_failed"]
     )
     assert report == create_map_data["return"]
 
@@ -74,6 +84,8 @@ def test_create_map(create_map_data):
                 ("created_before", ""),
                 ("created_after", ""),
                 ("created_by", "rogelio@example.com"),
+                ("finished_before", ""),
+                ("finished_after", ""),
                 ("sort", ""),
                 ("limit", ""),
                 ("offset", ""),
@@ -89,6 +101,7 @@ def test_create_map(create_map_data):
                     },
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
+                    "finished_at": "2020-09-24T19:09:59.311462"
                 }
             ),
         },
@@ -102,6 +115,8 @@ def test_create_map(create_map_data):
                 ("created_before", ""),
                 ("created_after", ""),
                 ("created_by", ""),
+                ("finished_before", ""),
+                ("finished_after", ""),
                 ("sort", ""),
                 ("limit", ""),
                 ("offset", ""),
@@ -139,6 +154,8 @@ def test_find_maps(find_maps_data):
         find_maps_data["params"][7][1],
         find_maps_data["params"][8][1],
         find_maps_data["params"][9][1],
+        find_maps_data["params"][10][1],
+        find_maps_data["params"][11][1],
     )
     assert report == find_maps_data["return"]
 
@@ -159,6 +176,7 @@ def test_find_maps(find_maps_data):
                     },
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
+                    "finished_at": "2020-09-24T21:07:59.311462",
                 }
             ),
         },

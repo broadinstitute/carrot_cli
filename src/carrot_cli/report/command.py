@@ -136,7 +136,7 @@ def delete(id):
     """Delete a report by its ID, if the report has no templates, sections, or runs associated with it."""
     print(reports.delete(id))
 
-@main.command(name="map_to_result")
+@main.command(name="map_to_section")
 @click.argument("id")
 @click.argument("section_id")
 @click.argument("name")

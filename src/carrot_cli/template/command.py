@@ -5,7 +5,8 @@ import click
 
 from .. import file_util
 from ..config import manager as config
-from ..rest import runs, template_results, templates
+from ..rest import runs, template_results, templates, template_reports
+from .. import file_util
 
 LOGGER = logging.getLogger(__name__)
 
@@ -469,3 +470,120 @@ def delete_result_map_by_id(id, result_id):
     runs associated with it
     """
     print(template_results.delete_map_by_ids(id, result_id))
+
+@main.command(name="map_to_report")
+@click.argument("id")
+@click.argument("report_id")
+@click.argument("input_map")
+@click.option("--created_by", default="", help="Email of the creator of the mapping")
+def map_to_report(id, report_id, input_map, created_by):
+    """
+    Map the template specified by ID to the report specified by REPORT_ID with a mapping of report
+    inputs to values, divided by section, in a json file specified by INPUT_MAP
+    """
+    # If created_by is not set and there is an email config variable, fill with that
+    if created_by == "":
+        email_config_val = config.load_var_no_error("email")
+        if email_config_val is not None:
+            created_by = email_config_val
+        else:
+            print(
+                "No email config variable set.  If a value is not specified for --created by, "
+                "there must be a value set for email."
+            )
+            sys.exit(1)
+    print(template_reports.create_map(id, report_id, file_util.read_file_to_json(input_map), created_by))
+
+
+@main.command(name="find_report_map_by_id")
+@click.argument("id")
+@click.argument("report_id")
+def find_report_map_by_id(id, report_id):
+    """
+    Retrieve the mapping record from the template specified by ID to the report specified by
+    REPORT_ID
+    """
+    print(template_reports.find_map_by_ids(id, report_id))
+
+
+@main.command(name="find_report_maps")
+@click.argument("id")
+@click.option("--report_id", default="", help="The id of the report")
+@click.option(
+    "--input_map",
+    default="",
+    help="A json file containing a mapping of report inputs to their values (either test inputs "
+    "eval inputs, results, or string literals, divided up by section",
+)
+@click.option(
+    "--created_before",
+    default="",
+    help="Upper bound for map's created_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss",
+)
+@click.option(
+    "--created_after",
+    default="",
+    help="Lower bound for map's created_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss",
+)
+@click.option(
+    "--created_by", default="", help="Email of the creator of the map, case sensitive"
+)
+@click.option(
+    "--sort",
+    default="",
+    help="A comma-separated list of sort keys, enclosed in asc() for ascending or desc() for "
+    "descending.  Ex. asc(input_map),desc(report_id)",
+)
+@click.option(
+    "--limit",
+    default=20,
+    show_default=True,
+    help="The maximum number of map records to return",
+)
+@click.option(
+    "--offset",
+    default=0,
+    show_default=True,
+    help="The offset to start at within the list of records to return.  Ex. Sorting by "
+    "asc(created_at) with offset=1 would return records sorted by when they were created "
+    "starting from the second record to be created",
+)
+def find_report_maps(
+    id,
+    report_id,
+    input_map,
+    created_before,
+    created_after,
+    created_by,
+    sort,
+    limit,
+    offset,
+):
+    """
+    Retrieve the mapping record from the template specified by ID to the report specified by
+    REPORT_ID
+    """
+    print(
+        template_reports.find_maps(
+            id,
+            report_id,
+            file_util.read_file_to_json(input_map),
+            created_before,
+            created_after,
+            created_by,
+            sort,
+            limit,
+            offset,
+        )
+    )
+
+@main.command(name="delete_report_map_by_id")
+@click.argument("id")
+@click.argument("report_id")
+def delete_report_map_by_id(id, report_id):
+    """
+    Delete the mapping record from the template specified by ID to the report specified by
+    REPORT_ID, if the specified template has no non-failed (i.e. successful or currently running)
+    runs associated with it
+    """
+    print(template_reports.delete_map_by_ids(id, report_id))

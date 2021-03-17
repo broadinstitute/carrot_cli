@@ -5,7 +5,7 @@ from . import request_handler
 LOGGER = logging.getLogger(__name__)
 
 
-def create_map(run_id, report_id, created_by):
+def create_map(run_id, report_id, created_by, delete_failed):
     """Submits a request to CARROT's run_report create mapping"""
     return request_handler.create_map(
         "runs",
@@ -13,6 +13,7 @@ def create_map(run_id, report_id, created_by):
         "reports",
         report_id,
         [("created_by", created_by)],
+        [("delete_failed", delete_failed)]
     )
 
 
@@ -25,6 +26,8 @@ def find_maps(
     created_before,
     created_after,
     created_by,
+    finished_before,
+    finished_after,
     sort,
     limit,
     offset,
@@ -39,6 +42,8 @@ def find_maps(
         ("created_before", created_before),
         ("created_after", created_after),
         ("created_by", created_by),
+        ("finished_before", finished_before),
+        ("finished_after", finished_after),
         ("sort", sort),
         ("limit", limit),
         ("offset", offset),
@@ -56,5 +61,4 @@ def delete_map_by_ids(run_id, report_id):
     """Submits a request to CARROT's run_report delete mapping"""
     return request_handler.delete_map_by_ids(
         "runs", run_id, "reports", report_id
-    )
-    
+    ) 
