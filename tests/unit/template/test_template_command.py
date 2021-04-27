@@ -1,12 +1,12 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
-from carrot_cli.rest import runs, template_results, templates, template_reports
+from carrot_cli.rest import runs, template_reports, template_results, templates
 
 
 @pytest.fixture(autouse=True)
@@ -14,9 +14,11 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
+
 
 @pytest.fixture(
     params=[
@@ -243,7 +245,7 @@ def test_find(find_data):
             ],
             "params": [],
             "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "there must be a value set for email.",
         },
         {
             "args": ["template", "create"],
@@ -349,9 +351,7 @@ def test_update(update_data):
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -446,7 +446,7 @@ def test_delete(delete_data):
                         "status": "succeeded",
                         "results": {},
                         "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
-                        "eval_cromwell_job_id":"03958293-6b71-429c-a4de-8e90222488cd",
+                        "eval_cromwell_job_id": "03958293-6b71-429c-a4de-8e90222488cd",
                         "name": "Queen of Bright Moon run",
                         "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -698,7 +698,7 @@ def test_unsubscribe(unsubscribe_data):
             ],
             "params": [],
             "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "there must be a value set for email.",
         },
         {
             "args": ["template", "map_to_result"],
@@ -893,9 +893,7 @@ def test_find_result_maps(find_result_maps_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -925,6 +923,7 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
     result = runner.invoke(carrot, delete_result_map_by_id_data["args"])
     assert result.output == delete_result_map_by_id_data["return"] + "\n"
 
+
 @pytest.fixture(
     params=[
         {
@@ -933,29 +932,18 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
                 "map_to_report",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                "tests/data/mock_template_report_input_map.json",
                 "--created_by",
                 "adora@example.com",
             ],
             "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                {
-                    "section1":{
-                        "input1":"val1"
-                    }
-                },
                 "adora@example.com",
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "input_map": {
-                        "section1":{
-                            "input1":"val1"
-                        }
-                    },
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -967,16 +955,15 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
                 "map_to_report",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                "tests/data/mock_template_report_input_map.json",
             ],
             "params": [],
             "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "there must be a value set for email.",
         },
         {
             "args": ["template", "map_to_report"],
             "params": [],
-            "return": "Usage: carrot_cli template map_to_report [OPTIONS] ID REPORT_ID INPUT_MAP\n"
+            "return": "Usage: carrot_cli template map_to_report [OPTIONS] ID REPORT_ID\n"
             "Try 'carrot_cli template map_to_report --help' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
@@ -992,7 +979,6 @@ def map_to_report_data(request):
             request.param["params"][0],
             request.param["params"][1],
             request.param["params"][2],
-            request.param["params"][3],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -1020,11 +1006,7 @@ def test_map_to_report(map_to_report_data):
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "input_map": {
-                        "section1":{
-                            "input1":"val1"
-                        }
-                    },
+                    "input_map": {"section1": {"input1": "val1"}},
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -1067,8 +1049,6 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "--report_id",
                 "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                "--input_map",
-                "tests/data/mock_template_report_input_map.json",
                 "--created_by",
                 "adora@example.com",
                 "--created_before",
@@ -1085,11 +1065,6 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
             "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                {
-                    "section1":{
-                        "input1":"val1"
-                    }
-                },
                 "2020-10-00T00:00:00.000000",
                 "2020-09-00T00:00:00.000000",
                 "adora@example.com",
@@ -1102,11 +1077,6 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                     {
                         "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                         "report_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                        "input_map": {
-                            "section1":{
-                                "input1":"val1"
-                            }
-                        },
                         "created_at": "2020-09-24T19:07:59.311462",
                         "created_by": "adora@example.com",
                     }
@@ -1121,7 +1091,6 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
             ],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
-                "",
                 "",
                 "",
                 "",
@@ -1153,7 +1122,6 @@ def find_report_maps_data(request):
         request.param["params"][5],
         request.param["params"][6],
         request.param["params"][7],
-        request.param["params"][8],
     ).thenReturn(request.param["return"])
     return request.param
 
@@ -1178,9 +1146,7 @@ def test_find_report_maps(find_report_maps_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {

@@ -14,7 +14,8 @@ def find(
     report_id,
     name,
     description,
-    metadata,
+    notebook,
+    config,
     created_by,
     created_before,
     created_after,
@@ -28,7 +29,8 @@ def find(
         ("report_id", report_id),
         ("name", name),
         ("description", description),
-        ("metadata", metadata),
+        ("notebook", notebook),
+        ("config", config),
         ("created_by", created_by),
         ("created_before", created_before),
         ("created_after", created_after),
@@ -39,25 +41,30 @@ def find(
     return request_handler.find("reports", params)
 
 
-def create(name, description, created_by):
+def create(name, description, notebook, config, created_by):
     """Submits a request to CARROT's reports create mapping"""
     # Create parameter list
     params = [
         ("name", name),
         ("description", description),
-        ("created_by", created_by)
+        ("notebook", notebook),
+        ("config", config),
+        ("created_by", created_by),
     ]
     return request_handler.create("reports", params)
 
 
-def update(report_id, name, description):
+def update(report_id, name, description, notebook, config):
     """Submits a request to CARROT's reports update mapping"""
     # Create parameter list
     params = [
         ("name", name),
         ("description", description),
+        ("notebook", notebook),
+        ("config", config),
     ]
     return request_handler.update("reports", report_id, params)
+
 
 def delete(report_id):
     """Submits a request to CARROT's reports delete mapping"""

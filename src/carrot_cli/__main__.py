@@ -9,7 +9,6 @@ from .pipeline import command as pipeline
 from .report import command as report
 from .result import command as result
 from .run import command as run
-from .section import command as section
 from .software import command as software
 from .subscription import command as subscription
 from .template import command as template
@@ -74,7 +73,6 @@ main_entry.add_command(run.main)
 main_entry.add_command(software.main)
 main_entry.add_command(config.main)
 main_entry.add_command(report.main)
-main_entry.add_command(section.main)
 
 if __name__ == "__main__":
     main_entry()  # pylint: disable=E1120

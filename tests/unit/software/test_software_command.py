@@ -1,9 +1,9 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
 from carrot_cli.rest import software
@@ -14,9 +14,11 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
+
 
 @pytest.fixture(
     params=[
@@ -210,7 +212,7 @@ def test_find(find_data):
             ],
             "params": [],
             "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "there must be a value set for email.",
         },
         {
             "args": ["software", "create"],

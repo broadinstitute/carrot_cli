@@ -2,7 +2,6 @@ import pprint
 
 import mockito
 import pytest
-
 from carrot_cli.rest import request_handler, run_reports
 
 
@@ -49,7 +48,7 @@ def create_map_data(request):
         ("created_by", request.param["created_by"]),
     ]
     query_params = [
-        ("delete_failed", request.param["delete_failed"])
+        ("delete_failed", "true" if request.param["delete_failed"] else "false")
     ]
     mockito.when(request_handler).create_map(
         "runs",
@@ -57,7 +56,7 @@ def create_map_data(request):
         "reports",
         request.param["report_id"],
         params,
-        query_params
+        query_params,
     ).thenReturn(request.param["return"])
     return request.param
 
@@ -67,7 +66,7 @@ def test_create_map(create_map_data):
         create_map_data["run_id"],
         create_map_data["report_id"],
         create_map_data["created_by"],
-        create_map_data["delete_failed"]
+        create_map_data["delete_failed"],
     )
     assert report == create_map_data["return"]
 
@@ -96,12 +95,10 @@ def test_create_map(create_map_data):
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "status": "succeeded",
                     "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
-                    "results": {
-                        "result1": "val1"
-                    },
+                    "results": {"result1": "val1"},
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                    "finished_at": "2020-09-24T19:09:59.311462"
+                    "finished_at": "2020-09-24T19:09:59.311462",
                 }
             ),
         },
@@ -171,9 +168,7 @@ def test_find_maps(find_maps_data):
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "status": "succeeded",
                     "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
-                    "results": {
-                        "result1": "val1"
-                    },
+                    "results": {"result1": "val1"},
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                     "finished_at": "2020-09-24T21:07:59.311462",
@@ -209,15 +204,14 @@ def test_find_maps_by_id(find_map_by_ids_data):
     )
     assert report == find_map_by_ids_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {

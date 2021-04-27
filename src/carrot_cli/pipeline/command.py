@@ -3,9 +3,9 @@ import sys
 
 import click
 
+from .. import file_util
 from ..config import manager as config
 from ..rest import pipelines, runs
-from .. import file_util
 
 LOGGER = logging.getLogger(__name__)
 
@@ -128,6 +128,7 @@ def update(id, name, description):
 def delete(id):
     """Delete a pipeline by its ID, if the pipeline has no templates associated with it."""
     print(pipelines.delete(id))
+
 
 @main.command(name="find_runs")
 @click.argument("id")

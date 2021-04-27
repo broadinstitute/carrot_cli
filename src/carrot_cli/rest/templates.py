@@ -66,13 +66,15 @@ def update(template_id, name, description, test_wdl, eval_wdl):
         ("name", name),
         ("description", description),
         ("test_wdl", test_wdl),
-        ("eval_wdl", eval_wdl)
+        ("eval_wdl", eval_wdl),
     ]
     return request_handler.update("templates", template_id, params)
+
 
 def delete(template_id):
     """Submits a request to CARROT's templates delete mapping"""
     return request_handler.delete("templates", template_id)
+
 
 def subscribe(template_id, email):
     """Submits a request to CARROT's templates subscribe mapping"""

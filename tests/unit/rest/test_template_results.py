@@ -2,7 +2,6 @@ import pprint
 
 import mockito
 import pytest
-
 from carrot_cli.rest import request_handler, template_results
 
 
@@ -181,15 +180,14 @@ def test_find_maps_by_id(find_map_by_ids_data):
     )
     assert result == find_map_by_ids_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {

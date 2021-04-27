@@ -2,7 +2,6 @@ import pprint
 
 import mockito
 import pytest
-
 from carrot_cli.rest import reports, request_handler
 
 
@@ -20,19 +19,16 @@ def unstub():
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
-                    "metadata": {
+                    "notebook": {
                         "metadata": {
                             "language_info": {
-                                "codemirror_mode": {
-                                    "name": "ipython",
-                                    "version": 3
-                                },
+                                "codemirror_mode": {"name": "ipython", "version": 3},
                                 "file_extension": ".py",
                                 "mimetype": "text/x-python",
                                 "name": "python",
                                 "nbconvert_exporter": "python",
                                 "pygments_lexer": "ipython3",
-                                "version": "3.8.5-final"
+                                "version": "3.8.5-final",
                             },
                             "orig_nbformat": 2,
                             "kernelspec": {
@@ -42,12 +38,42 @@ def unstub():
                                     "interpreter": {
                                         "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
                                     }
-                                }
-                            }
+                                },
+                            },
                         },
                         "nbformat": 4,
-                        "nbformat_minor": 2
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
                     },
+                    "config": {"cpu": 2},
                     "description": "This report will save Etheria",
                     "name": "Sword of Protection report",
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -70,9 +96,9 @@ def find_by_id_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).find_by_id(
-        "reports", request.param["id"]
-    ).thenReturn(request.param["return"])
+    mockito.when(request_handler).find_by_id("reports", request.param["id"]).thenReturn(
+        request.param["return"]
+    )
     return request.param
 
 
@@ -88,7 +114,8 @@ def test_find_by_id(find_by_id_data):
                 ("report_id", ""),
                 ("name", "Queen of Bright Moon report"),
                 ("description", ""),
-                ("metadata", ""),
+                ("notebook", ""),
+                ("config", ""),
                 ("created_by", ""),
                 ("created_before", ""),
                 ("created_after", ""),
@@ -101,19 +128,19 @@ def test_find_by_id(find_by_id_data):
                     {
                         "created_at": "2020-09-16T18:48:08.371563",
                         "created_by": "glimmer@example.com",
-                        "metadata": {
+                        "notebook": {
                             "metadata": {
                                 "language_info": {
                                     "codemirror_mode": {
                                         "name": "ipython",
-                                        "version": 3
+                                        "version": 3,
                                     },
                                     "file_extension": ".py",
                                     "mimetype": "text/x-python",
                                     "name": "python",
                                     "nbconvert_exporter": "python",
                                     "pygments_lexer": "ipython3",
-                                    "version": "3.8.5-final"
+                                    "version": "3.8.5-final",
                                 },
                                 "orig_nbformat": 2,
                                 "kernelspec": {
@@ -123,12 +150,42 @@ def test_find_by_id(find_by_id_data):
                                         "interpreter": {
                                             "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
                                         }
-                                    }
-                                }
+                                    },
+                                },
                             },
                             "nbformat": 4,
-                            "nbformat_minor": 2
+                            "nbformat_minor": 2,
+                            "cells": [
+                                {
+                                    "cell_type": "code",
+                                    "execution_count": None,
+                                    "metadata": {},
+                                    "outputs": [],
+                                    "source": [
+                                        'message = carrot_run_data["results"]["Greeting"]\n',
+                                        "print(message)",
+                                    ],
+                                },
+                                {
+                                    "cell_type": "code",
+                                    "execution_count": None,
+                                    "metadata": {},
+                                    "outputs": [],
+                                    "source": [
+                                        'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                        "print(message_file.read())",
+                                    ],
+                                },
+                                {
+                                    "cell_type": "code",
+                                    "execution_count": None,
+                                    "metadata": {},
+                                    "outputs": [],
+                                    "source": ["print('Thanks')"],
+                                },
+                            ],
                         },
+                        "config": {"cpu": 2},
                         "description": "This report leads the Rebellion",
                         "name": "Queen of Bright Moon report",
                         "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
@@ -141,7 +198,8 @@ def test_find_by_id(find_by_id_data):
                 ("report_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("name", ""),
                 ("description", ""),
-                ("metadata", ""),
+                ("notebook", ""),
+                ("config", ""),
                 ("created_by", ""),
                 ("created_before", ""),
                 ("created_after", ""),
@@ -181,6 +239,7 @@ def test_find(find_data):
         find_data["params"][7][1],
         find_data["params"][8][1],
         find_data["params"][9][1],
+        find_data["params"][10][1],
     )
     assert result == find_data["return"]
 
@@ -191,25 +250,18 @@ def test_find(find_data):
             "params": [
                 ("name", "Horde Emperor report"),
                 ("description", "This report rules the known universe"),
-                ("created_by", "hordeprime@example.com"),
-            ],
-            "return": pprint.PrettyPrinter().pformat(
-                {
-                    "created_at": "2020-09-16T18:48:08.371563",
-                    "created_by": "hordeprime@example.com",
-                    "metadata": {
+                (
+                    "notebook",
+                    {
                         "metadata": {
                             "language_info": {
-                                "codemirror_mode": {
-                                    "name": "ipython",
-                                    "version": 3
-                                },
+                                "codemirror_mode": {"name": "ipython", "version": 3},
                                 "file_extension": ".py",
                                 "mimetype": "text/x-python",
                                 "name": "python",
                                 "nbconvert_exporter": "python",
                                 "pygments_lexer": "ipython3",
-                                "version": "3.8.5-final"
+                                "version": "3.8.5-final",
                             },
                             "orig_nbformat": 2,
                             "kernelspec": {
@@ -219,12 +271,104 @@ def test_find(find_data):
                                     "interpreter": {
                                         "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
                                     }
-                                }
-                            }
+                                },
+                            },
                         },
                         "nbformat": 4,
-                        "nbformat_minor": 2
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
                     },
+                ),
+                ("config", {"cpu": 2}),
+                ("created_by", "hordeprime@example.com"),
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:08.371563",
+                    "created_by": "hordeprime@example.com",
+                    "notebook": {
+                        "metadata": {
+                            "language_info": {
+                                "codemirror_mode": {"name": "ipython", "version": 3},
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8.5-final",
+                            },
+                            "orig_nbformat": 2,
+                            "kernelspec": {
+                                "name": "python3",
+                                "display_name": "Python 3.8.5 64-bit",
+                                "metadata": {
+                                    "interpreter": {
+                                        "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                    }
+                                },
+                            },
+                        },
+                        "nbformat": 4,
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
+                    },
+                    "config": {"cpu": 2},
                     "description": "This report rules the known universe",
                     "name": "Horde Emperor report",
                     "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
@@ -235,6 +379,64 @@ def test_find(find_data):
             "params": [
                 ("name", "Horde Emperor report"),
                 ("description", "This report rules the known universe"),
+                (
+                    "notebook",
+                    {
+                        "metadata": {
+                            "language_info": {
+                                "codemirror_mode": {"name": "ipython", "version": 3},
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8.5-final",
+                            },
+                            "orig_nbformat": 2,
+                            "kernelspec": {
+                                "name": "python3",
+                                "display_name": "Python 3.8.5 64-bit",
+                                "metadata": {
+                                    "interpreter": {
+                                        "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                    }
+                                },
+                            },
+                        },
+                        "nbformat": 4,
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
+                    },
+                ),
+                ("config", {"cpu": 2}),
                 ("created_by", "hordeprime@example.com"),
             ],
             "return": pprint.PrettyPrinter().pformat(
@@ -251,9 +453,9 @@ def create_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).create(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).create(
-        "reports", request.param["params"]
-    ).thenReturn(request.param["return"])
+    mockito.when(request_handler).create("reports", request.param["params"]).thenReturn(
+        request.param["return"]
+    )
     return request.param
 
 
@@ -262,6 +464,8 @@ def test_create(create_data):
         create_data["params"][0][1],
         create_data["params"][1][1],
         create_data["params"][2][1],
+        create_data["params"][3][1],
+        create_data["params"][4][1],
     )
     assert result == create_data["return"]
 
@@ -276,24 +480,18 @@ def test_create(create_data):
                     "description",
                     "This report is trying to learn to process anger better",
                 ),
-            ],
-            "return": pprint.PrettyPrinter().pformat(
-                {
-                    "created_at": "2020-09-16T18:48:08.371563",
-                    "created_by": "catra@example.com",
-                    "metadata": {
+                (
+                    "notebook",
+                    {
                         "metadata": {
                             "language_info": {
-                                "codemirror_mode": {
-                                    "name": "ipython",
-                                    "version": 3
-                                },
+                                "codemirror_mode": {"name": "ipython", "version": 3},
                                 "file_extension": ".py",
                                 "mimetype": "text/x-python",
                                 "name": "python",
                                 "nbconvert_exporter": "python",
                                 "pygments_lexer": "ipython3",
-                                "version": "3.8.5-final"
+                                "version": "3.8.5-final",
                             },
                             "orig_nbformat": 2,
                             "kernelspec": {
@@ -303,12 +501,103 @@ def test_create(create_data):
                                     "interpreter": {
                                         "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
                                     }
-                                }
-                            }
+                                },
+                            },
                         },
                         "nbformat": 4,
-                        "nbformat_minor": 2
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
                     },
+                ),
+                ("config", {"cpu": 2}),
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "created_at": "2020-09-16T18:48:08.371563",
+                    "created_by": "catra@example.com",
+                    "notebook": {
+                        "metadata": {
+                            "language_info": {
+                                "codemirror_mode": {"name": "ipython", "version": 3},
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8.5-final",
+                            },
+                            "orig_nbformat": 2,
+                            "kernelspec": {
+                                "name": "python3",
+                                "display_name": "Python 3.8.5 64-bit",
+                                "metadata": {
+                                    "interpreter": {
+                                        "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                    }
+                                },
+                            },
+                        },
+                        "nbformat": 4,
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
+                    },
+                    "config": {"cpu": 2},
                     "description": "This report is trying to learn to process anger better",
                     "name": "Catra report",
                     "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
@@ -317,7 +606,68 @@ def test_create(create_data):
         },
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
-            "params": [("name", "Angella report"), ("description", "")],
+            "params": [
+                ("name", "Angella report"),
+                ("description", ""),
+                (
+                    "notebook",
+                    {
+                        "metadata": {
+                            "language_info": {
+                                "codemirror_mode": {"name": "ipython", "version": 3},
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8.5-final",
+                            },
+                            "orig_nbformat": 2,
+                            "kernelspec": {
+                                "name": "python3",
+                                "display_name": "Python 3.8.5 64-bit",
+                                "metadata": {
+                                    "interpreter": {
+                                        "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                    }
+                                },
+                            },
+                        },
+                        "nbformat": 4,
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
+                    },
+                ),
+                ("config", {"cpu": 2}),
+            ],
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "title": "Server error",
@@ -343,6 +693,8 @@ def test_update(update_data):
         update_data["id"],
         update_data["params"][0][1],
         update_data["params"][1][1],
+        update_data["params"][2][1],
+        update_data["params"][3][1],
     )
     assert result == update_data["return"]
 
@@ -352,9 +704,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -373,9 +723,9 @@ def delete_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).delete(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).delete(
-        "reports", request.param["id"]
-    ).thenReturn(request.param["return"])
+    mockito.when(request_handler).delete("reports", request.param["id"]).thenReturn(
+        request.param["return"]
+    )
     return request.param
 
 

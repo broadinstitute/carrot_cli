@@ -1,11 +1,11 @@
 import json
 import pprint
+import urllib
+
+import requests
 
 import mockito
 import pytest
-import requests
-import urllib
-
 from carrot_cli.config import manager as config
 from carrot_cli.rest import request_handler
 
@@ -236,9 +236,7 @@ def test_update(update_data):
             "entity": "pipelines",
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -248,7 +246,7 @@ def test_update(update_data):
                 {
                     "title": "No template found",
                     "status": 404,
-                    "detail": "No template found for the specified id"
+                    "detail": "No template found for the specified id",
                 }
             ),
         },
@@ -272,10 +270,9 @@ def delete_data(request):
 
 
 def test_delete(delete_data):
-    result = request_handler.delete(
-        delete_data["entity"], delete_data["id"]
-    )
+    result = request_handler.delete(delete_data["entity"], delete_data["id"])
     assert result == delete_data["return"]
+
 
 @pytest.fixture(
     params=[
@@ -568,9 +565,9 @@ def create_map_data(request):
     )
     # Get params converted to dict
     params = dict(request.param["params"])
-    mockito.when(request_handler).send_request("POST", address, body=params, params=None).thenReturn(
-        request.param["return"]
-    )
+    mockito.when(request_handler).send_request(
+        "POST", address, body=params, params=None
+    ).thenReturn(request.param["return"])
     return request.param
 
 
@@ -654,9 +651,7 @@ def test_find_map_by_ids(find_map_by_ids_data):
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -701,6 +696,7 @@ def test_delete_map_by_ids(delete_map_by_ids_data):
         delete_map_by_ids_data["entity2_id"],
     )
     assert result == delete_map_by_ids_data["return"]
+
 
 @pytest.fixture(
     params=[
@@ -781,130 +777,6 @@ def test_find_maps(find_maps_data):
     )
     assert result == find_maps_data["return"]
 
-@pytest.fixture(
-    params=[
-        {
-            "entity1": "reports",
-            "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
-            "entity2": "sections",
-            "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "name": "Huntara",
-            "return": pprint.PrettyPrinter().pformat(
-                {
-                    "report_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
-                    "section_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-                    "name": "Huntara",
-                    "position": 2,
-                    "created_at": "2020-09-24T19:07:59.311462",
-                    "created_by": "crimson_waste@example.com",
-                }
-            ),
-        },
-        {
-            "entity1": "reports",
-            "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
-            "entity2": "sections",
-            "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "name": "Flutterina",
-            "return": pprint.PrettyPrinter().pformat(
-                {
-                    "title": "No report_section mapping found",
-                    "status": 404,
-                    "detail": "No report_section mapping found with the specified IDs and name",
-                }
-            ),
-        },
-    ]
-)
-def find_map_by_ids_and_name_data(request):
-    # Set all requests to return None so only the one we expect will return a value
-    mockito.when(request_handler).send_request(...).thenReturn(None)
-    # Instead of setting and loading config from a file, we'll just mock this
-    mockito.when(config).load_var("carrot_server_address").thenReturn("example.com")
-    # Mock up request response
-    address = "http://%s/api/v1/%s/%s/%s/%s/%s" % (
-        "example.com",
-        request.param["entity1"],
-        request.param["entity1_id"],
-        request.param["entity2"],
-        request.param["entity2_id"],
-        request.param["name"],
-    )
-    mockito.when(request_handler).send_request("GET", address).thenReturn(
-        request.param["return"]
-    )
-    return request.param
-
-
-def test_find_map_by_ids_and_name(find_map_by_ids_and_name_data):
-    result = request_handler.find_map_by_ids_and_name(
-        find_map_by_ids_and_name_data["entity1"],
-        find_map_by_ids_and_name_data["entity1_id"],
-        find_map_by_ids_and_name_data["entity2"],
-        find_map_by_ids_and_name_data["entity2_id"],
-        find_map_by_ids_and_name_data["name"],
-    )
-    assert result == find_map_by_ids_and_name_data["return"]
-
-@pytest.fixture(
-    params=[
-        {
-            "entity1": "reports",
-            "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
-            "entity2": "sections",
-            "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "name": "Swift Wind",
-            "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
-            ),
-        },
-        {
-            "entity1": "reports",
-            "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
-            "entity2": "sections",
-            "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "name": "Micah",
-            "return": pprint.PrettyPrinter().pformat(
-                {
-                    "title": "No report_section mapping found",
-                    "status": 404,
-                    "detail": "No report_section mapping found with the specified ID",
-                }
-            ),
-        },
-    ]
-)
-def delete_map_by_ids_and_name_data(request):
-    # Set all requests to return None so only the one we expect will return a value
-    mockito.when(request_handler).send_request(...).thenReturn(None)
-    # Instead of setting and loading config from a file, we'll just mock this
-    mockito.when(config).load_var("carrot_server_address").thenReturn("example.com")
-    # Mock up request response
-    address = "http://%s/api/v1/%s/%s/%s/%s/%s" % (
-        "example.com",
-        request.param["entity1"],
-        request.param["entity1_id"],
-        request.param["entity2"],
-        request.param["entity2_id"],
-        urllib.parse.quote(request.param["name"]),
-    )
-    mockito.when(request_handler).send_request("DELETE", address).thenReturn(
-        request.param["return"]
-    )
-    return request.param
-
-
-def test_delete_map_by_ids_and_name(delete_map_by_ids_and_name_data):
-    result = request_handler.delete_map_by_ids_and_name(
-        delete_map_by_ids_and_name_data["entity1"],
-        delete_map_by_ids_and_name_data["entity1_id"],
-        delete_map_by_ids_and_name_data["entity2"],
-        delete_map_by_ids_and_name_data["entity2_id"],
-        delete_map_by_ids_and_name_data["name"],
-    )
-    assert result == delete_map_by_ids_and_name_data["return"]
 
 @pytest.fixture(
     params=[

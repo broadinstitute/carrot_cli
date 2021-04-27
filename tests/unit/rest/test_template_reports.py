@@ -2,7 +2,6 @@ import pprint
 
 import mockito
 import pytest
-
 from carrot_cli.rest import request_handler, template_reports
 
 
@@ -11,17 +10,11 @@ from carrot_cli.rest import request_handler, template_reports
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "input_map": {
-                "input1": "val1"
-            },
             "created_by": "rogelio@example.com",
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "input_map": {
-                        "input1": "val1"
-                    },
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -30,9 +23,6 @@ from carrot_cli.rest import request_handler, template_reports
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "input_map": {
-                "input1": "val1"
-            },
             "created_by": "rogelio@example.com",
             "return": pprint.PrettyPrinter().pformat(
                 {
@@ -49,7 +39,6 @@ def create_map_data(request):
     mockito.when(request_handler).create_map(...).thenReturn(None)
     # Mock up request response
     params = [
-        ("input_map", request.param["input_map"]),
         ("created_by", request.param["created_by"]),
     ]
     mockito.when(request_handler).create_map(
@@ -66,7 +55,6 @@ def test_create_map(create_map_data):
     report = template_reports.create_map(
         create_map_data["template_id"],
         create_map_data["report_id"],
-        create_map_data["input_map"],
         create_map_data["created_by"],
     )
     assert report == create_map_data["return"]
@@ -78,7 +66,6 @@ def test_create_map(create_map_data):
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "params": [
                 ("report_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
-                ("input_map", {"input1": "val1"}),
                 ("created_before", ""),
                 ("created_after", ""),
                 ("created_by", "rogelio@example.com"),
@@ -90,9 +77,6 @@ def test_create_map(create_map_data):
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "input_map": {
-                        "input1": "val1"
-                    },
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -102,7 +86,6 @@ def test_create_map(create_map_data):
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "params": [
                 ("report_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
-                ("input_map", ""),
                 ("created_before", ""),
                 ("created_after", ""),
                 ("created_by", ""),
@@ -140,7 +123,6 @@ def test_find_maps(find_maps_data):
         find_maps_data["params"][4][1],
         find_maps_data["params"][5][1],
         find_maps_data["params"][6][1],
-        find_maps_data["params"][7][1],
     )
     assert report == find_maps_data["return"]
 
@@ -154,9 +136,6 @@ def test_find_maps(find_maps_data):
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "input_map": {
-                        "input1": "val1"
-                    },
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -191,15 +170,14 @@ def test_find_maps_by_id(find_map_by_ids_data):
     )
     assert report == find_map_by_ids_data["return"]
 
+
 @pytest.fixture(
     params=[
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {

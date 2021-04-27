@@ -5,8 +5,7 @@ import click
 
 from .. import file_util
 from ..config import manager as config
-from ..rest import runs, template_results, templates, template_reports
-from .. import file_util
+from ..rest import runs, template_reports, template_results, templates
 
 LOGGER = logging.getLogger(__name__)
 
@@ -184,11 +183,13 @@ def update(id, name, description, test_wdl, eval_wdl):
     """Update template with ID with the specified parameters"""
     print(templates.update(id, name, description, test_wdl, eval_wdl))
 
+
 @main.command(name="delete")
 @click.argument("id")
 def delete(id):
     """Delete a template by its ID, if it has no tests associated with it"""
     print(templates.delete(id))
+
 
 @main.command(name="find_runs")
 @click.argument("id")
@@ -460,6 +461,7 @@ def find_result_maps(
         )
     )
 
+
 @main.command(name="delete_result_map_by_id")
 @click.argument("id")
 @click.argument("result_id")
@@ -471,15 +473,14 @@ def delete_result_map_by_id(id, result_id):
     """
     print(template_results.delete_map_by_ids(id, result_id))
 
+
 @main.command(name="map_to_report")
 @click.argument("id")
 @click.argument("report_id")
-@click.argument("input_map")
 @click.option("--created_by", default="", help="Email of the creator of the mapping")
-def map_to_report(id, report_id, input_map, created_by):
+def map_to_report(id, report_id, created_by):
     """
-    Map the template specified by ID to the report specified by REPORT_ID with a mapping of report
-    inputs to values, divided by section, in a json file specified by INPUT_MAP
+    Map the template specified by ID to the report specified by REPORT_ID
     """
     # If created_by is not set and there is an email config variable, fill with that
     if created_by == "":
@@ -492,7 +493,7 @@ def map_to_report(id, report_id, input_map, created_by):
                 "there must be a value set for email."
             )
             sys.exit(1)
-    print(template_reports.create_map(id, report_id, file_util.read_file_to_json(input_map), created_by))
+    print(template_reports.create_map(id, report_id, created_by))
 
 
 @main.command(name="find_report_map_by_id")
@@ -509,12 +510,6 @@ def find_report_map_by_id(id, report_id):
 @main.command(name="find_report_maps")
 @click.argument("id")
 @click.option("--report_id", default="", help="The id of the report")
-@click.option(
-    "--input_map",
-    default="",
-    help="A json file containing a mapping of report inputs to their values (either test inputs "
-    "eval inputs, results, or string literals, divided up by section",
-)
 @click.option(
     "--created_before",
     default="",
@@ -551,7 +546,6 @@ def find_report_map_by_id(id, report_id):
 def find_report_maps(
     id,
     report_id,
-    input_map,
     created_before,
     created_after,
     created_by,
@@ -567,7 +561,6 @@ def find_report_maps(
         template_reports.find_maps(
             id,
             report_id,
-            file_util.read_file_to_json(input_map),
             created_before,
             created_after,
             created_by,
@@ -576,6 +569,7 @@ def find_report_maps(
             offset,
         )
     )
+
 
 @main.command(name="delete_report_map_by_id")
 @click.argument("id")

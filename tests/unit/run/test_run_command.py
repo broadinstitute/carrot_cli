@@ -1,12 +1,12 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
-from carrot_cli.rest import runs, run_reports
 from carrot_cli.config import manager as config
+from carrot_cli.rest import run_reports, runs
 
 
 @pytest.fixture(autouse=True)
@@ -14,9 +14,11 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
+
 
 @pytest.fixture(
     params=[
@@ -66,14 +68,13 @@ def test_find_by_id(find_by_id_data):
     result = runner.invoke(carrot, find_by_id_data["args"])
     assert result.output == find_by_id_data["return"] + "\n"
 
+
 @pytest.fixture(
     params=[
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -103,6 +104,7 @@ def test_delete(delete_data):
     result = runner.invoke(carrot, delete_data["args"])
     assert result.output == delete_data["return"] + "\n"
 
+
 @pytest.fixture(
     params=[
         {
@@ -113,13 +115,13 @@ def test_delete(delete_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "--created_by",
                 "adora@example.com",
-                "--delete_failed"
+                "--delete_failed",
             ],
             "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "adora@example.com",
-                True
+                True,
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
@@ -143,7 +145,7 @@ def test_delete(delete_data):
             ],
             "params": [],
             "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "there must be a value set for email.",
         },
         {
             "args": ["run", "create_report"],
@@ -194,12 +196,10 @@ def test_create_report(create_report_data):
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "status": "succeeded",
                     "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
-                    "results": {
-                        "result1": "val1"
-                    },
+                    "results": {"result1": "val1"},
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                    "finished_at": "2020-09-24T21:07:59.311462"
+                    "finished_at": "2020-09-24T21:07:59.311462",
                 }
             ),
         },
@@ -268,9 +268,7 @@ def test_find_report_by_ids(find_report_by_ids_data):
                 "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "succeeded",
                 "d9855002-6b71-429c-a4de-8e90222488cd",
-                {
-                    "result1": "val1"
-                },
+                {"result1": "val1"},
                 "2020-10-00T00:00:00.000000",
                 "2020-09-00T00:00:00.000000",
                 "adora@example.com",
@@ -287,12 +285,10 @@ def test_find_report_by_ids(find_report_by_ids_data):
                         "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "status": "succeeded",
                         "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
-                        "results": {
-                            "result1": "val1"
-                        },
+                        "results": {"result1": "val1"},
                         "created_at": "2020-09-24T19:07:59.311462",
                         "created_by": "adora@example.com",
-                        "finished_at": "2020-09-24T21:07:59.311462"
+                        "finished_at": "2020-09-24T21:07:59.311462",
                     }
                 ]
             ),
@@ -370,9 +366,7 @@ def test_find_reports(find_reports_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {

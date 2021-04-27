@@ -3,9 +3,9 @@ import sys
 
 import click
 
-from ..rest import runs, run_reports
 from .. import file_util
 from ..config import manager as config
+from ..rest import run_reports, runs
 
 LOGGER = logging.getLogger(__name__)
 
@@ -14,17 +14,20 @@ LOGGER = logging.getLogger(__name__)
 def main():
     """Commands for searching, creating, and updating runs"""
 
+
 @main.command(name="find_by_id")
 @click.argument("id")
 def find_by_id(id):
     """Retrieve a run by its ID"""
     print(runs.find_by_id(id))
 
+
 @main.command(name="delete")
 @click.argument("id")
 def delete(id):
     """Delete a run by its ID, if the run has a failed status"""
     print(runs.delete(id))
+
 
 @main.command(name="create_report")
 @click.argument("id")
@@ -34,11 +37,11 @@ def delete(id):
     "--delete_failed",
     is_flag=True,
     help="If set, and there is a failed record for this run with this report, will overwrite that "
-    "record"
+    "record",
 )
 def create_report(id, report_id, created_by, delete_failed):
     """
-    Start a job to generate a filled report using data from the run specified by ID with the 
+    Start a job to generate a filled report using data from the run specified by ID with the
     report specified by REPORT_ID
     """
     # If created_by is not set and there is an email config variable, fill with that
@@ -70,9 +73,7 @@ def find_report_by_ids(id, report_id):
 @click.argument("id")
 @click.option("--report_id", default="", help="The id of the report")
 @click.option(
-    "--status",
-    default="",
-    help="The status of the job generating the report"
+    "--status", default="", help="The status of the job generating the report"
 )
 @click.option(
     "--cromwell_job_id",
@@ -95,7 +96,9 @@ def find_report_by_ids(id, report_id):
     help="Lower bound for report record's created_at value, in the format YYYY-MM-DDThh:mm:ss.ssssss",
 )
 @click.option(
-    "--created_by", default="", help="Email of the creator of the report record, case sensitive"
+    "--created_by",
+    default="",
+    help="Email of the creator of the report record, case sensitive",
 )
 @click.option(
     "--finished_before",
@@ -163,6 +166,7 @@ def find_reports(
             offset,
         )
     )
+
 
 @main.command(name="delete_report_by_ids")
 @click.argument("id")
