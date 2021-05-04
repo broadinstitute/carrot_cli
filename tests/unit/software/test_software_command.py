@@ -211,7 +211,7 @@ def test_find(find_data):
                 "example.com/repo.git",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -238,10 +238,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     test_software = runner.invoke(carrot, create_data["args"])
-    assert test_software.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert test_software.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(

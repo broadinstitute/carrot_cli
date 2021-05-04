@@ -144,7 +144,7 @@ def test_delete(delete_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -171,10 +171,13 @@ def create_report_data(request):
     return request.param
 
 
-def test_create_report(create_report_data):
+def test_create_report(create_report_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_report_data["args"])
-    assert result.output == create_report_data["return"] + "\n"
+    if "logging" in create_report_data:
+        assert create_report_data["logging"] in caplog.text
+    else:
+        assert result.output == create_report_data["return"] + "\n"
 
 
 @pytest.fixture(

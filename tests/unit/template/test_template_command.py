@@ -244,7 +244,7 @@ def test_find(find_data):
                 "example.com/she-ra_eval.wdl",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -273,10 +273,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_data["args"])
-    assert result.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert result.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -490,7 +493,7 @@ def test_delete(delete_data):
                 "nonexistent_file.json",
             ],
             "params": [],
-            "return": "Failed to locate file with name nonexistent_file.json",
+            "logging": "Encountered FileNotFound error when trying to read nonexistent_file.json",
         },
     ]
 )
@@ -520,10 +523,13 @@ def find_runs_data(request):
     return request.param
 
 
-def test_find_runs(find_runs_data):
+def test_find_runs(find_runs_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, find_runs_data["args"])
-    assert result.output == find_runs_data["return"] + "\n"
+    if "logging" in find_runs_data:
+        assert find_runs_data["logging"] in caplog.text
+    else:
+        assert result.output == find_runs_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -697,7 +703,7 @@ def test_unsubscribe(unsubscribe_data):
                 "out_horde_tanks",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -724,10 +730,13 @@ def map_to_result_data(request):
     return request.param
 
 
-def test_map_to_result(map_to_result_data):
+def test_map_to_result(map_to_result_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, map_to_result_data["args"])
-    assert result.output == map_to_result_data["return"] + "\n"
+    if "logging" in map_to_result_data:
+        assert map_to_result_data["logging"] in caplog.text
+    else:
+        assert result.output == map_to_result_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -957,7 +966,7 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -983,10 +992,13 @@ def map_to_report_data(request):
     return request.param
 
 
-def test_map_to_report(map_to_report_data):
+def test_map_to_report(map_to_report_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, map_to_report_data["args"])
-    assert result.output == map_to_report_data["return"] + "\n"
+    if "logging" in map_to_report_data:
+        assert map_to_report_data["logging"] in caplog.text
+    else:
+        assert result.output == map_to_report_data["return"] + "\n"
 
 
 @pytest.fixture(

@@ -211,7 +211,7 @@ def test_find(find_data):
                 "numeric",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -238,10 +238,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_data["args"])
-    assert result.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert result.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -374,7 +377,7 @@ def test_delete(delete_data):
                 "out_horde_tanks",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
             "there must be a value set for email.",
         },
         {
@@ -401,7 +404,10 @@ def map_to_template_data(request):
     return request.param
 
 
-def test_map_to_template(map_to_template_data):
+def test_map_to_template(map_to_template_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, map_to_template_data["args"])
-    assert result.output == map_to_template_data["return"] + "\n"
+    if "logging" in map_to_template_data:
+        assert map_to_template_data["logging"] in caplog.text
+    else:
+        assert result.output == map_to_template_data["return"] + "\n"

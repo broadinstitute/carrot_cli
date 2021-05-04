@@ -151,7 +151,7 @@ def create(name, pipeline_id, description, test_wdl, eval_wdl, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
@@ -323,7 +323,7 @@ def subscribe(id, email):
             email = email_config_val
         # If the config variable is also not set, print a message to the user and exit
         else:
-            print(
+            LOGGER.error(
                 "Subscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable"
             )
@@ -348,7 +348,7 @@ def unsubscribe(id, email):
             email = email_config_val
         # If the config variable is also not set, print a message to the user and exit
         else:
-            print(
+            LOGGER.error(
                 "Unsubscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable"
             )
@@ -372,7 +372,7 @@ def map_to_result(id, result_id, result_key, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
@@ -488,7 +488,7 @@ def map_to_report(id, report_id, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
