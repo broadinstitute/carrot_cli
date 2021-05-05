@@ -100,7 +100,7 @@ def find(
     # Load data from files for test_input_defaults and eval_input_defaults, if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
     eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
-    
+
     print(
         tests.find(
             test_id,
@@ -153,7 +153,7 @@ def create(
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
@@ -236,7 +236,7 @@ def run(id, name, test_input, eval_input, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
@@ -377,7 +377,7 @@ def subscribe(id, email):
             email = email_config_val
         # If the config variable is also not set, print a message to the user and exit
         else:
-            print(
+            LOGGER.error(
                 "Subscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable"
             )
@@ -402,7 +402,7 @@ def unsubscribe(id, email):
             email = email_config_val
         # If the config variable is also not set, print a message to the user and exit
         else:
-            print(
+            LOGGER.error(
                 "Unsubscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable"
             )

@@ -1,10 +1,11 @@
 import json
 import pprint
+import urllib
+
+import requests
 
 import mockito
 import pytest
-import requests
-
 from carrot_cli.config import manager as config
 from carrot_cli.rest import request_handler
 
@@ -235,9 +236,7 @@ def test_update(update_data):
             "entity": "pipelines",
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -247,7 +246,7 @@ def test_update(update_data):
                 {
                     "title": "No template found",
                     "status": 404,
-                    "detail": "No template found for the specified id"
+                    "detail": "No template found for the specified id",
                 }
             ),
         },
@@ -271,10 +270,9 @@ def delete_data(request):
 
 
 def test_delete(delete_data):
-    result = request_handler.delete(
-        delete_data["entity"], delete_data["id"]
-    )
+    result = request_handler.delete(delete_data["entity"], delete_data["id"])
     assert result == delete_data["return"]
+
 
 @pytest.fixture(
     params=[
@@ -567,9 +565,9 @@ def create_map_data(request):
     )
     # Get params converted to dict
     params = dict(request.param["params"])
-    mockito.when(request_handler).send_request("POST", address, body=params).thenReturn(
-        request.param["return"]
-    )
+    mockito.when(request_handler).send_request(
+        "POST", address, body=params, params=None
+    ).thenReturn(request.param["return"])
     return request.param
 
 
@@ -653,9 +651,7 @@ def test_find_map_by_ids(find_map_by_ids_data):
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -700,6 +696,7 @@ def test_delete_map_by_ids(delete_map_by_ids_data):
         delete_map_by_ids_data["entity2_id"],
     )
     assert result == delete_map_by_ids_data["return"]
+
 
 @pytest.fixture(
     params=[

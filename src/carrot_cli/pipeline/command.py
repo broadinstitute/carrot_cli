@@ -3,9 +3,9 @@ import sys
 
 import click
 
+from .. import file_util
 from ..config import manager as config
 from ..rest import pipelines, runs
-from .. import file_util
 
 LOGGER = logging.getLogger(__name__)
 
@@ -106,7 +106,7 @@ def create(name, description, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
@@ -128,6 +128,7 @@ def update(id, name, description):
 def delete(id):
     """Delete a pipeline by its ID, if the pipeline has no templates associated with it."""
     print(pipelines.delete(id))
+
 
 @main.command(name="find_runs")
 @click.argument("id")
@@ -261,7 +262,7 @@ def subscribe(id, email):
             email = email_config_val
         # If the config variable is also not set, print a message to the user and exit
         else:
-            print(
+            LOGGER.error(
                 "Subscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable"
             )
@@ -286,7 +287,7 @@ def unsubscribe(id, email):
             email = email_config_val
         # If the config variable is also not set, print a message to the user and exit
         else:
-            print(
+            LOGGER.error(
                 "Unsubscribing requires that an email address is supplied either via the --email"
                 "flag or by setting the email config variable"
             )

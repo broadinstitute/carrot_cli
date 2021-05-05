@@ -1,6 +1,7 @@
 import json
 import logging
 import pprint
+import urllib
 
 import requests
 
@@ -57,6 +58,7 @@ def update(entity, id, params):
             body[param[0]] = param[1]
     # Build and send request
     return send_request("PUT", address, body=body)
+
 
 def delete(entity, id):
     """
@@ -126,7 +128,7 @@ def find_runs(entity, id, params):
     return send_request("GET", address, params=params)
 
 
-def create_map(entity1, entity1_id, entity2, entity2_id, params):
+def create_map(entity1, entity1_id, entity2, entity2_id, params, query_params=None):
     """
     Submits a request for creating a mapping between entity1 and entity2, with the specified
     params.
@@ -142,7 +144,7 @@ def create_map(entity1, entity1_id, entity2, entity2_id, params):
         if param[1] != "":
             body[param[0]] = param[1]
     # Create and send request
-    return send_request("POST", address, body=body)
+    return send_request("POST", address, body=body, params=query_params)
 
 
 def find_map_by_ids(entity1, entity1_id, entity2, entity2_id):
@@ -171,6 +173,7 @@ def find_maps(entity1, entity1_id, entity2, params):
     params = list(filter(lambda param: param[1] != "", params))
     # Create and send request
     return send_request("GET", address, params=params)
+
 
 def delete_map_by_ids(entity1, entity1_id, entity2, entity2_id):
     """

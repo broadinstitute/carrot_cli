@@ -1,9 +1,9 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
 from carrot_cli.rest import runs, tests
@@ -14,9 +14,11 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
+
 
 @pytest.fixture(
     params=[
@@ -244,8 +246,8 @@ def test_find(find_data):
                 "tests/data/mock_eval_input.json",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": ["test", "create"],
@@ -273,10 +275,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_data["args"])
-    assert result.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert result.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -300,7 +305,7 @@ def test_create(create_data):
                 "New Sword of Protection test",
                 "This new test replaced the broken one",
                 {"in_greeted": "Cool Person"},
-                {"in_output_filename": "test_greeting.txt"}
+                {"in_output_filename": "test_greeting.txt"},
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
@@ -351,9 +356,7 @@ def test_update(update_data):
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -461,8 +464,8 @@ def test_delete(delete_data):
                 "tests/data/mock_eval_input.json",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": [
@@ -479,7 +482,7 @@ def test_delete(delete_data):
                 "glimmer@example.com",
             ],
             "params": [],
-            "return": "Failed to locate file with name nonexistent_file.json",
+            "logging": "Encountered FileNotFound error when trying to read nonexistent_file.json",
         },
     ]
 )
@@ -498,10 +501,13 @@ def run_data(request):
     return request.param
 
 
-def test_run(run_data):
+def test_run(run_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, run_data["args"])
-    assert result.output == run_data["return"] + "\n"
+    if "logging" in run_data:
+        assert run_data["logging"] in caplog.text
+    else:
+        assert result.output == run_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -612,7 +618,7 @@ def test_run(run_data):
                 "nonexistent_file.json",
             ],
             "params": [],
-            "return": "Failed to locate file with name nonexistent_file.json",
+            "logging": "Encountered FileNotFound error when trying to read nonexistent_file.json",
         },
     ]
 )
@@ -642,10 +648,13 @@ def find_runs_data(request):
     return request.param
 
 
-def test_find_runs(find_runs_data):
+def test_find_runs(find_runs_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, find_runs_data["args"])
-    assert result.output == find_runs_data["return"] + "\n"
+    if "logging" in find_runs_data:
+        assert find_runs_data["logging"] in caplog.text
+    else:
+        assert result.output == find_runs_data["return"] + "\n"
 
 
 @pytest.fixture(

@@ -1,12 +1,12 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
-from carrot_cli.rest import runs, template_results, templates
+from carrot_cli.rest import runs, template_reports, template_results, templates
 
 
 @pytest.fixture(autouse=True)
@@ -14,9 +14,11 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
+
 
 @pytest.fixture(
     params=[
@@ -242,8 +244,8 @@ def test_find(find_data):
                 "example.com/she-ra_eval.wdl",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": ["template", "create"],
@@ -271,10 +273,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_data["args"])
-    assert result.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert result.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -349,9 +354,7 @@ def test_update(update_data):
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -446,7 +449,7 @@ def test_delete(delete_data):
                         "status": "succeeded",
                         "results": {},
                         "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
-                        "eval_cromwell_job_id":"03958293-6b71-429c-a4de-8e90222488cd",
+                        "eval_cromwell_job_id": "03958293-6b71-429c-a4de-8e90222488cd",
                         "name": "Queen of Bright Moon run",
                         "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -490,7 +493,7 @@ def test_delete(delete_data):
                 "nonexistent_file.json",
             ],
             "params": [],
-            "return": "Failed to locate file with name nonexistent_file.json",
+            "logging": "Encountered FileNotFound error when trying to read nonexistent_file.json",
         },
     ]
 )
@@ -520,10 +523,13 @@ def find_runs_data(request):
     return request.param
 
 
-def test_find_runs(find_runs_data):
+def test_find_runs(find_runs_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, find_runs_data["args"])
-    assert result.output == find_runs_data["return"] + "\n"
+    if "logging" in find_runs_data:
+        assert find_runs_data["logging"] in caplog.text
+    else:
+        assert result.output == find_runs_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -697,8 +703,8 @@ def test_unsubscribe(unsubscribe_data):
                 "out_horde_tanks",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": ["template", "map_to_result"],
@@ -724,10 +730,13 @@ def map_to_result_data(request):
     return request.param
 
 
-def test_map_to_result(map_to_result_data):
+def test_map_to_result(map_to_result_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, map_to_result_data["args"])
-    assert result.output == map_to_result_data["return"] + "\n"
+    if "logging" in map_to_result_data:
+        assert map_to_result_data["logging"] in caplog.text
+    else:
+        assert result.output == map_to_result_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -893,9 +902,7 @@ def test_find_result_maps(find_result_maps_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -924,3 +931,259 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
     runner = CliRunner()
     result = runner.invoke(carrot, delete_result_map_by_id_data["args"])
     assert result.output == delete_result_map_by_id_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "map_to_report",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "--created_by",
+                "adora@example.com",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "adora@example.com",
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                }
+            ),
+        },
+        {
+            "args": [
+                "template",
+                "map_to_report",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "params": [],
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
+        },
+        {
+            "args": ["template", "map_to_report"],
+            "params": [],
+            "return": "Usage: carrot_cli template map_to_report [OPTIONS] ID REPORT_ID\n"
+            "Try 'carrot_cli template map_to_report --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
+    ]
+)
+def map_to_report_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_reports).create_map(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(template_reports).create_map(
+            request.param["params"][0],
+            request.param["params"][1],
+            request.param["params"][2],
+        ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_map_to_report(map_to_report_data, caplog):
+    runner = CliRunner()
+    result = runner.invoke(carrot, map_to_report_data["args"])
+    if "logging" in map_to_report_data:
+        assert map_to_report_data["logging"] in caplog.text
+    else:
+        assert result.output == map_to_report_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "find_report_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "input_map": {"section1": {"input1": "val1"}},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                }
+            ),
+        },
+        {
+            "args": ["template", "find_report_map_by_id"],
+            "params": [],
+            "return": "Usage: carrot_cli template find_report_map_by_id [OPTIONS] ID REPORT_ID\n"
+            "Try 'carrot_cli template find_report_map_by_id --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
+    ]
+)
+def find_report_map_by_id_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_reports).find_map_by_ids(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(template_reports).find_map_by_ids(
+            request.param["params"][0],
+            request.param["params"][1],
+        ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_find_report_map_by_id(find_report_map_by_id_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, find_report_map_by_id_data["args"])
+    assert result.output == find_report_map_by_id_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "find_report_maps",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--report_id",
+                "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "--created_by",
+                "adora@example.com",
+                "--created_before",
+                "2020-10-00T00:00:00.000000",
+                "--created_after",
+                "2020-09-00T00:00:00.000000",
+                "--sort",
+                "asc(input_map)",
+                "--limit",
+                1,
+                "--offset",
+                0,
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "adora@example.com",
+                "asc(input_map)",
+                1,
+                0,
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                [
+                    {
+                        "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        "report_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "created_at": "2020-09-24T19:07:59.311462",
+                        "created_by": "adora@example.com",
+                    }
+                ]
+            ),
+        },
+        {
+            "args": [
+                "template",
+                "find_report_maps",
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+            ],
+            "params": [
+                "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
+                "",
+                "",
+                "",
+                20,
+                0,
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {
+                    "title": "No template_reports found",
+                    "status": 404,
+                    "detail": "No template_reports found with the specified parameters",
+                }
+            ),
+        },
+    ]
+)
+def find_report_maps_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_reports).find_maps(...).thenReturn(None)
+    # Mock up request response
+    mockito.when(template_reports).find_maps(
+        request.param["params"][0],
+        request.param["params"][1],
+        request.param["params"][2],
+        request.param["params"][3],
+        request.param["params"][4],
+        request.param["params"][5],
+        request.param["params"][6],
+        request.param["params"][7],
+    ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_find_report_maps(find_report_maps_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, find_report_maps_data["args"])
+    assert result.output == find_report_maps_data["return"] + "\n"
+
+
+@pytest.fixture(
+    params=[
+        {
+            "args": [
+                "template",
+                "delete_report_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "return": pprint.PrettyPrinter().pformat(
+                {"message": "Successfully deleted 1 row"}
+            ),
+        },
+        {
+            "args": ["template", "delete_report_map_by_id"],
+            "params": [],
+            "return": "Usage: carrot_cli template delete_report_map_by_id [OPTIONS] ID REPORT_ID\n"
+            "Try 'carrot_cli template delete_report_map_by_id --help' for help.\n"
+            "\n"
+            "Error: Missing argument 'ID'.",
+        },
+    ]
+)
+def delete_report_map_by_id_data(request):
+    # Set all requests to return None so only the one we expect will return a value
+    mockito.when(template_reports).delete_map_by_ids(...).thenReturn(None)
+    # Mock up request response only if we expect it to get that far
+    if len(request.param["params"]) > 0:
+        mockito.when(template_reports).delete_map_by_ids(
+            request.param["params"][0],
+            request.param["params"][1],
+        ).thenReturn(request.param["return"])
+    return request.param
+
+
+def test_delete_report_map_by_id(delete_report_map_by_id_data):
+    runner = CliRunner()
+    result = runner.invoke(carrot, delete_report_map_by_id_data["args"])
+    assert result.output == delete_report_map_by_id_data["return"] + "\n"

@@ -4,6 +4,7 @@ import sys
 
 LOGGER = logging.getLogger(__name__)
 
+
 def read_file_to_json(filename):
     """
     Opens the file specified by filename to read and returns its contents parsed as JSON if
@@ -18,14 +19,12 @@ def read_file_to_json(filename):
                 "Encountered FileNotFound error when trying to read %s",
                 filename,
             )
-            print("Failed to locate file with name %s" % filename)
             sys.exit(1)
         except json.JSONDecodeError:
             LOGGER.error(
                 "Encountered JSONDecodeError error when trying to read %s",
                 filename,
             )
-            print("Failed to parse JSON from file with name %s" % filename)
             sys.exit(1)
     else:
         return ""

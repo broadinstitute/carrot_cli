@@ -2,7 +2,6 @@ import pprint
 
 import mockito
 import pytest
-
 from carrot_cli.rest import request_handler, tests
 
 
@@ -235,7 +234,7 @@ def test_create(create_data):
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
             "params": [
-                ("name", "Angella test"), 
+                ("name", "Angella test"),
                 ("description", ""),
                 ("test_input_defaults", ""),
                 ("eval_input_defaults", ""),
@@ -276,9 +275,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -297,9 +294,9 @@ def delete_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).delete(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).delete(
-        "tests", request.param["id"]
-    ).thenReturn(request.param["return"])
+    mockito.when(request_handler).delete("tests", request.param["id"]).thenReturn(
+        request.param["return"]
+    )
     return request.param
 
 

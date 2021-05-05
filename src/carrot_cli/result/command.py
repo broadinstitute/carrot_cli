@@ -115,7 +115,7 @@ def create(name, description, result_type, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )
@@ -131,11 +131,13 @@ def update(id, name, description):
     """Update result with ID with the specified parameters"""
     print(results.update(id, name, description))
 
+
 @main.command(name="delete")
 @click.argument("id")
 def find_by_id(id):
     """Delete a result definition by its ID, if the result is not mapped to any templates"""
     print(results.delete(id))
+
 
 @main.command(name="map_to_template")
 @click.argument("id")
@@ -157,7 +159,7 @@ def map_to_template(id, template_id, result_key, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )

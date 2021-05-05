@@ -119,7 +119,7 @@ def create(name, description, repository_url, created_by):
         if email_config_val is not None:
             created_by = email_config_val
         else:
-            print(
+            LOGGER.error(
                 "No email config variable set.  If a value is not specified for --created by, "
                 "there must be a value set for email."
             )

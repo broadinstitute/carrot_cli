@@ -1,9 +1,9 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
 from carrot_cli.rest import pipelines, runs
@@ -14,10 +14,12 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
-   
+
+
 @pytest.fixture(
     params=[
         {
@@ -196,8 +198,8 @@ def test_find(find_data):
                 "This pipeline will save Etheria",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": ["pipeline", "create"],
@@ -222,10 +224,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_data["args"])
-    assert result.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert result.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -289,9 +294,7 @@ def test_update(update_data):
         {
             "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -430,7 +433,7 @@ def test_delete(delete_data):
                 "nonexistent_file.json",
             ],
             "params": [],
-            "return": "Failed to locate file with name nonexistent_file.json",
+            "logging": "Encountered FileNotFound error when trying to read nonexistent_file.json",
         },
     ]
 )
@@ -460,10 +463,13 @@ def find_runs_data(request):
     return request.param
 
 
-def test_find_runs(find_runs_data):
+def test_find_runs(find_runs_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, find_runs_data["args"])
-    assert result.output == find_runs_data["return"] + "\n"
+    if "logging" in find_runs_data:
+        assert find_runs_data["logging"] in caplog.text
+    else:
+        assert result.output == find_runs_data["return"] + "\n"
 
 
 @pytest.fixture(

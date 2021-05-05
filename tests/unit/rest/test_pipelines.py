@@ -2,7 +2,6 @@ import pprint
 
 import mockito
 import pytest
-
 from carrot_cli.rest import pipelines, request_handler
 
 
@@ -237,9 +236,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -258,15 +255,16 @@ def delete_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(request_handler).delete(...).thenReturn(None)
     # Mock up request response
-    mockito.when(request_handler).delete(
-        "pipelines", request.param["id"]
-    ).thenReturn(request.param["return"])
+    mockito.when(request_handler).delete("pipelines", request.param["id"]).thenReturn(
+        request.param["return"]
+    )
     return request.param
 
 
 def test_delete(delete_data):
     result = pipelines.delete(delete_data["id"])
     assert result == delete_data["return"]
+
 
 @pytest.fixture(
     params=[

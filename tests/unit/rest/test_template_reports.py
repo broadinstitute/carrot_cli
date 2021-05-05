@@ -2,21 +2,19 @@ import pprint
 
 import mockito
 import pytest
-from carrot_cli.rest import request_handler, template_results
+from carrot_cli.rest import request_handler, template_reports
 
 
 @pytest.fixture(
     params=[
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "result_key": "out_horde_tanks",
+            "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "created_by": "rogelio@example.com",
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "result_key": "out_horde_tanks",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -24,14 +22,13 @@ from carrot_cli.rest import request_handler, template_results
         },
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "result_key": "out_horde_tanks",
+            "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "created_by": "rogelio@example.com",
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "title": "Server error",
                     "status": 500,
-                    "detail": "Error while attempting to insert new template result mapping",
+                    "detail": "Error while attempting to insert new template report mapping",
                 }
             ),
         },
@@ -42,27 +39,25 @@ def create_map_data(request):
     mockito.when(request_handler).create_map(...).thenReturn(None)
     # Mock up request response
     params = [
-        ("result_key", request.param["result_key"]),
         ("created_by", request.param["created_by"]),
     ]
     mockito.when(request_handler).create_map(
         "templates",
         request.param["template_id"],
-        "results",
-        request.param["result_id"],
+        "reports",
+        request.param["report_id"],
         params,
     ).thenReturn(request.param["return"])
     return request.param
 
 
 def test_create_map(create_map_data):
-    result = template_results.create_map(
+    report = template_reports.create_map(
         create_map_data["template_id"],
-        create_map_data["result_id"],
-        create_map_data["result_key"],
+        create_map_data["report_id"],
         create_map_data["created_by"],
     )
-    assert result == create_map_data["return"]
+    assert report == create_map_data["return"]
 
 
 @pytest.fixture(
@@ -70,8 +65,7 @@ def test_create_map(create_map_data):
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "params": [
-                ("result_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
-                ("result_key", "out_horde_tanks"),
+                ("report_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("created_before", ""),
                 ("created_after", ""),
                 ("created_by", "rogelio@example.com"),
@@ -82,8 +76,7 @@ def test_create_map(create_map_data):
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "result_key": "out_horde_tanks",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -92,8 +85,7 @@ def test_create_map(create_map_data):
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "params": [
-                ("result_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
-                ("result_key", "out_horde_tanks"),
+                ("report_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("created_before", ""),
                 ("created_after", ""),
                 ("created_by", ""),
@@ -103,9 +95,9 @@ def test_create_map(create_map_data):
             ],
             "return": pprint.PrettyPrinter().pformat(
                 {
-                    "title": "No template_result mapping found",
+                    "title": "No template_report mapping found",
                     "status": 404,
-                    "detail": "No template_result mapping found with the specified parameters",
+                    "detail": "No template_report mapping found with the specified parameters",
                 }
             ),
         },
@@ -116,13 +108,13 @@ def find_maps_data(request):
     mockito.when(request_handler).find_maps(...).thenReturn(None)
     # Mock up request response
     mockito.when(request_handler).find_maps(
-        "templates", request.param["template_id"], "results", request.param["params"]
+        "templates", request.param["template_id"], "reports", request.param["params"]
     ).thenReturn(request.param["return"])
     return request.param
 
 
 def test_find_maps(find_maps_data):
-    result = template_results.find_maps(
+    report = template_reports.find_maps(
         find_maps_data["template_id"],
         find_maps_data["params"][0][1],
         find_maps_data["params"][1][1],
@@ -131,21 +123,19 @@ def test_find_maps(find_maps_data):
         find_maps_data["params"][4][1],
         find_maps_data["params"][5][1],
         find_maps_data["params"][6][1],
-        find_maps_data["params"][7][1],
     )
-    assert result == find_maps_data["return"]
+    assert report == find_maps_data["return"]
 
 
 @pytest.fixture(
     params=[
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-                    "result_key": "out_horde_tanks",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 }
@@ -153,12 +143,12 @@ def test_find_maps(find_maps_data):
         },
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
                 {
-                    "title": "No template_result mapping found",
+                    "title": "No template_report mapping found",
                     "status": 404,
-                    "detail": "No template_result mapping found with the specified ID",
+                    "detail": "No template_report mapping found with the specified ID",
                 }
             ),
         },
@@ -169,35 +159,35 @@ def find_map_by_ids_data(request):
     mockito.when(request_handler).find_map_by_ids(...).thenReturn(None)
     # Mock up request response
     mockito.when(request_handler).find_map_by_ids(
-        "templates", request.param["template_id"], "results", request.param["result_id"]
+        "templates", request.param["template_id"], "reports", request.param["report_id"]
     ).thenReturn(request.param["return"])
     return request.param
 
 
 def test_find_maps_by_id(find_map_by_ids_data):
-    result = template_results.find_map_by_ids(
-        find_map_by_ids_data["template_id"], find_map_by_ids_data["result_id"]
+    report = template_reports.find_map_by_ids(
+        find_map_by_ids_data["template_id"], find_map_by_ids_data["report_id"]
     )
-    assert result == find_map_by_ids_data["return"]
+    assert report == find_map_by_ids_data["return"]
 
 
 @pytest.fixture(
     params=[
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
                 {"message": "Successfully deleted 1 row"}
             ),
         },
         {
             "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "return": pprint.PrettyPrinter().pformat(
                 {
-                    "title": "No template_result mapping found",
+                    "title": "No template_report mapping found",
                     "status": 404,
-                    "detail": "No template_result mapping found with the specified ID",
+                    "detail": "No template_report mapping found with the specified ID",
                 }
             ),
         },
@@ -208,13 +198,13 @@ def delete_map_by_ids_data(request):
     mockito.when(request_handler).delete_map_by_ids(...).thenReturn(None)
     # Mock up request response
     mockito.when(request_handler).delete_map_by_ids(
-        "templates", request.param["template_id"], "results", request.param["result_id"]
+        "templates", request.param["template_id"], "reports", request.param["report_id"]
     ).thenReturn(request.param["return"])
     return request.param
 
 
 def test_delete_maps_by_id(delete_map_by_ids_data):
-    result = template_results.delete_map_by_ids(
-        delete_map_by_ids_data["template_id"], delete_map_by_ids_data["result_id"]
+    report = template_reports.delete_map_by_ids(
+        delete_map_by_ids_data["template_id"], delete_map_by_ids_data["report_id"]
     )
-    assert result == delete_map_by_ids_data["return"]
+    assert report == delete_map_by_ids_data["return"]

@@ -1,9 +1,9 @@
 import pprint
 
-import mockito
-import pytest
 from click.testing import CliRunner
 
+import mockito
+import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
 from carrot_cli.rest import results, template_results
@@ -14,9 +14,11 @@ def unstub():
     yield
     mockito.unstub()
 
+
 @pytest.fixture(autouse=True)
 def no_email():
     mockito.when(config).load_var_no_error("email").thenReturn(None)
+
 
 @pytest.fixture(
     params=[
@@ -209,8 +211,8 @@ def test_find(find_data):
                 "numeric",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": ["result", "create"],
@@ -236,10 +238,13 @@ def create_data(request):
     return request.param
 
 
-def test_create(create_data):
+def test_create(create_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, create_data["args"])
-    assert result.output == create_data["return"] + "\n"
+    if "logging" in create_data:
+        assert create_data["logging"] in caplog.text
+    else:
+        assert result.output == create_data["return"] + "\n"
 
 
 @pytest.fixture(
@@ -304,9 +309,7 @@ def test_update(update_data):
         {
             "args": ["result", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": pprint.PrettyPrinter().pformat(
-                {
-                    "message": "Successfully deleted 1 row"
-                }
+                {"message": "Successfully deleted 1 row"}
             ),
         },
         {
@@ -374,8 +377,8 @@ def test_delete(delete_data):
                 "out_horde_tanks",
             ],
             "params": [],
-            "return": "No email config variable set.  If a value is not specified for --created by, "
-                "there must be a value set for email."
+            "logging": "No email config variable set.  If a value is not specified for --created by, "
+            "there must be a value set for email.",
         },
         {
             "args": ["result", "map_to_template"],
@@ -401,7 +404,10 @@ def map_to_template_data(request):
     return request.param
 
 
-def test_map_to_template(map_to_template_data):
+def test_map_to_template(map_to_template_data, caplog):
     runner = CliRunner()
     result = runner.invoke(carrot, map_to_template_data["args"])
-    assert result.output == map_to_template_data["return"] + "\n"
+    if "logging" in map_to_template_data:
+        assert map_to_template_data["logging"] in caplog.text
+    else:
+        assert result.output == map_to_template_data["return"] + "\n"
