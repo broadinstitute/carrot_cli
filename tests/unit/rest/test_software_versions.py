@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,23 +15,25 @@ def unstub():
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "commit": "ca82a6dff817ec66f44342007202690a93763949",
                     "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No software_version found",
                     "status": 404,
                     "detail": "No software_version found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -65,7 +67,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:06.371563",
@@ -73,7 +75,8 @@ def test_find_by_id(find_by_id_data):
                         "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -88,12 +91,13 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No software_versions found",
                     "status": 404,
                     "detail": "No software_versions found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]

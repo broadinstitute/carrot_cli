@@ -1,4 +1,4 @@
-import pprint
+import json
 
 from click.testing import CliRunner
 
@@ -24,7 +24,7 @@ def no_email():
     params=[
         {
             "args": ["result", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -32,17 +32,19 @@ def no_email():
                     "description": "This result will save Etheria",
                     "name": "Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["result", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No result found",
                     "status": 404,
                     "detail": "No result found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -102,7 +104,7 @@ def test_find_by_id(find_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -110,7 +112,8 @@ def test_find_by_id(find_by_id_data):
                     "description": "This result will save Etheria",
                     "name": "Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -132,12 +135,13 @@ def test_find_by_id(find_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No results found",
                     "status": 404,
                     "detail": "No results found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -188,7 +192,7 @@ def test_find(find_data):
                 "numeric",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -196,7 +200,8 @@ def test_find(find_data):
                     "description": "This result will save Etheria",
                     "name": "Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -264,7 +269,7 @@ def test_create(create_data, caplog):
                 "New Sword of Protection result",
                 "This new result replaced the broken one",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -272,7 +277,8 @@ def test_create(create_data, caplog):
                     "description": "This new result replaced the broken one",
                     "name": "New Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -308,18 +314,20 @@ def test_update(update_data):
     params=[
         {
             "args": ["result", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["result", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No result found",
                     "status": 404,
                     "detail": "No result found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -358,14 +366,15 @@ def test_delete(delete_data):
                 "out_horde_tanks",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "result_key": "out_horde_tanks",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {

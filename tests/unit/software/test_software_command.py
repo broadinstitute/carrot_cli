@@ -1,4 +1,4 @@
-import pprint
+import json
 
 from click.testing import CliRunner
 
@@ -24,7 +24,7 @@ def no_email():
     params=[
         {
             "args": ["software", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -32,17 +32,19 @@ def no_email():
                     "description": "This software will save Etheria",
                     "name": "Sword of Protection software",
                     "software_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["software", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No software found",
                     "status": 404,
                     "detail": "No software found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -102,7 +104,7 @@ def test_find_by_id(find_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -110,7 +112,8 @@ def test_find_by_id(find_by_id_data):
                     "description": "This software will save Etheria",
                     "name": "Sword of Protection software",
                     "software_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -132,12 +135,13 @@ def test_find_by_id(find_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No software found",
                     "status": 404,
                     "detail": "No software found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -188,7 +192,7 @@ def test_find(find_data):
                 "example.com/repo.git",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -196,7 +200,8 @@ def test_find(find_data):
                     "description": "This software will save Etheria",
                     "name": "Sword of Protection software",
                     "software_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -264,7 +269,7 @@ def test_create(create_data, caplog):
                 "New Sword of Protection software",
                 "This new software replaced the broken one",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -272,7 +277,8 @@ def test_create(create_data, caplog):
                     "description": "This new software replaced the broken one",
                     "name": "New Sword of Protection software",
                     "software_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {

@@ -1,4 +1,4 @@
-import pprint
+import json
 
 from click.testing import CliRunner
 
@@ -24,7 +24,7 @@ def no_email():
     params=[
         {
             "args": ["template", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -34,17 +34,19 @@ def no_email():
                     "name": "Sword of Protection template",
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["template", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -113,7 +115,7 @@ def test_find_by_id(find_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:06.371563",
@@ -125,7 +127,8 @@ def test_find_by_id(find_by_id_data):
                         "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -150,12 +153,13 @@ def test_find_by_id(find_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No templates found",
                     "status": 404,
                     "detail": "No templates found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -215,7 +219,7 @@ def test_find(find_data):
                 "example.com/she-ra_eval.wdl",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -225,7 +229,8 @@ def test_find(find_data):
                     "name": "Sword of Protection template",
                     "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -305,7 +310,7 @@ def test_create(create_data, caplog):
                 "example.com/she-ra_test.wdl",
                 "example.com/she-ra_eval.wdl",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -315,7 +320,8 @@ def test_create(create_data, caplog):
                     "name": "New Sword of Protection template",
                     "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -353,18 +359,20 @@ def test_update(update_data):
     params=[
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -438,7 +446,7 @@ def test_delete(delete_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:06.371563",
@@ -454,7 +462,8 @@ def test_delete(delete_data):
                         "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -476,12 +485,13 @@ def test_delete(delete_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -543,14 +553,15 @@ def test_find_runs(find_runs_data, caplog):
                 "netossa@example.com",
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "template",
                     "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "email": "netossa@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -565,25 +576,27 @@ def test_find_runs(find_runs_data, caplog):
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "spinnerella@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["template", "subscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
             "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "template",
                     "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "email": "frosta@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -616,8 +629,9 @@ def test_subscribe(subscribe_data):
                 "netossa@example.com",
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"},
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -632,19 +646,21 @@ def test_subscribe(subscribe_data):
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "spinnerella@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscription found",
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "args": ["template", "unsubscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
             "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"},
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -684,14 +700,15 @@ def test_unsubscribe(unsubscribe_data):
                 "out_horde_tanks",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "result_key": "out_horde_tanks",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -752,14 +769,15 @@ def test_map_to_result(map_to_result_data, caplog):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "result_key": "out_horde_tanks",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -825,7 +843,7 @@ def test_find_result_map_by_id(find_result_map_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -834,7 +852,8 @@ def test_find_result_map_by_id(find_result_map_by_id_data):
                         "created_at": "2020-09-24T19:07:59.311462",
                         "created_by": "adora@example.com",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -854,12 +873,13 @@ def test_find_result_map_by_id(find_result_map_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template_results found",
                     "status": 404,
                     "detail": "No template_results found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -901,8 +921,9 @@ def test_find_result_maps(find_result_maps_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -949,13 +970,14 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -1014,14 +1036,15 @@ def test_map_to_report(map_to_report_data, caplog):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "input_map": {"section1": {"input1": "val1"}},
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -1084,7 +1107,7 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -1092,7 +1115,8 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                         "created_at": "2020-09-24T19:07:59.311462",
                         "created_by": "adora@example.com",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -1111,12 +1135,13 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template_reports found",
                     "status": 404,
                     "detail": "No template_reports found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -1157,8 +1182,9 @@ def test_find_report_maps(find_report_maps_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {

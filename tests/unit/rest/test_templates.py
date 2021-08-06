@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,7 +15,7 @@ def unstub():
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -25,17 +25,19 @@ def unstub():
                     "name": "Sword of Protection template",
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -73,7 +75,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:08.371563",
@@ -85,7 +87,8 @@ def test_find_by_id(find_by_id_data):
                         "pipeline_id": "58723b05-6060-4444-9f1b-394aff691cce",
                         "template_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -104,12 +107,13 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No templates found",
                     "status": 404,
                     "detail": "No templates found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -154,7 +158,7 @@ def test_find(find_data):
                 ("eval_wdl", "example.com/horde_eval.wdl"),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "hordeprime@example.com",
@@ -164,7 +168,8 @@ def test_find(find_data):
                     "name": "Horde Emperor template",
                     "pipeline_id": "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -176,12 +181,13 @@ def test_find(find_data):
                 ("eval_wdl", "example.com/horde_eval.wdl"),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to insert new template",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -221,7 +227,7 @@ def test_create(create_data):
                 ("test_wdl", "example.com/horde_test.wdl"),
                 ("eval_wdl", "example.com/horde_eval.wdl"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "catra@example.com",
@@ -231,7 +237,8 @@ def test_create(create_data):
                     "name": "Catra template",
                     "pipeline_id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
                     "template_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -242,12 +249,13 @@ def test_create(create_data):
                 ("test_wdl", ""),
                 ("eval_wdl", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to update template",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -277,18 +285,20 @@ def test_update(update_data):
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -313,25 +323,27 @@ def test_delete(delete_data):
         {
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "bow@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "template",
                     "entity_id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
             "email": "huntara@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -359,19 +371,21 @@ def test_subscribe(subscribe_data):
         {
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "mermista@example.com",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"},
+                indent=4, sort_keys=True
             ),
         },
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
             "email": "castaspella@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscription found",
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]

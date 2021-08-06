@@ -1,6 +1,4 @@
 import json
-import pprint
-import urllib
 
 import requests
 
@@ -21,20 +19,21 @@ def unstub():
         {
             "entity": "pipelines",
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
                     "description": "This pipeline will save Etheria",
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "templates",
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-02T13:41:44.217522",
                     "created_by": "catra@example.com",
@@ -44,7 +43,8 @@ def unstub():
                     "name": "Catra template",
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "58723b05-6060-4444-9f1b-394aff691cce",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -78,7 +78,7 @@ def test_find_by_id(find_by_id_data):
         {
             "entity": "pipelines",
             "params": [("name", "Queen of Bright Moon Pipeline")],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:08.371563",
@@ -87,18 +87,20 @@ def test_find_by_id(find_by_id_data):
                         "name": "Queen of Bright Moon Pipeline",
                         "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "pipelines",
             "params": [("id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"), ("name", "")],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No pipelines found",
                     "status": 404,
                     "detail": "No pipelines found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -132,14 +134,15 @@ def test_find(find_data):
                 ("description", "This pipeline rules the known universe"),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "hordeprime@example.com",
                     "description": "This pipeline rules the known universe",
                     "name": "Horde Emperor Pipeline",
                     "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -177,7 +180,7 @@ def test_create(create_data):
             "params": [
                 ("description", "This template is working on her abandonment issues")
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-02T13:41:44.217522",
                     "created_by": "catra@example.com",
@@ -187,19 +190,21 @@ def test_create(create_data):
                     "name": "Catra template",
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "58723b05-6060-4444-9f1b-394aff691cce",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "pipelines",
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "params": [],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to update pipeline",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -235,19 +240,21 @@ def test_update(update_data):
         {
             "entity": "pipelines",
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "templates",
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template found",
                     "status": 404,
                     "detail": "No template found for the specified id",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -280,26 +287,28 @@ def test_delete(delete_data):
             "entity": "pipelines",
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "bow@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "pipeline",
                     "entity_id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "pipelines",
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "email": "huntara@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No pipeline found",
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -336,20 +345,22 @@ def test_subscribe(subscribe_data):
             "entity": "pipelines",
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "mermista@example.com",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"},
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "pipelines",
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "email": "castaspella@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscription found",
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -389,7 +400,7 @@ def test_unsubscribe(unsubscribe_data):
                 ("test_input", {"species": "Alicorn"}),
                 ("created_by", "swiftwind@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "69717609-0e95-4c9c-965c-1ea40a2cf44f",
                     "test_id": "c97c25e5-4adf-4db7-8f64-19af34d84ef8",
@@ -401,7 +412,8 @@ def test_unsubscribe(unsubscribe_data):
                     "created_at": "2020-09-24T15:50:49.641333",
                     "created_by": "swiftwind@example.com",
                     "finished_at": None,
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -411,12 +423,13 @@ def test_unsubscribe(unsubscribe_data):
                 ("test_input", {"occupation": "Princess"}),
                 ("created_by", "perfuma@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to query the database: NotFound",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -450,7 +463,7 @@ def test_run(run_data):
             "entity": "tests",
             "id": "5fad47be-0d23-4679-8d8c-deff717d5419",
             "params": [("name", "Entrapta Test Run")],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "run_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
@@ -467,19 +480,21 @@ def test_run(run_data):
                         "finished_at": "2020-09-10T14:03:27.658",
                         "results": {"ShipName": "Darla"},
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
             "entity": "templates",
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "params": [("id", ""), ("name", "Mara's Test Run")],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -521,14 +536,15 @@ def test_find_runs(find_runs_data):
                 ("result_key", "out_horde_tanks"),
                 ("created_by", "rogelio@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
                     "result_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
                     "result_key": "out_horde_tanks",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -540,12 +556,13 @@ def test_find_runs(find_runs_data):
                 ("result_key", "out_force_captain"),
                 ("created_by", "kyle@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to insert new template result mapping",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -589,14 +606,15 @@ def test_create_map(create_map_data):
             "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
                     "result_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
                     "result_key": "out_horde_tanks",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -604,12 +622,13 @@ def test_create_map(create_map_data):
             "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template_result mapping found",
                     "status": 404,
                     "detail": "No template_result mapping found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -650,8 +669,9 @@ def test_find_map_by_ids(find_map_by_ids_data):
             "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"},
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -659,12 +679,13 @@ def test_find_map_by_ids(find_map_by_ids_data):
             "entity1_id": "5fad47be-0d23-4679-8d8c-deff717d5419",
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template_result mapping found",
                     "status": 404,
                     "detail": "No template_result mapping found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -714,14 +735,15 @@ def test_delete_map_by_ids(delete_map_by_ids_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "result_key": "out_horde_tanks",
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -738,12 +760,13 @@ def test_delete_map_by_ids(delete_map_by_ids_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No template_result mapping found",
                     "status": 404,
                     "detail": "No template_result mapping found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -796,12 +819,17 @@ def test_find_maps(find_maps_data):
             "exception": requests.TooManyRedirects,
             "return": "Too many redirects. Enable verbose logging (-v) for more info",
         },
-        {"status_code": 400, "text": "", "return": "{'Body': '', 'Status': 400}"},
+        {
+            "status_code": 400,
+            "text": "",
+            "return": json.dumps({"Body": "", "Status": 400}, indent=4, sort_keys=True)
+        },
         {
             "status_code": 200,
             "text": json.dumps({"test_id": "123456789", "name": "test_name"}),
-            "return": pprint.PrettyPrinter().pformat(
-                {"name": "test_name", "test_id": "123456789"}
+            "return": json.dumps(
+                {"name": "test_name", "test_id": "123456789"},
+                indent=4, sort_keys=True
             ),
         },
     ]

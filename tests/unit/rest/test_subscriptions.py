@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,24 +15,26 @@ def unstub():
     params=[
         {
             "id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "template",
                     "entity_id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscription found",
                     "status": 404,
                     "detail": "No subscription found with the specified ID",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
@@ -66,7 +68,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
@@ -75,7 +77,8 @@ def test_find_by_id(find_by_id_data):
                         "email": "scorpia@example.com",
                         "created_at": "2020-09-23T19:41:46.839880",
                     }
-                ]
+                ],
+                indent=4, sort_keys=True
             ),
         },
         {
@@ -90,12 +93,13 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscriptions found",
                     "status": 404,
                     "detail": "No subscriptions found with the specified parameters",
-                }
+                },
+                indent=4, sort_keys=True
             ),
         },
     ]
