@@ -1,4 +1,4 @@
-import pprint
+import json
 
 from click.testing import CliRunner
 
@@ -24,7 +24,7 @@ def no_email():
     params=[
         {
             "args": ["report", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -86,17 +86,21 @@ def no_email():
                     "config": {"cpu": 2},
                     "name": "Sword of Protection report",
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["report", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No report found",
                     "status": 404,
                     "detail": "No report found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -212,7 +216,7 @@ def test_find_by_id(find_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -274,7 +278,9 @@ def test_find_by_id(find_by_id_data):
                     "config": {"cpu": 2},
                     "name": "Sword of Protection report",
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -297,12 +303,14 @@ def test_find_by_id(find_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No reports found",
                     "status": 404,
                     "detail": "No reports found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -410,7 +418,7 @@ def test_find(find_data):
                 {"cpu": 2},
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -472,7 +480,9 @@ def test_find(find_data):
                     "config": {"cpu": 2},
                     "name": "Sword of Protection report",
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -602,7 +612,7 @@ def test_create(create_data, caplog):
                 },
                 {"cpu": 2},
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "config": {"cpu": 2},
                     "created_at": "2020-09-16T18:48:06.371563",
@@ -664,7 +674,9 @@ def test_create(create_data, caplog):
                         ],
                     },
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -702,18 +714,20 @@ def test_update(update_data):
     params=[
         {
             "args": ["report", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "args": ["report", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No report found",
                     "status": 404,
                     "detail": "No report found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True
             ),
         },
     ]

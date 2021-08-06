@@ -1,4 +1,4 @@
-import pprint
+import json
 
 from click.testing import CliRunner
 
@@ -24,24 +24,28 @@ def no_email():
     params=[
         {
             "args": ["pipeline", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
                     "description": "This pipeline will save Etheria",
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["pipeline", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No pipeline found",
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -98,14 +102,16 @@ def test_find_by_id(find_by_id_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
                     "description": "This pipeline will save Etheria",
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -126,12 +132,14 @@ def test_find_by_id(find_by_id_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No pipelines found",
                     "status": 404,
                     "detail": "No pipelines found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -178,14 +186,16 @@ def test_find(find_data):
                 "This pipeline will save Etheria",
                 "adora@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
                     "description": "This pipeline will save Etheria",
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -250,14 +260,16 @@ def test_create(create_data, caplog):
                 "New Sword of Protection Pipeline",
                 "This new pipeline replaced the broken one",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
                     "description": "This new pipeline replaced the broken one",
                     "name": "New Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -293,18 +305,20 @@ def test_update(update_data):
     params=[
         {
             "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No pipeline found",
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -378,7 +392,7 @@ def test_delete(delete_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:06.371563",
@@ -394,7 +408,9 @@ def test_delete(delete_data):
                         "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -416,12 +432,14 @@ def test_delete(delete_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -483,14 +501,16 @@ def test_find_runs(find_runs_data, caplog):
                 "netossa@example.com",
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "pipeline",
                     "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "email": "netossa@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -505,25 +525,29 @@ def test_find_runs(find_runs_data, caplog):
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "spinnerella@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No pipeline found",
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["pipeline", "subscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
             "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "pipeline",
                     "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "email": "frosta@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -556,8 +580,8 @@ def test_subscribe(subscribe_data):
                 "netossa@example.com",
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -572,19 +596,21 @@ def test_subscribe(subscribe_data):
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "spinnerella@example.com",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscription found",
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["pipeline", "unsubscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
             "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
     ]

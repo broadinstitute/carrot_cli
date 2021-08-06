@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -12,7 +12,7 @@ from carrot_cli.rest import request_handler, run_reports
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "created_by": "rogelio@example.com",
             "delete_failed": True,
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
@@ -22,7 +22,9 @@ from carrot_cli.rest import request_handler, run_reports
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                     "finished_at": None,
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -30,12 +32,14 @@ from carrot_cli.rest import request_handler, run_reports
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             "created_by": "rogelio@example.com",
             "delete_failed": False,
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to insert new run report mapping",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -89,7 +93,7 @@ def test_create_map(create_map_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
@@ -99,7 +103,9 @@ def test_create_map(create_map_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                     "finished_at": "2020-09-24T19:09:59.311462",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -118,12 +124,14 @@ def test_create_map(create_map_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run_report mapping found",
                     "status": 404,
                     "detail": "No run_report mapping found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -162,7 +170,7 @@ def test_find_maps(find_maps_data):
         {
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
@@ -172,18 +180,22 @@ def test_find_maps(find_maps_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                     "finished_at": "2020-09-24T21:07:59.311462",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run_report mapping found",
                     "status": 404,
                     "detail": "No run_report mapping found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -210,19 +222,21 @@ def test_find_maps_by_id(find_map_by_ids_data):
         {
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run_report mapping found",
                     "status": 404,
                     "detail": "No run_report mapping found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

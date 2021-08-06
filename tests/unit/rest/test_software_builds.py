@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,7 +15,7 @@ def unstub():
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "status": "submitted",
@@ -24,17 +24,21 @@ def unstub():
                     "build_job_id": "d041bcce-288f-4c7e-9f9d-b6af57ae2369",
                     "software_version_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "software_build_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No software_build found",
                     "status": 404,
                     "detail": "No software_build found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -71,7 +75,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:06.371563",
@@ -82,7 +86,9 @@ def test_find_by_id(find_by_id_data):
                         "software_version_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "software_build_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -100,12 +106,14 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No software_builds found",
                     "status": 404,
                     "detail": "No software_builds found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

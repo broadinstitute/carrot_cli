@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,7 +15,7 @@ def unstub():
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "finished_at": None,
@@ -29,17 +29,21 @@ def unstub():
                     "name": "Sword of Protection run",
                     "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No run found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -80,7 +84,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:06.371563",
@@ -96,7 +100,9 @@ def test_find_by_id(find_by_id_data):
                         "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -118,12 +124,14 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No runs found",
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -166,18 +174,20 @@ def test_find(find_data):
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No run found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

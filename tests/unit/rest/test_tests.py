@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,7 +15,7 @@ def unstub():
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -25,17 +25,21 @@ def unstub():
                     "name": "Sword of Protection test",
                     "template_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No test found",
                     "status": 404,
                     "detail": "No test found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -73,7 +77,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:08.371563",
@@ -85,7 +89,9 @@ def test_find_by_id(find_by_id_data):
                         "template_id": "58723b05-6060-4444-9f1b-394aff691cce",
                         "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -104,12 +110,14 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No tests found",
                     "status": 404,
                     "detail": "No tests found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -154,7 +162,7 @@ def test_find(find_data):
                 ("eval_input_defaults", {"in_brother": "Hordak"}),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "hordeprime@example.com",
@@ -164,7 +172,9 @@ def test_find(find_data):
                     "name": "Horde Emperor test",
                     "template_id": "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -176,12 +186,14 @@ def test_find(find_data):
                 ("eval_input_defaults", {"in_brother": "Hordak"}),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to insert new test",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -218,7 +230,7 @@ def test_create(create_data):
                 ("test_input_defaults", {"in_nemesis?": "She-Ra"}),
                 ("eval_input_defaults", {"in_mother_figure": "Shadow Weaver"}),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "catra@example.com",
@@ -228,7 +240,9 @@ def test_create(create_data):
                     "name": "Catra test",
                     "template_id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
                     "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -239,12 +253,14 @@ def test_create(create_data):
                 ("test_input_defaults", ""),
                 ("eval_input_defaults", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to update test",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -274,18 +290,20 @@ def test_update(update_data):
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No test found",
                     "status": 404,
                     "detail": "No test found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -315,7 +333,7 @@ def test_delete(delete_data):
                 ("eval_input", {"in_wife": "Angella"}),
                 ("created_by", "micah@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "69717609-0e95-4c9c-965c-1ea40a2cf44f",
                     "test_id": "c97c25e5-4adf-4db7-8f64-19af34d84ef8",
@@ -327,7 +345,9 @@ def test_delete(delete_data):
                     "created_at": "2020-09-24T15:50:49.641333",
                     "created_by": "micah@example.com",
                     "finished_at": None,
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -338,12 +358,14 @@ def test_delete(delete_data):
                 ("eval_input", {"likes": "Plants, Mindfulness"}),
                 ("created_by", "perfuma@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to query the database: NotFound",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -374,25 +396,29 @@ def test_run(run_data):
         {
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "bow@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
                     "entity_type": "test",
                     "entity_id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
             "email": "huntara@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No test found",
                     "status": 404,
                     "detail": "No test found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -420,19 +446,21 @@ def test_subscribe(subscribe_data):
         {
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "mermista@example.com",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row(s)"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
             "id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
             "email": "castaspella@example.com",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No subscription found",
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

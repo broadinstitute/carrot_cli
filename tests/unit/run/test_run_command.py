@@ -1,4 +1,4 @@
-import pprint
+import json
 
 from click.testing import CliRunner
 
@@ -24,7 +24,7 @@ def no_email():
     params=[
         {
             "args": ["run", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "finished_at": None,
@@ -38,17 +38,21 @@ def no_email():
                     "name": "Sword of Protection run",
                     "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["run", "find_by_id", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No run found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -73,18 +77,20 @@ def test_find_by_id(find_by_id_data):
     params=[
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run found",
                     "status": 404,
                     "detail": "No run found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -123,7 +129,7 @@ def test_delete(delete_data):
                 "adora@example.com",
                 True,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
@@ -133,7 +139,9 @@ def test_delete(delete_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "adora@example.com",
                     "finished_at": None,
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -193,7 +201,7 @@ def test_create_report(create_report_data, caplog):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
@@ -203,7 +211,9 @@ def test_create_report(create_report_data, caplog):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                     "finished_at": "2020-09-24T21:07:59.311462",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -281,7 +291,7 @@ def test_find_report_by_ids(find_report_by_ids_data):
                 1,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -293,7 +303,9 @@ def test_find_report_by_ids(find_report_by_ids_data):
                         "created_by": "adora@example.com",
                         "finished_at": "2020-09-24T21:07:59.311462",
                     }
-                ]
+                ],
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -317,12 +329,14 @@ def test_find_report_by_ids(find_report_by_ids_data):
                 20,
                 0,
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No run_reports found",
                     "status": 404,
                     "detail": "No run_reports found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -368,8 +382,8 @@ def test_find_reports(find_reports_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {

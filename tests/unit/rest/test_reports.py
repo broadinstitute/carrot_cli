@@ -1,4 +1,4 @@
-import pprint
+import json
 
 import mockito
 import pytest
@@ -15,7 +15,7 @@ def unstub():
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:06.371563",
                     "created_by": "adora@example.com",
@@ -77,17 +77,21 @@ def unstub():
                     "description": "This report will save Etheria",
                     "name": "Sword of Protection report",
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No report found",
                     "status": 404,
                     "detail": "No report found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -123,7 +127,7 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 [
                     {
                         "created_at": "2020-09-16T18:48:08.371563",
@@ -190,7 +194,9 @@ def test_find_by_id(find_by_id_data):
                         "name": "Queen of Bright Moon report",
                         "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
-                ]
+                ],
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -207,12 +213,14 @@ def test_find_by_id(find_by_id_data):
                 ("limit", ""),
                 ("offset", ""),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No reports found",
                     "status": 404,
                     "detail": "No reports found with the specified parameters",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -310,7 +318,7 @@ def test_find(find_data):
                 ("config", {"cpu": 2}),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "hordeprime@example.com",
@@ -372,7 +380,9 @@ def test_find(find_data):
                     "description": "This report rules the known universe",
                     "name": "Horde Emperor report",
                     "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -439,12 +449,14 @@ def test_find(find_data):
                 ("config", {"cpu": 2}),
                 ("created_by", "hordeprime@example.com"),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to insert new report",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -539,7 +551,7 @@ def test_create(create_data):
                 ),
                 ("config", {"cpu": 2}),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "catra@example.com",
@@ -601,7 +613,9 @@ def test_create(create_data):
                     "description": "This report is trying to learn to process anger better",
                     "name": "Catra report",
                     "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -668,12 +682,14 @@ def test_create(create_data):
                 ),
                 ("config", {"cpu": 2}),
             ],
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "Server error",
                     "status": 500,
                     "detail": "Error while attempting to update new report",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -703,18 +719,20 @@ def test_update(update_data):
     params=[
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
-            "return": pprint.PrettyPrinter().pformat(
-                {"message": "Successfully deleted 1 row"}
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
-            "return": pprint.PrettyPrinter().pformat(
+            "return": json.dumps(
                 {
                     "title": "No report found",
                     "status": 404,
                     "detail": "No report found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
