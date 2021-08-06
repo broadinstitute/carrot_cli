@@ -26,7 +26,8 @@ def unstub():
                     "template_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -37,7 +38,8 @@ def unstub():
                     "status": 404,
                     "detail": "No test found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -88,7 +90,8 @@ def test_find_by_id(find_by_id_data):
                         "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -113,7 +116,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No tests found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -169,7 +173,8 @@ def test_find(find_data):
                     "template_id": "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -187,7 +192,8 @@ def test_find(find_data):
                     "status": 500,
                     "detail": "Error while attempting to insert new test",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -235,7 +241,8 @@ def test_create(create_data):
                     "template_id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
                     "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -252,7 +259,8 @@ def test_create(create_data):
                     "status": 500,
                     "detail": "Error while attempting to update test",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -283,8 +291,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -295,7 +302,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No test found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -338,7 +346,8 @@ def test_delete(delete_data):
                     "created_by": "micah@example.com",
                     "finished_at": None,
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -355,7 +364,8 @@ def test_delete(delete_data):
                     "status": 500,
                     "detail": "Error while attempting to query the database: NotFound",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -394,7 +404,8 @@ def test_run(run_data):
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -406,7 +417,8 @@ def test_run(run_data):
                     "status": 404,
                     "detail": "No test found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -435,8 +447,7 @@ def test_subscribe(subscribe_data):
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "mermista@example.com",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -448,7 +459,8 @@ def test_subscribe(subscribe_data):
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

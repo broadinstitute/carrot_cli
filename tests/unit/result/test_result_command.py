@@ -33,7 +33,8 @@ def no_email():
                     "name": "Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -44,7 +45,8 @@ def no_email():
                     "status": 404,
                     "detail": "No result found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -113,7 +115,8 @@ def test_find_by_id(find_by_id_data):
                     "name": "Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -141,7 +144,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No results found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -201,7 +205,8 @@ def test_find(find_data):
                     "name": "Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -278,7 +283,8 @@ def test_create(create_data, caplog):
                     "name": "New Sword of Protection result",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -315,8 +321,7 @@ def test_update(update_data):
         {
             "args": ["result", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -327,7 +332,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No result found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -374,7 +380,8 @@ def test_delete(delete_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {

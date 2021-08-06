@@ -23,7 +23,8 @@ def unstub():
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -34,7 +35,8 @@ def unstub():
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -78,7 +80,8 @@ def test_find_by_id(find_by_id_data):
                         "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -99,7 +102,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No pipelines found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -145,7 +149,8 @@ def test_find(find_data):
                     "name": "Horde Emperor Pipeline",
                     "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -160,7 +165,8 @@ def test_find(find_data):
                     "status": 500,
                     "detail": "Error while attempting to insert new pipeline",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -203,7 +209,8 @@ def test_create(create_data):
                     "name": "Catra Pipeline",
                     "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -215,7 +222,8 @@ def test_create(create_data):
                     "status": 500,
                     "detail": "Error while attempting to update new pipeline",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -244,8 +252,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -256,7 +263,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -289,7 +297,8 @@ def test_delete(delete_data):
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -301,7 +310,8 @@ def test_delete(delete_data):
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -330,8 +340,7 @@ def test_subscribe(subscribe_data):
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "mermista@example.com",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -343,7 +352,8 @@ def test_subscribe(subscribe_data):
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

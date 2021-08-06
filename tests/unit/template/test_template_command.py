@@ -35,7 +35,8 @@ def no_email():
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -46,7 +47,8 @@ def no_email():
                     "status": 404,
                     "detail": "No template found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -128,7 +130,8 @@ def test_find_by_id(find_by_id_data):
                         "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -159,7 +162,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No templates found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -230,7 +234,8 @@ def test_find(find_data):
                     "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -321,7 +326,8 @@ def test_create(create_data, caplog):
                     "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -360,8 +366,7 @@ def test_update(update_data):
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -372,7 +377,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No template found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -463,7 +469,8 @@ def test_delete(delete_data):
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -491,7 +498,8 @@ def test_delete(delete_data):
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -561,7 +569,8 @@ def test_find_runs(find_runs_data, caplog):
                     "email": "netossa@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -582,7 +591,8 @@ def test_find_runs(find_runs_data, caplog):
                     "status": 404,
                     "detail": "No template found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -596,7 +606,8 @@ def test_find_runs(find_runs_data, caplog):
                     "email": "frosta@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -630,8 +641,7 @@ def test_subscribe(subscribe_data):
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -652,15 +662,15 @@ def test_subscribe(subscribe_data):
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["template", "unsubscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
             "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
     ]
@@ -708,7 +718,8 @@ def test_unsubscribe(unsubscribe_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -777,7 +788,8 @@ def test_map_to_result(map_to_result_data, caplog):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -853,7 +865,8 @@ def test_find_result_map_by_id(find_result_map_by_id_data):
                         "created_by": "adora@example.com",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -879,7 +892,8 @@ def test_find_result_map_by_id(find_result_map_by_id_data):
                     "status": 404,
                     "detail": "No template_results found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -922,8 +936,7 @@ def test_find_result_maps(find_result_maps_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -977,7 +990,8 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -1044,7 +1058,8 @@ def test_map_to_report(map_to_report_data, caplog):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -1116,7 +1131,8 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                         "created_by": "adora@example.com",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -1141,7 +1157,8 @@ def test_find_report_map_by_id(find_report_map_by_id_data):
                     "status": 404,
                     "detail": "No template_reports found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -1183,8 +1200,7 @@ def test_find_report_maps(find_report_maps_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {

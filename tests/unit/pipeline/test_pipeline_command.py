@@ -32,7 +32,8 @@ def no_email():
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -43,7 +44,8 @@ def no_email():
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -108,7 +110,8 @@ def test_find_by_id(find_by_id_data):
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -135,7 +138,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No pipelines found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -190,7 +194,8 @@ def test_find(find_data):
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -263,7 +268,8 @@ def test_create(create_data, caplog):
                     "name": "New Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -300,8 +306,7 @@ def test_update(update_data):
         {
             "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -312,7 +317,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -403,7 +409,8 @@ def test_delete(delete_data):
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -431,7 +438,8 @@ def test_delete(delete_data):
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -501,7 +509,8 @@ def test_find_runs(find_runs_data, caplog):
                     "email": "netossa@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -522,7 +531,8 @@ def test_find_runs(find_runs_data, caplog):
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -536,7 +546,8 @@ def test_find_runs(find_runs_data, caplog):
                     "email": "frosta@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -570,8 +581,7 @@ def test_subscribe(subscribe_data):
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -592,15 +602,15 @@ def test_subscribe(subscribe_data):
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
             "args": ["pipeline", "unsubscribe", "89657859-06fe-4b1a-9e96-47d4f36bf819"],
             "params": ["89657859-06fe-4b1a-9e96-47d4f36bf819", "frosta@example.com"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
     ]

@@ -30,7 +30,8 @@ def unstub():
                     "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -46,7 +47,8 @@ def unstub():
                     "status": 404,
                     "detail": "No software_version found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -113,7 +115,8 @@ def test_find_by_id(find_by_id_data):
                         "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -141,7 +144,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No software_versions found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

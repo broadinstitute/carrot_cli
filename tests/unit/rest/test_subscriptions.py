@@ -23,7 +23,8 @@ def unstub():
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -34,7 +35,8 @@ def unstub():
                     "status": 404,
                     "detail": "No subscription found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -78,7 +80,8 @@ def test_find_by_id(find_by_id_data):
                         "created_at": "2020-09-23T19:41:46.839880",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -99,7 +102,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No subscriptions found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

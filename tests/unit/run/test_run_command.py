@@ -39,7 +39,8 @@ def no_email():
                     "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -50,7 +51,8 @@ def no_email():
                     "status": 404,
                     "detail": "No run found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -76,8 +78,7 @@ def test_find_by_id(find_by_id_data):
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -88,7 +89,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No run found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -138,7 +140,8 @@ def test_delete(delete_data):
                     "created_by": "adora@example.com",
                     "finished_at": None,
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -209,7 +212,8 @@ def test_create_report(create_report_data, caplog):
                     "created_by": "rogelio@example.com",
                     "finished_at": "2020-09-24T21:07:59.311462",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -300,7 +304,8 @@ def test_find_report_by_ids(find_report_by_ids_data):
                         "finished_at": "2020-09-24T21:07:59.311462",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -330,7 +335,8 @@ def test_find_report_by_ids(find_report_by_ids_data):
                     "status": 404,
                     "detail": "No run_reports found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -377,8 +383,7 @@ def test_find_reports(find_reports_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {

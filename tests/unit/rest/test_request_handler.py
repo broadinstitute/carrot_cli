@@ -27,7 +27,8 @@ def unstub():
                     "name": "Sword of Protection Pipeline",
                     "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -44,7 +45,8 @@ def unstub():
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "58723b05-6060-4444-9f1b-394aff691cce",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -88,7 +90,8 @@ def test_find_by_id(find_by_id_data):
                         "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -100,7 +103,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No pipelines found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -142,7 +146,8 @@ def test_find(find_data):
                     "name": "Horde Emperor Pipeline",
                     "pipeline_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -191,7 +196,8 @@ def test_create(create_data):
                     "pipeline_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "template_id": "58723b05-6060-4444-9f1b-394aff691cce",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -204,7 +210,8 @@ def test_create(create_data):
                     "status": 500,
                     "detail": "Error while attempting to update pipeline",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -241,8 +248,7 @@ def test_update(update_data):
             "entity": "pipelines",
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -254,7 +260,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No template found for the specified id",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -295,7 +302,8 @@ def test_delete(delete_data):
                     "email": "bow@example.com",
                     "created_at": "2020-09-23T19:41:46.839880",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -308,7 +316,8 @@ def test_delete(delete_data):
                     "status": 404,
                     "detail": "No pipeline found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -346,8 +355,7 @@ def test_subscribe(subscribe_data):
             "id": "047e27ad-2890-4372-b2cb-dfec57347eb9",
             "email": "mermista@example.com",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row(s)"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -360,7 +368,8 @@ def test_subscribe(subscribe_data):
                     "status": 404,
                     "detail": "No subscription found for the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -413,7 +422,8 @@ def test_unsubscribe(unsubscribe_data):
                     "created_by": "swiftwind@example.com",
                     "finished_at": None,
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -429,7 +439,8 @@ def test_unsubscribe(unsubscribe_data):
                     "status": 500,
                     "detail": "Error while attempting to query the database: NotFound",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -481,7 +492,8 @@ def test_run(run_data):
                         "results": {"ShipName": "Darla"},
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -494,7 +506,8 @@ def test_run(run_data):
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -544,7 +557,8 @@ def test_find_runs(find_runs_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -562,7 +576,8 @@ def test_find_runs(find_runs_data):
                     "status": 500,
                     "detail": "Error while attempting to insert new template result mapping",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -614,7 +629,8 @@ def test_create_map(create_map_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -628,7 +644,8 @@ def test_create_map(create_map_data):
                     "status": 404,
                     "detail": "No template_result mapping found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -670,8 +687,7 @@ def test_find_map_by_ids(find_map_by_ids_data):
             "entity2": "results",
             "entity2_id": "8ff51b0a-cdbf-409f-9e8b-888524ae9c1a",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -685,7 +701,8 @@ def test_find_map_by_ids(find_map_by_ids_data):
                     "status": 404,
                     "detail": "No template_result mapping found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -743,7 +760,8 @@ def test_delete_map_by_ids(delete_map_by_ids_data):
                     "created_at": "2020-09-24T19:07:59.311462",
                     "created_by": "rogelio@example.com",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -766,7 +784,8 @@ def test_delete_map_by_ids(delete_map_by_ids_data):
                     "status": 404,
                     "detail": "No template_result mapping found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -822,14 +841,13 @@ def test_find_maps(find_maps_data):
         {
             "status_code": 400,
             "text": "",
-            "return": json.dumps({"Body": "", "Status": 400}, indent=4, sort_keys=True)
+            "return": json.dumps({"Body": "", "Status": 400}, indent=4, sort_keys=True),
         },
         {
             "status_code": 200,
             "text": json.dumps({"test_id": "123456789", "name": "test_name"}),
             "return": json.dumps(
-                {"name": "test_name", "test_id": "123456789"},
-                indent=4, sort_keys=True
+                {"name": "test_name", "test_id": "123456789"}, indent=4, sort_keys=True
             ),
         },
     ]

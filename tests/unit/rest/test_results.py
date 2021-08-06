@@ -24,7 +24,8 @@ def unstub():
                     "result_type": "file",
                     "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -35,7 +36,8 @@ def unstub():
                     "status": 404,
                     "detail": "No result found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -81,7 +83,8 @@ def test_find_by_id(find_by_id_data):
                         "result_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -103,7 +106,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No results found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -152,7 +156,8 @@ def test_find(find_data):
                     "name": "Horde Emperor result",
                     "result_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -168,7 +173,8 @@ def test_find(find_data):
                     "status": 500,
                     "detail": "Error while attempting to insert new result",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -213,7 +219,8 @@ def test_create(create_data):
                     "result_type": "numeric",
                     "result_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -225,7 +232,8 @@ def test_create(create_data):
                     "status": 500,
                     "detail": "Error while attempting to update new result",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -254,8 +262,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -266,7 +273,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No result found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

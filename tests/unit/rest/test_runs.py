@@ -30,7 +30,8 @@ def unstub():
                     "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -41,7 +42,8 @@ def unstub():
                     "status": 404,
                     "detail": "No run found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -99,7 +101,8 @@ def test_find_by_id(find_by_id_data):
                         "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -127,7 +130,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No runs found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -171,8 +175,7 @@ def test_find(find_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -183,7 +186,8 @@ def test_find(find_data):
                     "status": 404,
                     "detail": "No run found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]

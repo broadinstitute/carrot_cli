@@ -78,7 +78,8 @@ def unstub():
                     "name": "Sword of Protection report",
                     "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -89,7 +90,8 @@ def unstub():
                     "status": 404,
                     "detail": "No report found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -193,7 +195,8 @@ def test_find_by_id(find_by_id_data):
                         "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                     }
                 ],
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -216,7 +219,8 @@ def test_find_by_id(find_by_id_data):
                     "status": 404,
                     "detail": "No reports found with the specified parameters",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -377,7 +381,8 @@ def test_find(find_data):
                     "name": "Horde Emperor report",
                     "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -450,7 +455,8 @@ def test_find(find_data):
                     "status": 500,
                     "detail": "Error while attempting to insert new report",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -608,7 +614,8 @@ def test_create(create_data):
                     "name": "Catra report",
                     "report_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
         {
@@ -681,7 +688,8 @@ def test_create(create_data):
                     "status": 500,
                     "detail": "Error while attempting to update new report",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
@@ -712,8 +720,7 @@ def test_update(update_data):
         {
             "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
             "return": json.dumps(
-                {"message": "Successfully deleted 1 row"},
-                indent=4, sort_keys=True
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
@@ -724,7 +731,8 @@ def test_update(update_data):
                     "status": 404,
                     "detail": "No report found with the specified ID",
                 },
-                indent=4, sort_keys=True
+                indent=4,
+                sort_keys=True,
             ),
         },
     ]
