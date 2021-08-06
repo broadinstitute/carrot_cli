@@ -714,7 +714,9 @@ def test_update(update_data):
     params=[
         {
             "args": ["report", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
-            "return": json.dumps({"message": "Successfully deleted 1 row"}),
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
         },
         {
             "args": ["report", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
@@ -723,7 +725,9 @@ def test_update(update_data):
                     "title": "No report found",
                     "status": 404,
                     "detail": "No report found with the specified ID",
-                }
+                },
+                indent=4,
+                sort_keys=True
             ),
         },
     ]
