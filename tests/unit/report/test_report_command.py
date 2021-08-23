@@ -727,7 +727,7 @@ def test_update(update_data):
                     "detail": "No report found with the specified ID",
                 },
                 indent=4,
-                sort_keys=True
+                sort_keys=True,
             ),
         },
     ]
