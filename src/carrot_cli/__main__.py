@@ -16,7 +16,7 @@ from .test import command as test
 
 # Version number is automatically set via bumpversion.
 # DO NOT MODIFY:
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 # Create a logger for this module:
 LOGGER = logging.getLogger(__name__)
