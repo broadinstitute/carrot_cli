@@ -213,7 +213,6 @@ def send_request(method, url, params=None, body=None):
                 "Received response with status %i and empty body" % response.status_code
             )
         return json.dumps(json_body, indent=4, sort_keys=True)
-        # return pprint.PrettyPrinter().pformat(json_body)
     except (AttributeError, json.decoder.JSONDecodeError):
         LOGGER.debug("Failed to parse json from response body: %s", response.text)
         return json.dumps(

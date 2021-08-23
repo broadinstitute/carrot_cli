@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import pprint
 import sys
 
 LOGGER = logging.getLogger(__name__)
@@ -78,4 +77,4 @@ def get_config():
     # Open file and load as json
     config_file_path = os.path.expanduser("~/.carrot_cli/config.json")
     with open(config_file_path, "r") as config_file:
-        return pprint.PrettyPrinter().pformat(json.load(config_file))
+        return json.dumps(json.load(config_file), indent=4, sort_keys=True)
