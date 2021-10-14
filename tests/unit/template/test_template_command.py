@@ -1,4 +1,5 @@
 import json
+import logging
 
 from click.testing import CliRunner
 
@@ -365,12 +366,119 @@ def test_update(update_data):
     params=[
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template replaced the broken one",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "New Sword of Protection template",
+                    "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": [
+                "template",
+                "delete",
+                "-y",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            ],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template replaced the broken one",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "New Sword of Protection template",
+                    "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template replaced the broken one",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "New Sword of Protection template",
+                    "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. "
+                "Are you sure you want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This template replaced the broken one",
+                    "test_wdl": "example.com/she-ra_test.wdl",
+                    "eval_wdl": "example.com/she-ra_eval.wdl",
+                    "name": "New Sword of Protection template",
+                    "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. "
+                "Are you sure you want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
+            "args": ["template", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "title": "No template found",
+                    "status": 404,
+                    "detail": "No template found with the specified ID",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {
                     "title": "No template found",
@@ -384,19 +492,39 @@ def test_update(update_data):
     ]
 )
 def delete_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(templates).delete(...).thenReturn(None)
+    mockito.when(templates).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(templates).delete(request.param["args"][2]).thenReturn(
+    mockito.when(templates).delete(request.param["id"]).thenReturn(
         request.param["return"]
+    )
+    mockito.when(templates).find_by_id(request.param["id"]).thenReturn(
+        request.param["find_return"]
     )
     return request.param
 
 
-def test_delete(delete_data):
+def test_delete(delete_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_data["args"])
-    assert result.output == delete_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_data:
+        expected_output = (
+            delete_data["interactive"]["message"] + delete_data["return"] + "\n"
+        )
+        result = runner.invoke(
+            carrot, delete_data["args"], input=delete_data["interactive"]["input"]
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_data["args"])
+        assert result.output == delete_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_data:
+        assert delete_data["logging"] in caplog.text
 
 
 @pytest.fixture(
@@ -931,17 +1059,154 @@ def test_find_result_maps(find_result_maps_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "params": [
+            "ids": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "sword_of_protection_key",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
+            "args": [
+                "template",
+                "delete_result_map_by_id",
+                "-y",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "sword_of_protection_key",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": [
+                "template",
+                "delete_result_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "sword_of_protection_key",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Template result mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "result with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
+                "you sure you want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": [
+                "template",
+                "delete_result_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "sword_of_protection_key",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Template result mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "result with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
+                "you sure you want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
+            "args": [
+                "template",
+                "delete_result_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "title": "No template_result found",
+                    "status": 404,
+                    "detail": "No template_result found with the specified ID",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
+            "return": json.dumps(
+                {
+                    "title": "No template_result found",
+                    "status": 404,
+                    "detail": "No template_result found with the specified ID",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
             "args": ["template", "delete_result_map_by_id"],
-            "params": [],
+            "ids": [],
+            "email": "adora@example.com",
             "return": "Usage: carrot_cli template delete_result_map_by_id [OPTIONS] ID RESULT_ID\n"
             "Try 'carrot_cli template delete_result_map_by_id --help' for help.\n"
             "\n"
@@ -950,21 +1215,46 @@ def test_find_result_maps(find_result_maps_data):
     ]
 )
 def delete_result_map_by_id_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(template_results).delete_map_by_ids(...).thenReturn(None)
+    mockito.when(template_results).find_map_by_ids(...).thenReturn(None)
     # Mock up request response only if we expect it to get that far
-    if len(request.param["params"]) > 0:
+    if len(request.param["ids"]) > 0:
         mockito.when(template_results).delete_map_by_ids(
-            request.param["params"][0],
-            request.param["params"][1],
+            request.param["ids"][0],
+            request.param["ids"][1],
         ).thenReturn(request.param["return"])
+        mockito.when(template_results).find_map_by_ids(
+            request.param["ids"][0],
+            request.param["ids"][1],
+        ).thenReturn(request.param["find_return"])
     return request.param
 
 
-def test_delete_result_map_by_id(delete_result_map_by_id_data):
+def test_delete_result_map_by_id(delete_result_map_by_id_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_result_map_by_id_data["args"])
-    assert result.output == delete_result_map_by_id_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_result_map_by_id_data:
+        expected_output = (
+            delete_result_map_by_id_data["interactive"]["message"]
+            + delete_result_map_by_id_data["return"]
+            + "\n"
+        )
+        result = runner.invoke(
+            carrot,
+            delete_result_map_by_id_data["args"],
+            input=delete_result_map_by_id_data["interactive"]["input"],
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_result_map_by_id_data["args"])
+        assert result.output == delete_result_map_by_id_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_result_map_by_id_data:
+        assert delete_result_map_by_id_data["logging"] in caplog.text
 
 
 @pytest.fixture(
@@ -1195,17 +1485,123 @@ def test_find_report_maps(find_report_maps_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "params": [
+            "ids": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "input_map": {"section1": {"input1": "val1"}},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "rogelio@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
+            "args": [
+                "template",
+                "delete_report_map_by_id",
+                "-y",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "input_map": {"section1": {"input1": "val1"}},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": [
+                "template",
+                "delete_report_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "input_map": {"section1": {"input1": "val1"}},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Template report mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "report with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
+                "you sure you want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": [
+                "template",
+                "delete_report_map_by_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "input_map": {"section1": {"input1": "val1"}},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Template report mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "report with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
+                "you sure you want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
             "args": ["template", "delete_report_map_by_id"],
-            "params": [],
+            "ids": [],
+            "email": "rogelio@example.com",
             "return": "Usage: carrot_cli template delete_report_map_by_id [OPTIONS] ID REPORT_ID\n"
             "Try 'carrot_cli template delete_report_map_by_id --help' for help.\n"
             "\n"
@@ -1214,18 +1610,43 @@ def test_find_report_maps(find_report_maps_data):
     ]
 )
 def delete_report_map_by_id_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(template_reports).delete_map_by_ids(...).thenReturn(None)
+    mockito.when(template_reports).find_map_by_ids(...).thenReturn(None)
     # Mock up request response only if we expect it to get that far
-    if len(request.param["params"]) > 0:
+    if len(request.param["ids"]) > 0:
         mockito.when(template_reports).delete_map_by_ids(
-            request.param["params"][0],
-            request.param["params"][1],
+            request.param["ids"][0],
+            request.param["ids"][1],
         ).thenReturn(request.param["return"])
+        mockito.when(template_reports).find_map_by_ids(
+            request.param["ids"][0],
+            request.param["ids"][1],
+        ).thenReturn(request.param["find_return"])
     return request.param
 
 
-def test_delete_report_map_by_id(delete_report_map_by_id_data):
+def test_delete_report_map_by_id(delete_report_map_by_id_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_report_map_by_id_data["args"])
-    assert result.output == delete_report_map_by_id_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_report_map_by_id_data:
+        expected_output = (
+            delete_report_map_by_id_data["interactive"]["message"]
+            + delete_report_map_by_id_data["return"]
+            + "\n"
+        )
+        result = runner.invoke(
+            carrot,
+            delete_report_map_by_id_data["args"],
+            input=delete_report_map_by_id_data["interactive"]["input"],
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_report_map_by_id_data["args"])
+        assert result.output == delete_report_map_by_id_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_report_map_by_id_data:
+        assert delete_report_map_by_id_data["logging"] in caplog.text

@@ -1,3 +1,4 @@
+import json
 import logging
 import sys
 
@@ -186,8 +187,32 @@ def update(id, name, description, test_wdl, eval_wdl):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of template created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a template by its ID, if it has no tests associated with it"""
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        record = json.loads(templates.find_by_id(id))
+        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in record and record["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Template with id {id} was created by {record['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(templates.delete(id))
 
 
@@ -465,12 +490,37 @@ def find_result_maps(
 @main.command(name="delete_result_map_by_id")
 @click.argument("id")
 @click.argument("result_id")
-def delete_result_map_by_id(id, result_id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of mapping created by "
+    "another user",
+)
+def delete_result_map_by_id(id, result_id, yes):
     """
     Delete the mapping record from the template specified by ID to the result specified by
     RESULT_ID, if the specified template has no non-failed (i.e. successful or currently running)
     runs associated with it
     """
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        record = json.loads(template_results.find_map_by_ids(id, result_id))
+        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in record and record["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Template result mapping for template with id {id} and result with id {result_id} was created by "
+                f"{record['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(template_results.delete_map_by_ids(id, result_id))
 
 
@@ -574,10 +624,35 @@ def find_report_maps(
 @main.command(name="delete_report_map_by_id")
 @click.argument("id")
 @click.argument("report_id")
-def delete_report_map_by_id(id, report_id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of mapping created by "
+    "another user",
+)
+def delete_report_map_by_id(id, report_id, yes):
     """
     Delete the mapping record from the template specified by ID to the report specified by
     REPORT_ID, if the specified template has no non-failed (i.e. successful or currently running)
     runs associated with it
     """
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        record = json.loads(template_reports.find_map_by_ids(id, report_id))
+        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in record and record["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Template report mapping for template with id {id} and report with id {report_id} was created by "
+                f"{record['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(template_reports.delete_map_by_ids(id, report_id))

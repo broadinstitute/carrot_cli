@@ -1,4 +1,5 @@
 import json
+import logging
 
 from click.testing import CliRunner
 
@@ -77,12 +78,130 @@ def test_find_by_id(find_by_id_data):
     params=[
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "finished_at": "2020-09-16T18:58:06.371563",
+                    "created_by": "adora@example.com",
+                    "test_input": {"in_prev_owner": "Mara"},
+                    "eval_input": {"in_creators": "Old Ones"},
+                    "status": "evalfailed",
+                    "results": {},
+                    "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "eval_cromwell_job_id": "39482203-6b71-429c-a4de-8e90222488cd",
+                    "name": "Sword of Protection run",
+                    "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": ["run", "delete", "-y", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "finished_at": "2020-09-16T18:58:06.371563",
+                    "created_by": "adora@example.com",
+                    "test_input": {"in_prev_owner": "Mara"},
+                    "eval_input": {"in_creators": "Old Ones"},
+                    "status": "evalfailed",
+                    "results": {},
+                    "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "eval_cromwell_job_id": "39482203-6b71-429c-a4de-8e90222488cd",
+                    "name": "Sword of Protection run",
+                    "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "finished_at": "2020-09-16T18:58:06.371563",
+                    "created_by": "adora@example.com",
+                    "test_input": {"in_prev_owner": "Mara"},
+                    "eval_input": {"in_creators": "Old Ones"},
+                    "status": "evalfailed",
+                    "results": {},
+                    "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "eval_cromwell_job_id": "39482203-6b71-429c-a4de-8e90222488cd",
+                    "name": "Sword of Protection run",
+                    "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Run with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. "
+                "Are you sure you want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "finished_at": "2020-09-16T18:58:06.371563",
+                    "created_by": "adora@example.com",
+                    "test_input": {"in_prev_owner": "Mara"},
+                    "eval_input": {"in_creators": "Old Ones"},
+                    "status": "evalfailed",
+                    "results": {},
+                    "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "eval_cromwell_job_id": "39482203-6b71-429c-a4de-8e90222488cd",
+                    "name": "Sword of Protection run",
+                    "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Run with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. "
+                "Are you sure you want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
+            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "title": "No run found",
+                    "status": 404,
+                    "detail": "No run found with the specified ID",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {
                     "title": "No run found",
@@ -96,19 +215,37 @@ def test_find_by_id(find_by_id_data):
     ]
 )
 def delete_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(runs).delete(...).thenReturn(None)
+    mockito.when(runs).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(runs).delete(request.param["args"][2]).thenReturn(
-        request.param["return"]
+    mockito.when(runs).delete(request.param["id"]).thenReturn(request.param["return"])
+    mockito.when(runs).find_by_id(request.param["id"]).thenReturn(
+        request.param["find_return"]
     )
     return request.param
 
 
-def test_delete(delete_data):
+def test_delete(delete_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_data["args"])
-    assert result.output == delete_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_data:
+        expected_output = (
+            delete_data["interactive"]["message"] + delete_data["return"] + "\n"
+        )
+        result = runner.invoke(
+            carrot, delete_data["args"], input=delete_data["interactive"]["input"]
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_data["args"])
+        assert result.output == delete_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_data:
+        assert delete_data["logging"] in caplog.text
 
 
 @pytest.fixture(
@@ -378,17 +515,149 @@ def test_find_reports(find_reports_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
-            "params": [
+            "ids": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
             ],
+            "find_return": json.dumps(
+                {
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "status": "succeeded",
+                    "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "results": {"result1": "val1"},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                    "finished_at": "2020-09-24T21:07:59.311462",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
+            "args": [
+                "run",
+                "delete_report_by_ids",
+                "-y",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "status": "succeeded",
+                    "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "results": {"result1": "val1"},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                    "finished_at": "2020-09-24T21:07:59.311462",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": [
+                "run",
+                "delete_report_by_ids",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "status": "succeeded",
+                    "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "results": {"result1": "val1"},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                    "finished_at": "2020-09-24T21:07:59.311462",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Run report for run with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and report with id "
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are you sure you "
+                "want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": [
+                "run",
+                "delete_report_by_ids",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "ids": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+            ],
+            "find_return": json.dumps(
+                {
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "status": "succeeded",
+                    "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "results": {"result1": "val1"},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                    "finished_at": "2020-09-24T21:07:59.311462",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Run report for run with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and report with id "
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are you sure you "
+                "want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
             "args": ["run", "delete_report_by_ids"],
-            "params": [],
+            "ids": [],
+            "find_return": json.dumps(
+                {
+                    "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "report_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "status": "succeeded",
+                    "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                    "results": {"result1": "val1"},
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "adora@example.com",
+                    "finished_at": "2020-09-24T21:07:59.311462",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": "Usage: carrot_cli run delete_report_by_ids [OPTIONS] ID REPORT_ID\n"
             "Try 'carrot_cli run delete_report_by_ids --help' for help.\n"
             "\n"
@@ -397,18 +666,43 @@ def test_find_reports(find_reports_data):
     ]
 )
 def delete_report_by_ids_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(run_reports).delete_map_by_ids(...).thenReturn(None)
+    mockito.when(run_reports).find_map_by_ids(...).thenReturn(None)
     # Mock up request response only if we expect it to get that far
-    if len(request.param["params"]) > 0:
+    if len(request.param["ids"]) > 0:
         mockito.when(run_reports).delete_map_by_ids(
-            request.param["params"][0],
-            request.param["params"][1],
+            request.param["ids"][0],
+            request.param["ids"][1],
         ).thenReturn(request.param["return"])
+        mockito.when(run_reports).find_map_by_ids(
+            request.param["ids"][0],
+            request.param["ids"][1],
+        ).thenReturn(request.param["find_return"])
     return request.param
 
 
-def test_delete_report_by_ids(delete_report_by_ids_data):
+def test_delete_report_by_ids(delete_report_by_ids_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_report_by_ids_data["args"])
-    assert result.output == delete_report_by_ids_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_report_by_ids_data:
+        expected_output = (
+            delete_report_by_ids_data["interactive"]["message"]
+            + delete_report_by_ids_data["return"]
+            + "\n"
+        )
+        result = runner.invoke(
+            carrot,
+            delete_report_by_ids_data["args"],
+            input=delete_report_by_ids_data["interactive"]["input"],
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_report_by_ids_data["args"])
+        assert result.output == delete_report_by_ids_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_report_by_ids_data:
+        assert delete_report_by_ids_data["logging"] in caplog.text

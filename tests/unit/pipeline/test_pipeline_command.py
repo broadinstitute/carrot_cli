@@ -1,4 +1,5 @@
 import json
+import logging
 
 from click.testing import CliRunner
 
@@ -305,12 +306,103 @@ def test_update(update_data):
     params=[
         {
             "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new pipeline replaced the broken one",
+                    "name": "New Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
+            "email": "adora@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": [
+                "pipeline",
+                "delete",
+                "-y",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            ],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new pipeline replaced the broken one",
+                    "name": "New Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
+            "email": "catra@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
             "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new pipeline replaced the broken one",
+                    "name": "New Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Pipeline with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. "
+                "Are you sure you want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new pipeline replaced the broken one",
+                    "name": "New Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Pipeline with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. "
+                "Are you sure you want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
+            "args": ["pipeline", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "title": "No pipeline found",
+                    "status": 404,
+                    "detail": "No pipeline found with the specified ID",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {
                     "title": "No pipeline found",
@@ -324,19 +416,40 @@ def test_update(update_data):
     ]
 )
 def delete_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(pipelines).delete(...).thenReturn(None)
+    mockito.when(pipelines).find_by_id(...).thenReturn(None)
+    # Mock up find_by_id return val
+    mockito.when(pipelines).find_by_id(request.param["id"]).thenReturn(
+        request.param["find_return"]
+    )
     # Mock up request response
-    mockito.when(pipelines).delete(request.param["args"][2]).thenReturn(
+    mockito.when(pipelines).delete(request.param["id"]).thenReturn(
         request.param["return"]
     )
     return request.param
 
 
-def test_delete(delete_data):
+def test_delete(delete_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_data["args"])
-    assert result.output == delete_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_data:
+        expected_output = (
+            delete_data["interactive"]["message"] + delete_data["return"] + "\n"
+        )
+        result = runner.invoke(
+            carrot, delete_data["args"], input=delete_data["interactive"]["input"]
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_data["args"])
+        assert result.output == delete_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_data:
+        assert delete_data["logging"] in caplog.text
 
 
 @pytest.fixture(

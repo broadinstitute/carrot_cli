@@ -1,3 +1,4 @@
+import json
 import logging
 import sys
 
@@ -201,8 +202,32 @@ def update(id, name, description, test_input_defaults, eval_input_defaults):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of test created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a test by its ID, if the test has no runs associated with it"""
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        record = json.loads(tests.find_by_id(id))
+        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in record and record["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Test with id {id} was created by {record['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(tests.delete(id))
 
 

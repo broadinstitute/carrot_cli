@@ -1,3 +1,4 @@
+import json
 import logging
 import sys
 
@@ -24,8 +25,32 @@ def find_by_id(id):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of run created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a run by its ID, if the run has a failed status"""
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        record = json.loads(runs.find_by_id(id))
+        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in record and record["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Run with id {id} was created by {record['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(runs.delete(id))
 
 
@@ -171,9 +196,34 @@ def find_reports(
 @main.command(name="delete_report_by_ids")
 @click.argument("id")
 @click.argument("report_id")
-def delete_report_by_ids(id, report_id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of report created by "
+    "another user",
+)
+def delete_report_by_ids(id, report_id, yes):
     """
     Delete the report record for the run specified by ID to the report specified by
     REPORT_ID
     """
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        record = json.loads(run_reports.find_map_by_ids(id, report_id))
+        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in record and record["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Run report for run with id {id} and report with id {report_id} was created by "
+                f"{record['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(run_reports.delete_map_by_ids(id, report_id))

@@ -126,8 +126,32 @@ def update(id, name, description):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of pipeline created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a pipeline by its ID, if the pipeline has no templates associated with it."""
+    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
+    # they are not the creator
+    if not yes:
+        # Try to find the record by id
+        pipeline = json.loads(pipelines.find_by_id(id))
+        # If the returned pipeline has a created_by field that does not match the user email, prompt the user to confirm
+        # the delete
+        user_email = config.load_var("email")
+        if "created_by" in pipeline and pipeline["created_by"] != user_email:
+            # If they decide not to delete, exit
+            if not click.confirm(
+                f"Pipeline with id {id} was created by {pipeline['created_by']}. Are you sure you want to delete?"
+            ):
+                LOGGER.info("Okay, aborting delete operation")
+                sys.exit(0)
+
     print(pipelines.delete(id))
 
 
