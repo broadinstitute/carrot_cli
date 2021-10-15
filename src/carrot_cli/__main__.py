@@ -21,8 +21,14 @@ __version__ = "0.3.2"
 # Create a logger for this module:
 LOGGER = logging.getLogger(__name__)
 
+# Context settings for commands, for overwriting some click defaults
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
-@click.group(name="carrot_cli")
+
+@click.group(
+    name="carrot_cli",
+    context_settings=CONTEXT_SETTINGS
+)
 @click.option(
     "-q",
     "--quiet",
