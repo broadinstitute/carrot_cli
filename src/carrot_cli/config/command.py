@@ -17,7 +17,16 @@ def main():
 @click.argument("variable")
 @click.argument("value")
 def set_var(variable, value):
-    """Set the value of a specified config variable"""
+    """
+    Set the value of a specified config variable
+
+    \b
+    Config variables:
+    carrot_server_address
+        The address of the CARROT server you'd like to connect to
+    email
+        Your email address, for provenance and notification purposes
+    """
     # If the user tries to set a variable that isn't a valid config variable, print a message
     if variable not in manager.CONFIG_VARIABLES:
         allowed_variables = ", ".join(manager.CONFIG_VARIABLES)
