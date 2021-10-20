@@ -4,6 +4,7 @@ import sys
 
 import click
 
+from .. import command_util
 from ..config import manager as config
 from ..rest import results, template_results
 
@@ -145,23 +146,7 @@ def update(id, name, description):
 )
 def delete(id, yes):
     """Delete a result definition by its ID, if the result is not mapped to any templates"""
-    # Unless user specifies --yes flag, check first to see if the record exists and prompt to user to confirm delete if
-    # they are not the creator
-    if not yes:
-        # Try to find the record by id
-        record = json.loads(results.find_by_id(id))
-        # If the returned record has a created_by field that does not match the user email, prompt the user to confirm
-        # the delete
-        user_email = config.load_var("email")
-        if "created_by" in record and record["created_by"] != user_email:
-            # If they decide not to delete, exit
-            if not click.confirm(
-                f"Result with id {id} was created by {record['created_by']}. Are you sure you want to delete?"
-            ):
-                LOGGER.info("Okay, aborting delete operation")
-                sys.exit(0)
-
-    print(results.delete(id))
+    command_util.delete(id, yes, results, "Result")
 
 
 @main.command(name="map_to_template")

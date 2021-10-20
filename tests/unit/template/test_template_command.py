@@ -1135,7 +1135,7 @@ def test_find_result_maps(find_result_maps_data):
             ),
             "interactive": {
                 "input": "y",
-                "message": "Template result mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "message": "Mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
                 "result with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
                 "you sure you want to delete? [y/N]: y\n",
             },
@@ -1166,7 +1166,7 @@ def test_find_result_maps(find_result_maps_data):
             "return": "",
             "interactive": {
                 "input": "n",
-                "message": "Template result mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "message": "Mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
                 "result with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
                 "you sure you want to delete? [y/N]: n",
             },
@@ -1561,7 +1561,7 @@ def test_find_report_maps(find_report_maps_data):
             ),
             "interactive": {
                 "input": "y",
-                "message": "Template report mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "message": "Mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
                 "report with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
                 "you sure you want to delete? [y/N]: y\n",
             },
@@ -1592,7 +1592,7 @@ def test_find_report_maps(find_report_maps_data):
             "return": "",
             "interactive": {
                 "input": "n",
-                "message": "Template report mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
+                "message": "Mapping for template with id cd987859-06fe-4b1a-9e96-47d4f36bf819 and "
                 "report with id 3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8 was created by adora@example.com. Are "
                 "you sure you want to delete? [y/N]: n",
             },
