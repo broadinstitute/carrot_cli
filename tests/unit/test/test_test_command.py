@@ -1,4 +1,5 @@
 import json
+import logging
 
 from click.testing import CliRunner
 
@@ -366,18 +367,120 @@ def test_update(update_data):
 @pytest.fixture(
     params=[
         {
-            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "args": ["test", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This test replaced the broken one",
+                    "test_input_defaults": {"in_greeted": "Cool Person"},
+                    "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                    "name": "New Sword of Protection test",
+                    "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
         },
         {
-            "args": ["run", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "args": ["test", "delete", "-y", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This test replaced the broken one",
+                    "test_input_defaults": {"in_greeted": "Cool Person"},
+                    "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                    "name": "New Sword of Protection test",
+                    "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": ["test", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This test replaced the broken one",
+                    "test_input_defaults": {"in_greeted": "Cool Person"},
+                    "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                    "name": "New Sword of Protection test",
+                    "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+            "interactive": {
+                "input": "y",
+                "message": "Test with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. Are "
+                "you sure you want to delete? [y/N]: y\n",
+            },
+        },
+        {
+            "args": ["test", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This test replaced the broken one",
+                    "test_input_defaults": {"in_greeted": "Cool Person"},
+                    "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                    "name": "New Sword of Protection test",
+                    "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "catra@example.com",
+            "return": "",
+            "interactive": {
+                "input": "n",
+                "message": "Test with id cd987859-06fe-4b1a-9e96-47d4f36bf819 was created by adora@example.com. Are "
+                "you sure you want to delete? [y/N]: n",
+            },
+            "logging": "Okay, aborting delete operation",
+        },
+        {
+            "args": ["test", "delete", "cd987859-06fe-4b1a-9e96-47d4f36bf819"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "title": "No test found",
+                    "status": 404,
+                    "detail": "No test found with the specified ID",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+            "email": "adora@example.com",
             "return": json.dumps(
                 {
-                    "title": "No run found",
+                    "title": "No test found",
                     "status": 404,
-                    "detail": "No run found with the specified ID",
+                    "detail": "No test found with the specified ID",
                 },
                 indent=4,
                 sort_keys=True,
@@ -386,19 +489,37 @@ def test_update(update_data):
     ]
 )
 def delete_data(request):
+    # We want to load the value from "email" from config
+    mockito.when(config).load_var("email").thenReturn(request.param["email"])
     # Set all requests to return None so only the one we expect will return a value
-    mockito.when(runs).delete(...).thenReturn(None)
+    mockito.when(tests).delete(...).thenReturn(None)
+    mockito.when(tests).find_by_id(...).thenReturn(None)
     # Mock up request response
-    mockito.when(runs).delete(request.param["args"][2]).thenReturn(
-        request.param["return"]
+    mockito.when(tests).delete(request.param["id"]).thenReturn(request.param["return"])
+    mockito.when(tests).find_by_id(request.param["id"]).thenReturn(
+        request.param["find_return"]
     )
     return request.param
 
 
-def test_delete(delete_data):
+def test_delete(delete_data, caplog):
+    caplog.set_level(logging.INFO)
     runner = CliRunner()
-    result = runner.invoke(carrot, delete_data["args"])
-    assert result.output == delete_data["return"] + "\n"
+    # Include interactive input and expected message if this test should trigger interactive stuff
+    if "interactive" in delete_data:
+        expected_output = (
+            delete_data["interactive"]["message"] + delete_data["return"] + "\n"
+        )
+        result = runner.invoke(
+            carrot, delete_data["args"], input=delete_data["interactive"]["input"]
+        )
+        assert result.output == expected_output
+    else:
+        result = runner.invoke(carrot, delete_data["args"])
+        assert result.output == delete_data["return"] + "\n"
+    # If we expect logging that we want to check, make sure it's there
+    if "logging" in delete_data:
+        assert delete_data["logging"] in caplog.text
 
 
 @pytest.fixture(

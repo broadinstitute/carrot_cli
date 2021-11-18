@@ -1,9 +1,12 @@
+import json
 import logging
 import sys
 
 import click
 
+from .. import command_util
 from .. import file_util
+
 # Naming this differently here than in other files because reports have a config attribute
 from ..config import manager as config_manager
 from ..rest import reports
@@ -182,6 +185,14 @@ def update(id, name, description, notebook, config):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of report created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a report by its ID, if the report has no templates, sections, or runs associated with it."""
-    print(reports.delete(id))
+    command_util.delete(id, yes, reports, "Report")

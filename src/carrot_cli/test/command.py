@@ -1,8 +1,10 @@
+import json
 import logging
 import sys
 
 import click
 
+from .. import command_util
 from .. import file_util
 from ..config import manager as config
 from ..rest import runs, tests
@@ -201,9 +203,17 @@ def update(id, name, description, test_input_defaults, eval_input_defaults):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of test created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a test by its ID, if the test has no runs associated with it"""
-    print(tests.delete(id))
+    command_util.delete(id, yes, tests, "Test")
 
 
 @main.command(name="run")

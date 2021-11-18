@@ -1,8 +1,10 @@
+import json
 import logging
 import sys
 
 import click
 
+from .. import command_util
 from ..config import manager as config
 from ..rest import results, template_results
 
@@ -134,9 +136,17 @@ def update(id, name, description):
 
 @main.command(name="delete")
 @click.argument("id")
-def find_by_id(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of result created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a result definition by its ID, if the result is not mapped to any templates"""
-    print(results.delete(id))
+    command_util.delete(id, yes, results, "Result")
 
 
 @main.command(name="map_to_template")

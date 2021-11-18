@@ -1,8 +1,10 @@
+import json
 import logging
 import sys
 
 import click
 
+from .. import command_util
 from .. import file_util
 from ..config import manager as config
 from ..rest import runs, template_reports, template_results, templates
@@ -186,9 +188,17 @@ def update(id, name, description, test_wdl, eval_wdl):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of template created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a template by its ID, if it has no tests associated with it"""
-    print(templates.delete(id))
+    command_util.delete(id, yes, templates, "Template")
 
 
 @main.command(name="find_runs")
@@ -465,13 +475,21 @@ def find_result_maps(
 @main.command(name="delete_result_map_by_id")
 @click.argument("id")
 @click.argument("result_id")
-def delete_result_map_by_id(id, result_id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of mapping created by "
+    "another user",
+)
+def delete_result_map_by_id(id, result_id, yes):
     """
     Delete the mapping record from the template specified by ID to the result specified by
     RESULT_ID, if the specified template has no non-failed (i.e. successful or currently running)
     runs associated with it
     """
-    print(template_results.delete_map_by_ids(id, result_id))
+    command_util.delete_map(id, result_id, yes, template_results, "template", "result")
 
 
 @main.command(name="map_to_report")
@@ -574,10 +592,18 @@ def find_report_maps(
 @main.command(name="delete_report_map_by_id")
 @click.argument("id")
 @click.argument("report_id")
-def delete_report_map_by_id(id, report_id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of mapping created by "
+    "another user",
+)
+def delete_report_map_by_id(id, report_id, yes):
     """
     Delete the mapping record from the template specified by ID to the report specified by
     REPORT_ID, if the specified template has no non-failed (i.e. successful or currently running)
     runs associated with it
     """
-    print(template_reports.delete_map_by_ids(id, report_id))
+    command_util.delete_map(id, report_id, yes, template_reports, "template", "report")

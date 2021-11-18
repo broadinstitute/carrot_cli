@@ -7,6 +7,8 @@ LOGGER = logging.getLogger(__name__)
 
 CONFIG_VARIABLES = ["carrot_server_address", "email"]
 
+__CURRENT_CONFIG = {}
+
 
 def create_config_dir_if_not_exists():
     """Creates the .carrot_cli dir and config file if they don't exist"""

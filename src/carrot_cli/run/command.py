@@ -1,8 +1,10 @@
+import json
 import logging
 import sys
 
 import click
 
+from .. import command_util
 from .. import file_util
 from ..config import manager as config
 from ..rest import run_reports, runs
@@ -24,9 +26,17 @@ def find_by_id(id):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of run created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a run by its ID, if the run has a failed status"""
-    print(runs.delete(id))
+    command_util.delete(id, yes, runs, "Run")
 
 
 @main.command(name="create_report")
@@ -171,9 +181,17 @@ def find_reports(
 @main.command(name="delete_report_by_ids")
 @click.argument("id")
 @click.argument("report_id")
-def delete_report_by_ids(id, report_id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of report created by "
+    "another user",
+)
+def delete_report_by_ids(id, report_id, yes):
     """
     Delete the report record for the run specified by ID to the report specified by
     REPORT_ID
     """
-    print(run_reports.delete_map_by_ids(id, report_id))
+    command_util.delete_map(id, report_id, yes, run_reports, "run", "report")

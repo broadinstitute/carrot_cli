@@ -4,6 +4,7 @@ import sys
 
 import click
 
+from .. import command_util
 from .. import file_util
 from ..config import manager as config
 from ..rest import pipelines, runs
@@ -126,9 +127,17 @@ def update(id, name, description):
 
 @main.command(name="delete")
 @click.argument("id")
-def delete(id):
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Automatically answers yes if prompted to confirm delete of pipeline created by "
+    "another user",
+)
+def delete(id, yes):
     """Delete a pipeline by its ID, if the pipeline has no templates associated with it."""
-    print(pipelines.delete(id))
+    command_util.delete(id, yes, pipelines, "Pipeline")
 
 
 @main.command(name="find_runs")
