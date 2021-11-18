@@ -8,6 +8,7 @@ Current version: 0.3.3
 * [Installation](#installation)
 * [Setup](#setup)
 * [Using carrot_cli](#using)
+* [Documentation](#documentation)
 * [Development](#development)
     * [Linting files](#linting-files)
     * [Tests](#tests)
@@ -28,6 +29,10 @@ Using carrot_cli requires access to a running [CARROT](https://github.com/broadi
 If you are new to CARROT, start with the [User Guide](https://github.com/broadinstitute/carrot/blob/master/UserGuide.md), which provides an explanation of how CARROT works and how it should be used, along with examples using carrot_cli commands.
 
 If you would like to start with a simple example that will allow you to run a test yourself, such an example exists in the [carrot-example-test](https://github.com/broadinstitute/carrot-example-test) repo.
+
+## <a name="documentation">Documentation</a>
+[carrot_cli documentation](https://broadinstitute.github.io/carrot_cli/)
+
 
 ## <a name="development">Development</a>
 
