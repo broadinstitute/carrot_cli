@@ -3,8 +3,9 @@ import sys
 
 import click
 
+from .. import dependency_util
 from ..config import manager as config
-from ..rest import software
+from ..rest import software as software_rest
 from .software_version import command as software_version
 
 LOGGER = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ def main():
 @click.argument("id")
 def find_by_id(id):
     """Retrieve a software definition by its ID"""
-    print(software.find_by_id(id))
+    print(software_rest.find_by_id(id))
 
 
 @main.command(name="find")
@@ -82,7 +83,7 @@ def find(
 ):
     """Retrieve software definitions filtered to match the specified parameters"""
     print(
-        software.find(
+        software_rest.find(
             software_id,
             name,
             description,
@@ -124,16 +125,18 @@ def create(name, description, repository_url, created_by):
                 "there must be a value set for email."
             )
             sys.exit(1)
-    print(software.create(name, description, repository_url, created_by))
+    print(software_rest.create(name, description, repository_url, created_by))
 
 
 @main.command(name="update")
-@click.argument("id")
+@click.argument("software")
 @click.option("--name", default="", help="The name of the software")
 @click.option("--description", default="", help="The description of the software")
-def update(id, name, description):
-    """Update software definition with ID with the specified parameters"""
-    print(software.update(id, name, description))
+def update(software, name, description):
+    """Update software definition for SOFTWARE (id or name) with the specified parameters"""
+    # Process software to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(software, software_rest, "software_id", "software")
+    print(software_rest.update(id, name, description))
 
 
 main.add_command(software_version.main)

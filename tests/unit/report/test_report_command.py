@@ -680,19 +680,238 @@ def test_create(create_data, caplog):
                 sort_keys=True,
             ),
         },
+{
+            "args": [
+                "report",
+                "update",
+                "Old Sword of Protection report",
+                "--description",
+                "This new report replaced the broken one",
+                "--name",
+                "New Sword of Protection report",
+                "--notebook",
+                "tests/data/mock_report_notebook.ipynb",
+                "--config",
+                "tests/data/mock_report_config.json",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "New Sword of Protection report",
+                "This new report replaced the broken one",
+                {
+                    "metadata": {
+                        "language_info": {
+                            "codemirror_mode": {"name": "ipython", "version": 3},
+                            "file_extension": ".py",
+                            "mimetype": "text/x-python",
+                            "name": "python",
+                            "nbconvert_exporter": "python",
+                            "pygments_lexer": "ipython3",
+                            "version": "3.8.5-final",
+                        },
+                        "orig_nbformat": 2,
+                        "kernelspec": {
+                            "name": "python3",
+                            "display_name": "Python 3.8.5 64-bit",
+                            "metadata": {
+                                "interpreter": {
+                                    "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                }
+                            },
+                        },
+                    },
+                    "nbformat": 4,
+                    "nbformat_minor": 2,
+                    "cells": [
+                        {
+                            "cell_type": "code",
+                            "execution_count": None,
+                            "metadata": {},
+                            "outputs": [],
+                            "source": [
+                                'message = carrot_run_data["results"]["Greeting"]\n',
+                                "print(message)",
+                            ],
+                        },
+                        {
+                            "cell_type": "code",
+                            "execution_count": None,
+                            "metadata": {},
+                            "outputs": [],
+                            "source": [
+                                'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                "print(message_file.read())",
+                            ],
+                        },
+                        {
+                            "cell_type": "code",
+                            "execution_count": None,
+                            "metadata": {},
+                            "outputs": [],
+                            "source": ["print('Thanks')"],
+                        },
+                    ],
+                },
+                {"cpu": 2},
+            ],
+            "from_name": {
+                "name": "Old Sword of Protection report",
+                "return": json.dumps(
+                    [
+                        {
+                            "config": {"cpu": 2},
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This old report is old",
+                            "name": "Old Sword of Protection report",
+                            "notebook": {
+                                "metadata": {
+                                    "language_info": {
+                                        "codemirror_mode": {"name": "ipython", "version": 3},
+                                        "file_extension": ".py",
+                                        "mimetype": "text/x-python",
+                                        "name": "python",
+                                        "nbconvert_exporter": "python",
+                                        "pygments_lexer": "ipython3",
+                                        "version": "3.8.5-final",
+                                    },
+                                    "orig_nbformat": 2,
+                                    "kernelspec": {
+                                        "name": "python3",
+                                        "display_name": "Python 3.8.5 64-bit",
+                                        "metadata": {
+                                            "interpreter": {
+                                                "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                            }
+                                        },
+                                    },
+                                },
+                                "nbformat": 4,
+                                "nbformat_minor": 2,
+                                "cells": [
+                                    {
+                                        "cell_type": "code",
+                                        "execution_count": None,
+                                        "metadata": {},
+                                        "outputs": [],
+                                        "source": [
+                                            'message = carrot_run_data["results"]["Greeting"]\n',
+                                            "print(message)",
+                                        ],
+                                    },
+                                    {
+                                        "cell_type": "code",
+                                        "execution_count": None,
+                                        "metadata": {},
+                                        "outputs": [],
+                                        "source": [
+                                            'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                            "print(message_file.read())",
+                                        ],
+                                    },
+                                    {
+                                        "cell_type": "code",
+                                        "execution_count": None,
+                                        "metadata": {},
+                                        "outputs": [],
+                                        "source": ["print('Thanks')"],
+                                    },
+                                ],
+                            },
+                            "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                {
+                    "config": {"cpu": 2},
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new report replaced the broken one",
+                    "name": "New Sword of Protection report",
+                    "notebook": {
+                        "metadata": {
+                            "language_info": {
+                                "codemirror_mode": {"name": "ipython", "version": 3},
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8.5-final",
+                            },
+                            "orig_nbformat": 2,
+                            "kernelspec": {
+                                "name": "python3",
+                                "display_name": "Python 3.8.5 64-bit",
+                                "metadata": {
+                                    "interpreter": {
+                                        "hash": "1ee38ef4a5a9feb55287fd749643f13d043cb0a7addaab2a9c224cbe137c0062"
+                                    }
+                                },
+                            },
+                        },
+                        "nbformat": 4,
+                        "nbformat_minor": 2,
+                        "cells": [
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message = carrot_run_data["results"]["Greeting"]\n',
+                                    "print(message)",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": [
+                                    'message_file = open(carrot_downloads["results"]["File Result"], \'r\')\n',
+                                    "print(message_file.read())",
+                                ],
+                            },
+                            {
+                                "cell_type": "code",
+                                "execution_count": None,
+                                "metadata": {},
+                                "outputs": [],
+                                "source": ["print('Thanks')"],
+                            },
+                        ],
+                    },
+                    "report_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
         {
             "args": ["report", "update"],
             "params": [],
-            "return": "Usage: carrot_cli report update [OPTIONS] ID\n"
+            "return": "Usage: carrot_cli report update [OPTIONS] REPORT\n"
             "Try 'carrot_cli report update -h' for help.\n"
             "\n"
-            "Error: Missing argument 'ID'.",
+            "Error: Missing argument 'REPORT'.",
         },
     ]
 )
 def update_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(reports).update(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(reports).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response only if we expect it to get that far
     if len(request.param["params"]) > 0:
         mockito.when(reports).update(

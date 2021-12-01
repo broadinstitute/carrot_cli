@@ -5,9 +5,10 @@ import sys
 import click
 
 from .. import command_util
+from .. import dependency_util
 from .. import file_util
 from ..config import manager as config
-from ..rest import run_reports, runs
+from ..rest import reports, run_reports, runs
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ def find_by_id(id):
 
 
 @main.command(name="delete")
-@click.argument("id")
+@click.argument("run")
 @click.option(
     "--yes",
     "-y",
@@ -34,14 +35,18 @@ def find_by_id(id):
     help="Automatically answers yes if prompted to confirm delete of run created by "
     "another user",
 )
-def delete(id, yes):
-    """Delete a run by its ID, if the run has a failed status"""
+def delete(run, yes):
+    """
+    Delete the run specified by RUN (id or name), if the run has a failed status
+    """
+    # Process run to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(run, runs, "run_id", "run")
     command_util.delete(id, yes, runs, "Run")
 
 
 @main.command(name="create_report")
-@click.argument("id")
-@click.argument("report_id")
+@click.argument("run")
+@click.argument("report")
 @click.option("--created_by", default="", help="Email of the creator of the mapping")
 @click.option(
     "--delete_failed",
@@ -49,10 +54,10 @@ def delete(id, yes):
     help="If set, and there is a failed record for this run with this report, will overwrite that "
     "record",
 )
-def create_report(id, report_id, created_by, delete_failed):
+def create_report(run, report, created_by, delete_failed):
     """
-    Start a job to generate a filled report using data from the run specified by ID with the
-    report specified by REPORT_ID
+    Start a job to generate a filled report using data from the run specified by RUN (id or name)
+    with the report specified by REPORT (id or name)
     """
     # If created_by is not set and there is an email config variable, fill with that
     if created_by == "":
@@ -65,23 +70,31 @@ def create_report(id, report_id, created_by, delete_failed):
                 "there must be a value set for email."
             )
             sys.exit(1)
+    # Process run to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(run, runs, "run_id", "run")
+    # Do the same for report
+    report_id = dependency_util.get_id_from_id_or_name_and_handle_error(report, reports, "report_id", "report")
     print(run_reports.create_map(id, report_id, created_by, delete_failed))
 
 
 @main.command(name="find_report_by_ids")
-@click.argument("id")
-@click.argument("report_id")
-def find_report_by_ids(id, report_id):
+@click.argument("run")
+@click.argument("report")
+def find_report_by_ids(run, report):
     """
-    Retrieve the report record for the run specified by ID and the report specified by
-    REPORT_ID
+    Retrieve the report record for the run specified by RUN (id or name) and the report specified
+    by REPORT (id or name)
     """
+    # Process run to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(run, runs, "run_id", "run")
+    # Do the same for report
+    report_id = dependency_util.get_id_from_id_or_name_and_handle_error(report, reports, "report_id", "report")
     print(run_reports.find_map_by_ids(id, report_id))
 
 
 @main.command(name="find_reports")
-@click.argument("id")
-@click.option("--report_id", default="", help="The id of the report")
+@click.argument("run")
+@click.option("--report", "--report_id", default="", help="The id or name of the report")
 @click.option(
     "--status", default="", help="The status of the job generating the report"
 )
@@ -141,8 +154,8 @@ def find_report_by_ids(id, report_id):
     "starting from the second record to be created",
 )
 def find_reports(
-    id,
-    report_id,
+    run,
+    report,
     status,
     cromwell_job_id,
     results,
@@ -156,9 +169,15 @@ def find_reports(
     offset,
 ):
     """
-    Retrieve the report record from the run specified by ID for the report specified by
-    REPORT_ID
+    Retrieve the report records for the run specified by RUN (id or name) for the specified params
     """
+    # Process run to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(run, runs, "run_id", "run")
+    # Same for report
+    if report:
+        report_id = dependency_util.get_id_from_id_or_name_and_handle_error(report, reports, "report_id", "report")
+    else:
+        report_id = ""
     print(
         run_reports.find_maps(
             id,
@@ -179,8 +198,8 @@ def find_reports(
 
 
 @main.command(name="delete_report_by_ids")
-@click.argument("id")
-@click.argument("report_id")
+@click.argument("run")
+@click.argument("report")
 @click.option(
     "--yes",
     "-y",
@@ -189,9 +208,13 @@ def find_reports(
     help="Automatically answers yes if prompted to confirm delete of report created by "
     "another user",
 )
-def delete_report_by_ids(id, report_id, yes):
+def delete_report_by_ids(run, report, yes):
     """
-    Delete the report record for the run specified by ID to the report specified by
-    REPORT_ID
+    Delete the report record for the run specified by RUN (id or name) to the report specified by
+    REPORT (id or name)
     """
+    # Process run to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(run, runs, "run_id", "run")
+    # Do the same for report
+    report_id = dependency_util.get_id_from_id_or_name_and_handle_error(report, reports, "report_id", "report")
     command_util.delete_map(id, report_id, yes, run_reports, "run", "report")

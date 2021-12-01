@@ -11,21 +11,20 @@ def find_by_id(test_id):
 
 
 def find(
-    test_id,
-    template_id,
-    name,
-    template_name,
-    description,
-    test_input_defaults,
-    test_option_defaults,
-    eval_input_defaults,
-    eval_option_defaults,
-    created_by,
-    created_before,
-    created_after,
-    sort,
-    limit,
-    offset,
+    test_id="",
+    template_id="",
+    name="",
+    description="",
+    test_input_defaults="",
+    test_option_defaults="",
+    eval_input_defaults="",
+    eval_option_defaults="",
+    created_by="",
+    created_before="",
+    created_after="",
+    sort="",
+    limit="",
+    offset="",
 ):
     """Submits a request to CARROT's tests find mapping"""
     # Create parameter list
@@ -33,7 +32,6 @@ def find(
         ("test_id", test_id),
         ("template_id", template_id),
         ("name", name),
-        ("template_name", template_name),
         ("description", description),
         ("test_input_defaults", test_input_defaults),
         ("test_option_defaults", test_option_defaults),

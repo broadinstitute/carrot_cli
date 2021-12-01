@@ -5,7 +5,7 @@ from click.testing import CliRunner
 import mockito
 import pytest
 from carrot_cli.__main__ import main_entry as carrot
-from carrot_cli.rest import software_versions
+from carrot_cli.rest import software, software_versions
 
 
 @pytest.fixture(autouse=True)
@@ -82,8 +82,6 @@ def test_find_by_id(find_by_id_data):
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "--commit",
                 "ca82a6dff817ec66f44342007202690a93763949",
-                "--software_name",
-                "Sword of Protection software",
                 "--created_before",
                 "2020-10-00T00:00:00.000000",
                 "--created_after",
@@ -99,13 +97,74 @@ def test_find_by_id(find_by_id_data):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "ca82a6dff817ec66f44342007202690a93763949",
-                "Sword of Protection software",
                 "2020-10-00T00:00:00.000000",
                 "2020-09-00T00:00:00.000000",
                 "asc(commit)",
                 1,
                 0,
             ],
+            "return": json.dumps(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:06.371563",
+                        "commit": "ca82a6dff817ec66f44342007202690a93763949",
+                        "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "software_version_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ],
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
+            "args": [
+                "software",
+                "version",
+                "find",
+                "--software_version_id",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--software",
+                "New Sword of Protection software",
+                "--commit",
+                "ca82a6dff817ec66f44342007202690a93763949",
+                "--created_before",
+                "2020-10-00T00:00:00.000000",
+                "--created_after",
+                "2020-09-00T00:00:00.000000",
+                "--sort",
+                "asc(commit)",
+                "--limit",
+                1,
+                "--offset",
+                0,
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "ca82a6dff817ec66f44342007202690a93763949",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "asc(commit)",
+                1,
+                0,
+            ],
+            "from_name": {
+                "name": "New Sword of Protection software",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "repository_url": "example.com/repo.git",
+                            "description": "This new software replaced the broken one",
+                            "name": "New Sword of Protection software",
+                            "software_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
             "return": json.dumps(
                 [
                     {
@@ -134,7 +193,6 @@ def test_find_by_id(find_by_id_data):
                 "",
                 "",
                 "",
-                "",
                 20,
                 0,
             ],
@@ -153,6 +211,13 @@ def test_find_by_id(find_by_id_data):
 def find_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(software_versions).find(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(software).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response
     mockito.when(software_versions).find(
         request.param["params"][0],
@@ -163,7 +228,6 @@ def find_data(request):
         request.param["params"][5],
         request.param["params"][6],
         request.param["params"][7],
-        request.param["params"][8],
     ).thenReturn(request.param["return"])
     return request.param
 

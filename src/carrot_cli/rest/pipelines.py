@@ -12,15 +12,15 @@ def find_by_id(pipeline_id):
 
 
 def find(
-    pipeline_id,
-    name,
-    description,
-    created_by,
-    created_before,
-    created_after,
-    sort,
-    limit,
-    offset,
+    pipeline_id="",
+    name="",
+    description="",
+    created_by="",
+    created_before="",
+    created_after="",
+    sort="",
+    limit="",
+    offset="",
 ):
     """Submits a request to CARROT's pipelines find mapping"""
     # Create parameter list

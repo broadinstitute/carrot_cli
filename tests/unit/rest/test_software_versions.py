@@ -62,7 +62,6 @@ def test_find_by_id(find_by_id_data):
                 ("software_version_id", ""),
                 ("software_id", ""),
                 ("commit", "ca82a6dff817ec66f44342007202690a93763949"),
-                ("software_name", ""),
                 ("created_before", ""),
                 ("created_after", ""),
                 ("sort", ""),
@@ -87,7 +86,6 @@ def test_find_by_id(find_by_id_data):
                 ("software_version_id", ""),
                 ("software_id", ""),
                 ("commit", "ca82a6dff817ec66f44342007202690a93763949"),
-                ("software_name", ""),
                 ("created_before", ""),
                 ("created_after", ""),
                 ("sort", ""),
@@ -126,6 +124,5 @@ def test_find(find_data):
         find_data["params"][5][1],
         find_data["params"][6][1],
         find_data["params"][7][1],
-        find_data["params"][8][1],
     )
     assert result == find_data["return"]

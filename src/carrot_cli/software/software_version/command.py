@@ -2,7 +2,9 @@ import logging
 
 import click
 
+from ... import dependency_util
 from ...rest import software_versions
+from ...rest import software as software_rest
 from .software_build import command as software_build
 
 LOGGER = logging.getLogger(__name__)
@@ -27,16 +29,12 @@ def find_by_id(id):
     help="The ID of the software version record, a version 4 UUID",
 )
 @click.option(
+    "--software",
     "--software_id",
     default="",
-    help="The ID of the software to find version records of, a version 4 UUID",
+    help="The ID or name of the software to find version records of",
 )
 @click.option("--commit", default="", help="The commit hash for the version")
-@click.option(
-    "--software_name",
-    default="",
-    help="The name of the software to find version records of, case-sensitive",
-)
 @click.option(
     "--created_before",
     default="",
@@ -71,9 +69,8 @@ def find_by_id(id):
 )
 def find(
     software_version_id,
-    software_id,
+    software,
     commit,
-    software_name,
     created_before,
     created_after,
     sort,
@@ -81,12 +78,16 @@ def find(
     offset,
 ):
     """Retrieve software version records filtered to match the specified parameters"""
+    # Process software to get id if it's a name
+    if software:
+        software_id = dependency_util.get_id_from_id_or_name_and_handle_error(software, software_rest, "software_id", "software")
+    else:
+        software_id = ""
     print(
         software_versions.find(
             software_version_id,
             software_id,
             commit,
-            software_name,
             created_before,
             created_after,
             sort,

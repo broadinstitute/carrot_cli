@@ -274,18 +274,68 @@ def test_create(create_data, caplog):
             ),
         },
         {
+            "args": [
+                "pipeline",
+                "update",
+                "Old Sword of Protection Pipeline",
+                "--description",
+                "This new pipeline replaced the broken one",
+                "--name",
+                "New Sword of Protection Pipeline",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "New Sword of Protection Pipeline",
+                "This new pipeline replaced the broken one",
+            ],
+            "from_name": {
+                "name": "Old Sword of Protection Pipeline",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This is the old description for this pipeline",
+                            "name": "Old Sword of Protection Pipeline",
+                            "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new pipeline replaced the broken one",
+                    "name": "New Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
             "args": ["pipeline", "update"],
             "params": [],
-            "return": "Usage: carrot_cli pipeline update [OPTIONS] ID\n"
+            "return": "Usage: carrot_cli pipeline update [OPTIONS] PIPELINE\n"
             "Try 'carrot_cli pipeline update -h' for help.\n"
             "\n"
-            "Error: Missing argument 'ID'.",
+            "Error: Missing argument 'PIPELINE'.",
         },
     ]
 )
 def update_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(pipelines).update(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(pipelines).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response only if we expect it to get that far
     if len(request.param["params"]) > 0:
         mockito.when(pipelines).update(
@@ -317,6 +367,39 @@ def test_update(update_data):
                 }
             ),
             "email": "adora@example.com",
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": ["pipeline", "delete", "New Sword of Protection Pipeline"],
+            "id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+            "find_return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "description": "This new pipeline replaced the broken one",
+                    "name": "New Sword of Protection Pipeline",
+                    "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                }
+            ),
+            "email": "adora@example.com",
+            "from_name": {
+                "name": "New Sword of Protection Pipeline",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This is the old description for this pipeline",
+                            "name": "New Sword of Protection Pipeline",
+                            "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row"}, indent=4, sort_keys=True
             ),
@@ -421,6 +504,13 @@ def delete_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(pipelines).delete(...).thenReturn(None)
     mockito.when(pipelines).find_by_id(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(pipelines).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up find_by_id return val
     mockito.when(pipelines).find_by_id(request.param["id"]).thenReturn(
         request.param["find_return"]
@@ -535,6 +625,102 @@ def test_delete(delete_data, caplog):
             ),
         },
         {
+            "args": [
+                "pipeline",
+                "find_runs",
+                "Sword of Protection pipeline",
+                "--name",
+                "Queen of Bright Moon run",
+                "--status",
+                "succeeded",
+                "--test_input",
+                "tests/data/mock_test_input.json",
+                "--test_options",
+                "tests/data/mock_test_options.json",
+                "--eval_input",
+                "tests/data/mock_eval_input.json",
+                "--eval_options",
+                "tests/data/mock_eval_options.json",
+                "--test_cromwell_job_id",
+                "d9855002-6b71-429c-a4de-8e90222488cd",
+                "--eval_cromwell_job_id",
+                "03958293-6b71-429c-a4de-8e90222488cd",
+                "--created_before",
+                "2020-10-00T00:00:00.000000",
+                "--created_after",
+                "2020-09-00T00:00:00.000000",
+                "--created_by",
+                "glimmer@example.com",
+                "--finished_before",
+                "2020-10-00T00:00:00.000000",
+                "--finished_after",
+                "2020-09-00T00:00:00.000000",
+                "--sort",
+                "asc(name)",
+                "--limit",
+                1,
+                "--offset",
+                0,
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "Queen of Bright Moon run",
+                "succeeded",
+                {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
+                {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
+                "d9855002-6b71-429c-a4de-8e90222488cd",
+                "03958293-6b71-429c-a4de-8e90222488cd",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "glimmer@example.com",
+                "2020-10-00T00:00:00.000000",
+                "2020-09-00T00:00:00.000000",
+                "asc(name)",
+                1,
+                0,
+            ],
+            "from_name": {
+                "name": "Sword of Protection pipeline",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This is the old description for this pipeline",
+                            "name": "Sword of Protection pipeline",
+                            "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                [
+                    {
+                        "created_at": "2020-09-16T18:48:06.371563",
+                        "finished_at": "2020-09-16T18:58:06.371563",
+                        "created_by": "glimmer@example.com",
+                        "test_input": {"in_greeted": "Cool Person"},
+                        "test_options": {"option": "other_value"},
+                        "eval_input": {"in_output_filename": "test_greeting.txt"},
+                        "eval_options": {"option": "value"},
+                        "status": "succeeded",
+                        "results": {},
+                        "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
+                        "eval_cromwell_job_id": "03958293-6b71-429c-a4de-8e90222488cd",
+                        "name": "Queen of Bright Moon run",
+                        "test_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        "run_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    }
+                ],
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
             "args": ["pipeline", "find_runs", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
@@ -581,6 +767,13 @@ def test_delete(delete_data, caplog):
 def find_runs_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(runs).find(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(pipelines).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response
     if len(request.param["params"]) > 0:
         mockito.when(runs).find(
@@ -642,6 +835,43 @@ def test_find_runs(find_runs_data, caplog):
             "args": [
                 "pipeline",
                 "subscribe",
+                "Sword of Protection pipeline",
+                "--email",
+                "netossa@example.com",
+            ],
+            "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
+            "from_name": {
+                "name": "Sword of Protection pipeline",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This is the old description for this pipeline",
+                            "name": "Sword of Protection pipeline",
+                            "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                {
+                    "subscription_id": "361b3b95-4a6e-40d9-bd98-f92b2959864e",
+                    "entity_type": "pipeline",
+                    "entity_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "email": "netossa@example.com",
+                    "created_at": "2020-09-23T19:41:46.839880",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
+            "args": [
+                "pipeline",
+                "subscribe",
                 "89657859-06fe-4b1a-9e96-47d4f36bf819",
                 "--email",
                 "spinnerella@example.com",
@@ -681,6 +911,13 @@ def subscribe_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(pipelines).subscribe(...).thenReturn(None)
     mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(pipelines).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response
     mockito.when(pipelines).subscribe(
         request.param["params"][0], request.param["params"][1]
@@ -705,6 +942,35 @@ def test_subscribe(subscribe_data):
                 "netossa@example.com",
             ],
             "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
+            "return": json.dumps(
+                {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
+            ),
+        },
+        {
+            "args": [
+                "pipeline",
+                "unsubscribe",
+                "Sword of Protection pipeline",
+                "--email",
+                "netossa@example.com",
+            ],
+            "params": ["cd987859-06fe-4b1a-9e96-47d4f36bf819", "netossa@example.com"],
+            "from_name": {
+                "name": "Sword of Protection pipeline",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This is the old description for this pipeline",
+                            "name": "Sword of Protection pipeline",
+                            "pipeline_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
             "return": json.dumps(
                 {"message": "Successfully deleted 1 row(s)"}, indent=4, sort_keys=True
             ),
@@ -744,6 +1010,13 @@ def unsubscribe_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(pipelines).unsubscribe(...).thenReturn(None)
     mockito.when(config).load_var_no_error("email").thenReturn("frosta@example.com")
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(pipelines).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response
     mockito.when(pipelines).unsubscribe(
         request.param["params"][0], request.param["params"][1]
