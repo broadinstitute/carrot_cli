@@ -46,9 +46,19 @@ def find_by_id(id):
     help="A JSON file containing the default inputs to the test WDL for the test",
 )
 @click.option(
+    "--test_option_defaults",
+    default="",
+    help="A JSON file containing the default workflow options for the test WDL for the test",
+)
+@click.option(
     "--eval_input_defaults",
     default="",
     help="A JSON file containing the default inputs to the eval WDL for the test",
+)
+@click.option(
+    "--eval_option_defaults",
+    default="",
+    help="A JSON file containing the default workflow options for the eval WDL for the test",
 )
 @click.option(
     "--created_before",
@@ -90,7 +100,9 @@ def find(
     template_name,
     description,
     test_input_defaults,
+    test_option_defaults,
     eval_input_defaults,
+    eval_option_defaults,
     created_by,
     created_before,
     created_after,
@@ -99,9 +111,12 @@ def find(
     offset,
 ):
     """Retrieve tests filtered to match the specified parameters"""
-    # Load data from files for test_input_defaults and eval_input_defaults, if set
+    # Load data from files for test_input_defaults, test_option_defaults, eval_input_defaults and eval_option_defaults,
+    # if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
     eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
+    test_option_defaults = file_util.read_file_to_json(test_option_defaults)
+    eval_option_defaults = file_util.read_file_to_json(eval_option_defaults)
 
     print(
         tests.find(
@@ -111,7 +126,9 @@ def find(
             template_name,
             description,
             test_input_defaults,
+            test_option_defaults,
             eval_input_defaults,
+            eval_option_defaults,
             created_by,
             created_before,
             created_after,
@@ -136,9 +153,19 @@ def find(
     help="A JSON file containing the default inputs to the test WDL for the test",
 )
 @click.option(
+    "--test_option_defaults",
+    default="",
+    help="A JSON file containing the default workflow options for the test WDL for the test",
+)
+@click.option(
     "--eval_input_defaults",
     default="",
     help="A JSON file containing the default inputs to the eval WDL for the test",
+)
+@click.option(
+    "--eval_option_defaults",
+    default="",
+    help="A JSON file containing the default workflow options for the eval WDL for the test",
 )
 @click.option(
     "--created_by",
@@ -146,7 +173,14 @@ def find(
     help="Email of the creator of the test.  Defaults to email config variable",
 )
 def create(
-    name, template_id, description, test_input_defaults, eval_input_defaults, created_by
+    name,
+    template_id,
+    description,
+    test_input_defaults,
+    test_option_defaults,
+    eval_input_defaults,
+    eval_option_defaults,
+    created_by
 ):
     """Create test with the specified parameters"""
     # If created_by is not set and there is an email config variable, fill with that
@@ -160,16 +194,21 @@ def create(
                 "there must be a value set for email."
             )
             sys.exit(1)
-    # Load data from files for test_input_defaults and eval_input_defaults, if set
+    # Load data from files for test_input_defaults, test_option_defaults, eval_input_defaults and eval_option_defaults,
+    # if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
     eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
+    test_option_defaults = file_util.read_file_to_json(test_option_defaults)
+    eval_option_defaults = file_util.read_file_to_json(eval_option_defaults)
     print(
         tests.create(
             name,
             template_id,
             description,
             test_input_defaults,
+            test_option_defaults,
             eval_input_defaults,
+            eval_option_defaults,
             created_by,
         )
     )
@@ -187,18 +226,37 @@ def create(
     "currently running) runs associated with it",
 )
 @click.option(
+    "--test_option_defaults",
+    default="",
+    help="A JSON file containing the default workflow options for the test WDL for the test. Updating this "
+    "parameter is allowed only if the specified test has no non-failed (i.e. successful or "
+    "currently running) runs associated with it",
+)
+@click.option(
     "--eval_input_defaults",
     default="",
     help="A JSON file containing the default inputs to the eval WDL for the test. Updating this "
     "parameter is allowed only if the specified test has no non-failed (i.e. successful or "
     "currently running) runs associated with it",
 )
-def update(id, name, description, test_input_defaults, eval_input_defaults):
+@click.option(
+    "--eval_option_defaults",
+    default="",
+    help="A JSON file containing the default workflow options for the eval WDL for the test. Updating this "
+    "parameter is allowed only if the specified test has no non-failed (i.e. successful or "
+    "currently running) runs associated with it",
+)
+def update(id, name, description, test_input_defaults, test_option_defaults, eval_input_defaults, eval_option_defaults):
     """Update test with ID with the specified parameters"""
-    # Load data from files for test_input_defaults and eval_input_defaults, if set
+    # Load data from files for test_input_defaults, test_option_defaults, eval_input_defaults and eval_option_defaults,
+    # if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
     eval_input_defaults = file_util.read_file_to_json(eval_input_defaults)
-    print(tests.update(id, name, description, test_input_defaults, eval_input_defaults))
+    test_option_defaults = file_util.read_file_to_json(test_option_defaults)
+    eval_option_defaults = file_util.read_file_to_json(eval_option_defaults)
+    print(tests.update(
+        id, name, description, test_input_defaults, test_option_defaults, eval_input_defaults, eval_option_defaults
+    ))
 
 
 @main.command(name="delete")
@@ -229,16 +287,26 @@ def delete(id, yes):
     help="A JSON file containing the inputs to the test WDL for the run",
 )
 @click.option(
+    "--test_options",
+    default="",
+    help="A JSON file containing the workflow options to the test WDL for the run",
+)
+@click.option(
     "--eval_input",
     default="",
     help="A JSON file containing the inputs to the eval WDL for the run",
+)
+@click.option(
+    "--eval_options",
+    default="",
+    help="A JSON file containing the workflow options to the eval WDL for the run",
 )
 @click.option(
     "--created_by",
     default="",
     help="Email of the creator of the run.  Defaults to email config variable",
 )
-def run(id, name, test_input, eval_input, created_by):
+def run(id, name, test_input, test_options, eval_input, eval_options, created_by):
     """Start a run for the test specified by ID with the specified params"""
     # If created_by is not set and there is an email config variable, fill with that
     if created_by == "":
@@ -251,10 +319,12 @@ def run(id, name, test_input, eval_input, created_by):
                 "there must be a value set for email."
             )
             sys.exit(1)
-    # Load data from files for test_input and eval_input, if set
+    # Load data from files for test_input, test_options, eval_input and eval_options, if set
     test_input = file_util.read_file_to_json(test_input)
+    test_options = file_util.read_file_to_json(test_options)
     eval_input = file_util.read_file_to_json(eval_input)
-    print(tests.run(id, name, test_input, eval_input, created_by))
+    eval_options = file_util.read_file_to_json(eval_options)
+    print(tests.run(id, name, test_input, test_options, eval_input, eval_options, created_by))
 
 
 @main.command(name="find_runs")
@@ -272,9 +342,19 @@ def run(id, name, test_input, eval_input, created_by):
     help="A JSON file containing the inputs to the test WDL for the run",
 )
 @click.option(
+    "--test_options",
+    default="",
+    help="A JSON file containing the workflow options to the test WDL for the run",
+)
+@click.option(
     "--eval_input",
     default="",
     help="A JSON file containing the inputs to the eval WDL for the run",
+)
+@click.option(
+    "--eval_options",
+    default="",
+    help="A JSON file containing the workflow options to the eval WDL for the run",
 )
 @click.option(
     "--test_cromwell_job_id",
@@ -332,7 +412,9 @@ def find_runs(
     name,
     status,
     test_input,
+    test_options,
     eval_input,
+    eval_options,
     test_cromwell_job_id,
     eval_cromwell_job_id,
     created_before,
@@ -345,9 +427,11 @@ def find_runs(
     offset,
 ):
     """Retrieve runs of the test specified by ID, filtered by the specified parameters"""
-    # Load data from files for test_input and eval_input, if set
+    # Load data from files for test_input, test_options, eval_input and eval_options, if set
     test_input = file_util.read_file_to_json(test_input)
+    test_options = file_util.read_file_to_json(test_options)
     eval_input = file_util.read_file_to_json(eval_input)
+    eval_options = file_util.read_file_to_json(eval_options)
     print(
         runs.find(
             "tests",
@@ -355,7 +439,9 @@ def find_runs(
             name,
             status,
             test_input,
+            test_options,
             eval_input,
+            eval_options,
             test_cromwell_job_id,
             eval_cromwell_job_id,
             created_before,

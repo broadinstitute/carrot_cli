@@ -296,7 +296,7 @@ def test_delete(delete_data, caplog):
             "args": ["run", "create_report"],
             "params": [],
             "return": "Usage: carrot_cli run create_report [OPTIONS] ID REPORT_ID\n"
-            "Try 'carrot_cli run create_report --help' for help.\n"
+            "Try 'carrot_cli run create_report -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -357,7 +357,7 @@ def test_create_report(create_report_data, caplog):
             "args": ["run", "find_report_by_ids"],
             "params": [],
             "return": "Usage: carrot_cli run find_report_by_ids [OPTIONS] ID REPORT_ID\n"
-            "Try 'carrot_cli run find_report_by_ids --help' for help.\n"
+            "Try 'carrot_cli run find_report_by_ids -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -659,7 +659,7 @@ def test_find_reports(find_reports_data):
             ),
             "email": "adora@example.com",
             "return": "Usage: carrot_cli run delete_report_by_ids [OPTIONS] ID REPORT_ID\n"
-            "Try 'carrot_cli run delete_report_by_ids --help' for help.\n"
+            "Try 'carrot_cli run delete_report_by_ids -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },

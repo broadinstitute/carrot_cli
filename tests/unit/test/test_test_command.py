@@ -88,8 +88,12 @@ def test_find_by_id(find_by_id_data):
                 "This test will save Etheria",
                 "--test_input_defaults",
                 "tests/data/mock_test_input.json",
+                "--test_option_defaults",
+                "tests/data/mock_test_options.json",
                 "--eval_input_defaults",
                 "tests/data/mock_eval_input.json",
+                "--eval_option_defaults",
+                "tests/data/mock_eval_options.json",
                 "--created_by",
                 "adora@example.com",
                 "--created_before",
@@ -110,7 +114,9 @@ def test_find_by_id(find_by_id_data):
                 "Sword of Protection template",
                 "This test will save Etheria",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
                 "adora@example.com",
                 "2020-10-00T00:00:00.000000",
                 "2020-09-00T00:00:00.000000",
@@ -125,9 +131,11 @@ def test_find_by_id(find_by_id_data):
                         "created_by": "adora@example.com",
                         "description": "This test will save Etheria",
                         "test_input_defaults": {"in_greeted": "Cool Person"},
+                        "test_option_defaults": {"option": "other_value"},
                         "eval_input_defaults": {
                             "in_output_filename": "test_greeting.txt"
                         },
+                        "eval_option_defaults": {"option": "value"},
                         "name": "Sword of Protection test",
                         "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                         "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -146,6 +154,8 @@ def test_find_by_id(find_by_id_data):
             ],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
                 "",
                 "",
                 "",
@@ -189,6 +199,8 @@ def find_data(request):
         request.param["params"][10],
         request.param["params"][11],
         request.param["params"][12],
+        request.param["params"][13],
+        request.param["params"][14],
     ).thenReturn(request.param["return"])
     return request.param
 
@@ -213,8 +225,12 @@ def test_find(find_data):
                 "This test will save Etheria",
                 "--test_input_defaults",
                 "tests/data/mock_test_input.json",
+                "--test_option_defaults",
+                "tests/data/mock_test_options.json",
                 "--eval_input_defaults",
                 "tests/data/mock_eval_input.json",
+                "--eval_option_defaults",
+                "tests/data/mock_eval_options.json",
                 "--created_by",
                 "adora@example.com",
             ],
@@ -223,7 +239,9 @@ def test_find(find_data):
                 "d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "This test will save Etheria",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
                 "adora@example.com",
             ],
             "return": json.dumps(
@@ -232,7 +250,9 @@ def test_find(find_data):
                     "created_by": "adora@example.com",
                     "description": "This test will save Etheria",
                     "test_input_defaults": {"in_greeted": "Cool Person"},
+                    "test_option_defaults": {"option": "other_value"},
                     "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                    "eval_option_defaults": {"option": "value"},
                     "name": "Sword of Protection test",
                     "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -253,8 +273,12 @@ def test_find(find_data):
                 "This test will save Etheria",
                 "--test_input_defaults",
                 "tests/data/mock_test_input.json",
+                "--test_option_defaults",
+                "tests/data/mock_test_options.json",
                 "--eval_input_defaults",
                 "tests/data/mock_eval_input.json",
+                "--eval_option_defaults",
+                "tests/data/mock_eval_options.json",
             ],
             "params": [],
             "logging": "No email config variable set.  If a value is not specified for --created by, "
@@ -264,7 +288,7 @@ def test_find(find_data):
             "args": ["test", "create"],
             "params": [],
             "return": "Usage: carrot_cli test create [OPTIONS]\n"
-            "Try 'carrot_cli test create --help' for help.\n"
+            "Try 'carrot_cli test create -h' for help.\n"
             "\n"
             "Error: Missing option '--name'.",
         },
@@ -282,6 +306,8 @@ def create_data(request):
             request.param["params"][3],
             request.param["params"][4],
             request.param["params"][5],
+            request.param["params"][6],
+            request.param["params"][7],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -308,15 +334,21 @@ def test_create(create_data, caplog):
                 "New Sword of Protection test",
                 "--test_input_defaults",
                 "tests/data/mock_test_input.json",
+                "--test_option_defaults",
+                "tests/data/mock_test_options.json",
                 "--eval_input_defaults",
                 "tests/data/mock_eval_input.json",
+                "--eval_option_defaults",
+                "tests/data/mock_eval_options.json",
             ],
             "params": [
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "New Sword of Protection test",
                 "This new test replaced the broken one",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
             ],
             "return": json.dumps(
                 {
@@ -324,7 +356,9 @@ def test_create(create_data, caplog):
                     "created_by": "adora@example.com",
                     "description": "This test replaced the broken one",
                     "test_input_defaults": {"in_greeted": "Cool Person"},
+                    "test_option_defaults": {"option": "other_value"},
                     "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                    "eval_option_defaults": {"option": "value"},
                     "name": "New Sword of Protection test",
                     "template_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                     "test_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
@@ -337,7 +371,7 @@ def test_create(create_data, caplog):
             "args": ["test", "update"],
             "params": [],
             "return": "Usage: carrot_cli test update [OPTIONS] ID\n"
-            "Try 'carrot_cli test update --help' for help.\n"
+            "Try 'carrot_cli test update -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -354,6 +388,8 @@ def update_data(request):
             request.param["params"][2],
             request.param["params"][3],
             request.param["params"][4],
+            request.param["params"][5],
+            request.param["params"][6],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -533,8 +569,12 @@ def test_delete(delete_data, caplog):
                 "Queen of Bright Moon run",
                 "--test_input",
                 "tests/data/mock_test_input.json",
+                "--test_options",
+                "tests/data/mock_test_options.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
+                "--eval_options",
+                "tests/data/mock_eval_options.json",
                 "--created_by",
                 "glimmer@example.com",
             ],
@@ -542,7 +582,9 @@ def test_delete(delete_data, caplog):
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "Queen of Bright Moon run",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
                 "glimmer@example.com",
             ],
             "return": json.dumps(
@@ -552,7 +594,9 @@ def test_delete(delete_data, caplog):
                         "finished_at": "2020-09-16T18:58:06.371563",
                         "created_by": "glimmer@example.com",
                         "test_input": {"in_mother": "Angella"},
+                        "test_options": {"option": "other_value"},
                         "eval_input": {"in_friend": "Bow"},
+                        "eval_options": {"option": "value"},
                         "status": "succeeded",
                         "results": {},
                         "cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
@@ -578,6 +622,8 @@ def test_delete(delete_data, caplog):
                 "",
                 "",
                 "",
+                "",
+                "",
                 "frosta@example.com",
             ],
             "return": json.dumps(
@@ -599,8 +645,12 @@ def test_delete(delete_data, caplog):
                 "Queen of Bright Moon run",
                 "--test_input",
                 "tests/data/mock_test_input.json",
+                "--test_options",
+                "tests/data/mock_test_options.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
+                "--eval_options",
+                "tests/data/mock_eval_options.json",
             ],
             "params": [],
             "logging": "No email config variable set.  If a value is not specified for --created by, "
@@ -636,6 +686,8 @@ def run_data(request):
             request.param["params"][2],
             request.param["params"][3],
             request.param["params"][4],
+            request.param["params"][5],
+            request.param["params"][6],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -662,8 +714,12 @@ def test_run(run_data, caplog):
                 "succeeded",
                 "--test_input",
                 "tests/data/mock_test_input.json",
+                "--test_options",
+                "tests/data/mock_test_options.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
+                "--eval_options",
+                "tests/data/mock_eval_options.json",
                 "--test_cromwell_job_id",
                 "d9855002-6b71-429c-a4de-8e90222488cd",
                 "--eval_cromwell_job_id",
@@ -690,7 +746,9 @@ def test_run(run_data, caplog):
                 "Queen of Bright Moon run",
                 "succeeded",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
                 "d9855002-6b71-429c-a4de-8e90222488cd",
                 "03958293-6b71-429c-a4de-8e90222488cd",
                 "2020-10-00T00:00:00.000000",
@@ -709,7 +767,9 @@ def test_run(run_data, caplog):
                         "finished_at": "2020-09-16T18:58:06.371563",
                         "created_by": "glimmer@example.com",
                         "test_input": {"in_mother": "Angella"},
+                        "test_options": {"option": "other_value"},
                         "eval_input": {"in_friend": "Bow"},
+                        "eval_options": {"option": "value"},
                         "status": "succeeded",
                         "results": {},
                         "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
@@ -727,6 +787,8 @@ def test_run(run_data, caplog):
             "args": ["test", "find_runs", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
                 "",
                 "",
                 "",
@@ -787,6 +849,8 @@ def find_runs_data(request):
             request.param["params"][12],
             request.param["params"][13],
             request.param["params"][14],
+            request.param["params"][15],
+            request.param["params"][16],
         ).thenReturn(request.param["return"])
     return request.param
 

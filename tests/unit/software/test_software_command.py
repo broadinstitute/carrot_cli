@@ -228,7 +228,7 @@ def test_find(find_data):
             "args": ["software", "create"],
             "params": [],
             "return": "Usage: carrot_cli software create [OPTIONS]\n"
-            "Try 'carrot_cli software create --help' for help.\n"
+            "Try 'carrot_cli software create -h' for help.\n"
             "\n"
             "Error: Missing option '--name'.",
         },
@@ -291,7 +291,7 @@ def test_create(create_data, caplog):
             "args": ["software", "update"],
             "params": [],
             "return": "Usage: carrot_cli software update [OPTIONS] ID\n"
-            "Try 'carrot_cli software update --help' for help.\n"
+            "Try 'carrot_cli software update -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
