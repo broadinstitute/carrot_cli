@@ -262,7 +262,7 @@ def test_find(find_data):
             "args": ["template", "create"],
             "params": [],
             "return": "Usage: carrot_cli template create [OPTIONS]\n"
-            "Try 'carrot_cli template create --help' for help.\n"
+            "Try 'carrot_cli template create -h' for help.\n"
             "\n"
             "Error: Missing option '--pipeline_id'.",
         },
@@ -335,7 +335,7 @@ def test_create(create_data, caplog):
             "args": ["template", "update"],
             "params": [],
             "return": "Usage: carrot_cli template update [OPTIONS] ID\n"
-            "Try 'carrot_cli template update --help' for help.\n"
+            "Try 'carrot_cli template update -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -540,8 +540,12 @@ def test_delete(delete_data, caplog):
                 "succeeded",
                 "--test_input",
                 "tests/data/mock_test_input.json",
+                "--test_options",
+                "tests/data/mock_test_options.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
+                "--eval_options",
+                "tests/data/mock_eval_options.json",
                 "--test_cromwell_job_id",
                 "d9855002-6b71-429c-a4de-8e90222488cd",
                 "--eval_cromwell_job_id",
@@ -568,7 +572,9 @@ def test_delete(delete_data, caplog):
                 "Queen of Bright Moon run",
                 "succeeded",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
                 "d9855002-6b71-429c-a4de-8e90222488cd",
                 "03958293-6b71-429c-a4de-8e90222488cd",
                 "2020-10-00T00:00:00.000000",
@@ -586,8 +592,10 @@ def test_delete(delete_data, caplog):
                         "created_at": "2020-09-16T18:48:06.371563",
                         "finished_at": "2020-09-16T18:58:06.371563",
                         "created_by": "glimmer@example.com",
-                        "test_input": {"in_mother": "Angella"},
-                        "eval_input": {"in_friend": "Bow"},
+                        "test_input_defaults": {"in_greeted": "Cool Person"},
+                        "test_option_defaults": {"option": "other_value"},
+                        "eval_input_defaults": {"in_output_filename": "test_greeting.txt"},
+                        "eval_option_defaults": {"option": "value"},
                         "status": "succeeded",
                         "results": {},
                         "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
@@ -605,6 +613,8 @@ def test_delete(delete_data, caplog):
             "args": ["template", "find_runs", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
                 "",
                 "",
                 "",
@@ -665,6 +675,8 @@ def find_runs_data(request):
             request.param["params"][12],
             request.param["params"][13],
             request.param["params"][14],
+            request.param["params"][15],
+            request.param["params"][16],
         ).thenReturn(request.param["return"])
     return request.param
 
@@ -866,7 +878,7 @@ def test_unsubscribe(unsubscribe_data):
             "args": ["template", "map_to_result"],
             "params": [],
             "return": "Usage: carrot_cli template map_to_result [OPTIONS] ID RESULT_ID RESULT_KEY\n"
-            "Try 'carrot_cli template map_to_result --help' for help.\n"
+            "Try 'carrot_cli template map_to_result -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -924,7 +936,7 @@ def test_map_to_result(map_to_result_data, caplog):
             "args": ["template", "find_result_map_by_id"],
             "params": [],
             "return": "Usage: carrot_cli template find_result_map_by_id [OPTIONS] ID RESULT_ID\n"
-            "Try 'carrot_cli template find_result_map_by_id --help' for help.\n"
+            "Try 'carrot_cli template find_result_map_by_id -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -1208,7 +1220,7 @@ def test_find_result_maps(find_result_maps_data):
             "ids": [],
             "email": "adora@example.com",
             "return": "Usage: carrot_cli template delete_result_map_by_id [OPTIONS] ID RESULT_ID\n"
-            "Try 'carrot_cli template delete_result_map_by_id --help' for help.\n"
+            "Try 'carrot_cli template delete_result_map_by_id -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -1299,7 +1311,7 @@ def test_delete_result_map_by_id(delete_result_map_by_id_data, caplog):
             "args": ["template", "map_to_report"],
             "params": [],
             "return": "Usage: carrot_cli template map_to_report [OPTIONS] ID REPORT_ID\n"
-            "Try 'carrot_cli template map_to_report --help' for help.\n"
+            "Try 'carrot_cli template map_to_report -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -1356,7 +1368,7 @@ def test_map_to_report(map_to_report_data, caplog):
             "args": ["template", "find_report_map_by_id"],
             "params": [],
             "return": "Usage: carrot_cli template find_report_map_by_id [OPTIONS] ID REPORT_ID\n"
-            "Try 'carrot_cli template find_report_map_by_id --help' for help.\n"
+            "Try 'carrot_cli template find_report_map_by_id -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -1603,7 +1615,7 @@ def test_find_report_maps(find_report_maps_data):
             "ids": [],
             "email": "rogelio@example.com",
             "return": "Usage: carrot_cli template delete_report_map_by_id [OPTIONS] ID REPORT_ID\n"
-            "Try 'carrot_cli template delete_report_map_by_id --help' for help.\n"
+            "Try 'carrot_cli template delete_report_map_by_id -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },

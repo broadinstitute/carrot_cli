@@ -17,7 +17,9 @@ def find(
     template_name,
     description,
     test_input_defaults,
+    test_option_defaults,
     eval_input_defaults,
+    eval_option_defaults,
     created_by,
     created_before,
     created_after,
@@ -34,7 +36,9 @@ def find(
         ("template_name", template_name),
         ("description", description),
         ("test_input_defaults", test_input_defaults),
+        ("test_option_defaults", test_option_defaults),
         ("eval_input_defaults", eval_input_defaults),
+        ("eval_option_defaults", eval_option_defaults),
         ("created_by", created_by),
         ("created_before", created_before),
         ("created_after", created_after),
@@ -46,7 +50,14 @@ def find(
 
 
 def create(
-    name, template_id, description, test_input_defaults, eval_input_defaults, created_by
+    name,
+    template_id,
+    description,
+    test_input_defaults,
+    test_option_defaults,
+    eval_input_defaults,
+    eval_option_defaults,
+    created_by
 ):
     """Submits a request to CARROT's tests create mapping"""
     # Create parameter list
@@ -55,31 +66,45 @@ def create(
         ("template_id", template_id),
         ("description", description),
         ("test_input_defaults", test_input_defaults),
+        ("test_option_defaults", test_option_defaults),
         ("eval_input_defaults", eval_input_defaults),
+        ("eval_option_defaults", eval_option_defaults),
         ("created_by", created_by),
     ]
     return request_handler.create("tests", params)
 
 
-def update(test_id, name, description, test_input_defaults, eval_input_defaults):
+def update(
+    test_id,
+    name,
+    description,
+    test_input_defaults,
+    test_option_defaults,
+    eval_input_defaults,
+    eval_option_defaults
+):
     """Submits a request to CARROT's tests update mapping"""
     # Create parameter list
     params = [
         ("name", name),
         ("description", description),
         ("test_input_defaults", test_input_defaults),
+        ("test_option_defaults", test_option_defaults),
         ("eval_input_defaults", eval_input_defaults),
+        ("eval_option_defaults", eval_option_defaults),
     ]
     return request_handler.update("tests", test_id, params)
 
 
-def run(test_id, name, test_input, eval_input, created_by):
+def run(test_id, name, test_input, test_options, eval_input, eval_options, created_by):
     """Submits a request to CARROT's test run mapping"""
     # Create parameter list
     params = [
         ("name", name),
         ("test_input", test_input),
+        ("test_options", test_options),
         ("eval_input", eval_input),
+        ("eval_options", eval_options),
         ("created_by", created_by),
     ]
     return request_handler.run(test_id, params)

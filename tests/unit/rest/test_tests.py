@@ -69,7 +69,9 @@ def test_find_by_id(find_by_id_data):
                 ("template_name", ""),
                 ("description", ""),
                 ("test_input_defaults", ""),
+                ("test_option_defaults", ""),
                 ("eval_input_defaults", ""),
+                ("eval_option_defaults", ""),
                 ("created_by", ""),
                 ("created_before", ""),
                 ("created_after", ""),
@@ -84,7 +86,9 @@ def test_find_by_id(find_by_id_data):
                         "created_by": "glimmer@example.com",
                         "description": "This test leads the Rebellion",
                         "test_input_defaults": {"in_parent": "Angella"},
+                        "test_option_defaults": {"option": "other_value"},
                         "eval_input_defaults": {"in_friend": "Bow"},
+                        "eval_option_defaults": {"option": "value"},
                         "name": "Queen of Bright Moon test",
                         "template_id": "58723b05-6060-4444-9f1b-394aff691cce",
                         "test_id": "bd132568-06fe-4b1a-9e96-47d4f36bf819",
@@ -102,7 +106,9 @@ def test_find_by_id(find_by_id_data):
                 ("template_name", ""),
                 ("description", ""),
                 ("test_input_defaults", ""),
+                ("test_option_defaults", ""),
                 ("eval_input_defaults", ""),
+                ("eval_option_defaults", ""),
                 ("created_by", ""),
                 ("created_before", ""),
                 ("created_after", ""),
@@ -147,6 +153,8 @@ def test_find(find_data):
         find_data["params"][10][1],
         find_data["params"][11][1],
         find_data["params"][12][1],
+        find_data["params"][13][1],
+        find_data["params"][14][1],
     )
     assert result == find_data["return"]
 
@@ -159,7 +167,9 @@ def test_find(find_data):
                 ("template_id", "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("description", "This test rules the known universe"),
                 ("test_input_defaults", {"in_nemesis": "She-Ra"}),
+                ("test_option_defaults", {"option": "other_value"}),
                 ("eval_input_defaults", {"in_brother": "Hordak"}),
+                ("eval_option_defaults", {"option": "value"}),
                 ("created_by", "hordeprime@example.com"),
             ],
             "return": json.dumps(
@@ -167,7 +177,9 @@ def test_find(find_data):
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "hordeprime@example.com",
                     "test_input_defaults": {"in_nemesis": "She-Ra"},
+                    "test_option_defaults": {"option": "other_value"},
                     "eval_input_defaults": {"in_brother": "Hordak"},
+                    "eval_option_defaults": {"option": "value"},
                     "description": "This test rules the known universe",
                     "name": "Horde Emperor test",
                     "template_id": "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
@@ -183,7 +195,9 @@ def test_find(find_data):
                 ("template_id", "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("description", "This test rules the known universe"),
                 ("test_input_defaults", {"in_nemesis": "She-Ra"}),
+                ("test_option_defaults", {"option": "other_value"}),
                 ("eval_input_defaults", {"in_brother": "Hordak"}),
+                ("eval_option_defaults", {"option": "value"}),
                 ("created_by", "hordeprime@example.com"),
             ],
             "return": json.dumps(
@@ -216,6 +230,8 @@ def test_create(create_data):
         create_data["params"][3][1],
         create_data["params"][4][1],
         create_data["params"][5][1],
+        create_data["params"][6][1],
+        create_data["params"][7][1],
     )
     assert result == create_data["return"]
 
@@ -228,14 +244,18 @@ def test_create(create_data):
                 ("name", "Catra test"),
                 ("description", "This test is trying to learn to process anger better"),
                 ("test_input_defaults", {"in_nemesis?": "She-Ra"}),
+                ("test_option_defaults", {"option": "other_value"}),
                 ("eval_input_defaults", {"in_mother_figure": "Shadow Weaver"}),
+                ("eval_option_defaults", {"option": "value"})
             ],
             "return": json.dumps(
                 {
                     "created_at": "2020-09-16T18:48:08.371563",
                     "created_by": "catra@example.com",
                     "test_input_defaults": {"in_nemesis?": "She-Ra"},
+                    "test_option_defaults": {"option": "other_value"},
                     "eval_input_defaults": {"in_mother_figure": "Shadow Weaver"},
+                    "eval_option_defaults": {"option": "value"},
                     "description": "This test is trying to learn to process anger better",
                     "name": "Catra test",
                     "template_id": "98536487-06fe-4b1a-9e96-47d4f36bf819",
@@ -251,7 +271,9 @@ def test_create(create_data):
                 ("name", "Angella test"),
                 ("description", ""),
                 ("test_input_defaults", ""),
+                ("test_option_defaults", ""),
                 ("eval_input_defaults", ""),
+                ("eval_option_defaults", ""),
             ],
             "return": json.dumps(
                 {
@@ -282,6 +304,8 @@ def test_update(update_data):
         update_data["params"][1][1],
         update_data["params"][2][1],
         update_data["params"][3][1],
+        update_data["params"][4][1],
+        update_data["params"][5][1],
     )
     assert result == update_data["return"]
 
@@ -330,7 +354,9 @@ def test_delete(delete_data):
             "params": [
                 ("name", "King of Bright Moon run"),
                 ("test_input", {"in_daughter": "Glimmer"}),
+                ("test_options", {"option": "other_value"}),
                 ("eval_input", {"in_wife": "Angella"}),
+                ("eval_options", {"option": "value"}),
                 ("created_by", "micah@example.com"),
             ],
             "return": json.dumps(
@@ -340,7 +366,9 @@ def test_delete(delete_data):
                     "name": "King of Bright Moon run",
                     "status": "submitted",
                     "test_input": {"in_daughter": "Glimmer"},
+                    "test_options": {"option": "other_value"},
                     "eval_input": {"in_wife": "Angella"},
+                    "eval_options": {"option": "value"},
                     "cromwell_job_id": "f95ff110-88bd-4473-a5e1-dc7d5fc48d3a",
                     "created_at": "2020-09-24T15:50:49.641333",
                     "created_by": "micah@example.com",
@@ -355,7 +383,9 @@ def test_delete(delete_data):
             "params": [
                 ("name", "Meditation run"),
                 ("test_input", {"occupation": "Princess"}),
+                ("test_options", {"option": "other_value"}),
                 ("eval_input", {"likes": "Plants, Mindfulness"}),
+                ("eval_options", {"option": "value"}),
                 ("created_by", "perfuma@example.com"),
             ],
             "return": json.dumps(
@@ -387,6 +417,8 @@ def test_run(run_data):
         run_data["params"][1][1],
         run_data["params"][2][1],
         run_data["params"][3][1],
+        run_data["params"][4][1],
+        run_data["params"][5][1],
     )
     assert result == run_data["return"]
 

@@ -216,9 +216,19 @@ def delete(id, yes):
     help="A JSON file containing the inputs to the test WDL for the run",
 )
 @click.option(
+    "--test_options",
+    default="",
+    help="A JSON file containing the workflow options to the test WDL for the run",
+)
+@click.option(
     "--eval_input",
     default="",
     help="A JSON file containing the inputs to the eval WDL for the run",
+)
+@click.option(
+    "--eval_options",
+    default="",
+    help="A JSON file containing the workflow options to the eval WDL for the run",
 )
 @click.option(
     "--test_cromwell_job_id",
@@ -276,7 +286,9 @@ def find_runs(
     name,
     status,
     test_input,
+    test_options,
     eval_input,
+    eval_options,
     test_cromwell_job_id,
     eval_cromwell_job_id,
     created_before,
@@ -291,9 +303,11 @@ def find_runs(
     """
     Retrieve runs related to the template specified by ID, filtered by the specified parameters
     """
-    # Load data from files for test_input and eval_input, if set
+    # Load data from files for test_input, test_options, eval_input and eval_options, if set
     test_input = file_util.read_file_to_json(test_input)
+    test_options = file_util.read_file_to_json(test_options)
     eval_input = file_util.read_file_to_json(eval_input)
+    eval_options = file_util.read_file_to_json(eval_options)
     print(
         runs.find(
             "templates",
@@ -301,7 +315,9 @@ def find_runs(
             name,
             status,
             test_input,
+            test_options,
             eval_input,
+            eval_options,
             test_cromwell_job_id,
             eval_cromwell_job_id,
             created_before,

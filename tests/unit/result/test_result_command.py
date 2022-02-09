@@ -229,7 +229,7 @@ def test_find(find_data):
             "args": ["result", "create"],
             "params": [],
             "return": "Usage: carrot_cli result create [OPTIONS]\n"
-            "Try 'carrot_cli result create --help' for help.\n"
+            "Try 'carrot_cli result create -h' for help.\n"
             "\n"
             "Error: Missing option '--name'.",
         },
@@ -292,7 +292,7 @@ def test_create(create_data, caplog):
             "args": ["result", "update"],
             "params": [],
             "return": "Usage: carrot_cli result update [OPTIONS] ID\n"
-            "Try 'carrot_cli result update --help' for help.\n"
+            "Try 'carrot_cli result update -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -515,7 +515,7 @@ def test_delete(delete_data, caplog):
             "args": ["result", "map_to_template"],
             "params": [],
             "return": "Usage: carrot_cli result map_to_template [OPTIONS] ID TEMPLATE_ID RESULT_KEY\n"
-            "Try 'carrot_cli result map_to_template --help' for help.\n"
+            "Try 'carrot_cli result map_to_template -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },

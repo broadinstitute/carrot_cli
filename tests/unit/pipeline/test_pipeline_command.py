@@ -216,7 +216,7 @@ def test_find(find_data):
             "args": ["pipeline", "create"],
             "params": [],
             "return": "Usage: carrot_cli pipeline create [OPTIONS]\n"
-            "Try 'carrot_cli pipeline create --help' for help.\n"
+            "Try 'carrot_cli pipeline create -h' for help.\n"
             "\n"
             "Error: Missing option '--name'.",
         },
@@ -277,7 +277,7 @@ def test_create(create_data, caplog):
             "args": ["pipeline", "update"],
             "params": [],
             "return": "Usage: carrot_cli pipeline update [OPTIONS] ID\n"
-            "Try 'carrot_cli pipeline update --help' for help.\n"
+            "Try 'carrot_cli pipeline update -h' for help.\n"
             "\n"
             "Error: Missing argument 'ID'.",
         },
@@ -465,8 +465,12 @@ def test_delete(delete_data, caplog):
                 "succeeded",
                 "--test_input",
                 "tests/data/mock_test_input.json",
+                "--test_options",
+                "tests/data/mock_test_options.json",
                 "--eval_input",
                 "tests/data/mock_eval_input.json",
+                "--eval_options",
+                "tests/data/mock_eval_options.json",
                 "--test_cromwell_job_id",
                 "d9855002-6b71-429c-a4de-8e90222488cd",
                 "--eval_cromwell_job_id",
@@ -493,7 +497,9 @@ def test_delete(delete_data, caplog):
                 "Queen of Bright Moon run",
                 "succeeded",
                 {"in_greeted": "Cool Person"},
+                {"option": "other_value"},
                 {"in_output_filename": "test_greeting.txt"},
+                {"option": "value"},
                 "d9855002-6b71-429c-a4de-8e90222488cd",
                 "03958293-6b71-429c-a4de-8e90222488cd",
                 "2020-10-00T00:00:00.000000",
@@ -511,8 +517,10 @@ def test_delete(delete_data, caplog):
                         "created_at": "2020-09-16T18:48:06.371563",
                         "finished_at": "2020-09-16T18:58:06.371563",
                         "created_by": "glimmer@example.com",
-                        "test_input": {"in_mother": "Angella"},
-                        "eval_input": {"in_friend": "Bow"},
+                        "test_input": {"in_greeted": "Cool Person"},
+                        "test_options": {"option": "other_value"},
+                        "eval_input": {"in_output_filename": "test_greeting.txt"},
+                        "eval_options": {"option": "value"},
                         "status": "succeeded",
                         "results": {},
                         "test_cromwell_job_id": "d9855002-6b71-429c-a4de-8e90222488cd",
@@ -530,6 +538,8 @@ def test_delete(delete_data, caplog):
             "args": ["pipeline", "find_runs", "986325ba-06fe-4b1a-9e96-47d4f36bf819"],
             "params": [
                 "986325ba-06fe-4b1a-9e96-47d4f36bf819",
+                "",
+                "",
                 "",
                 "",
                 "",
@@ -590,6 +600,8 @@ def find_runs_data(request):
             request.param["params"][12],
             request.param["params"][13],
             request.param["params"][14],
+            request.param["params"][15],
+            request.param["params"][16],
         ).thenReturn(request.param["return"])
     return request.param
 
