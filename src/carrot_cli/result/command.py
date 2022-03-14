@@ -25,7 +25,7 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--result_id", default="", help="The result's ID, a version 4 UUID")
+@click.option("--result_id", default="", help="The result's ID")
 @click.option("--name", default="", help="The name of the result, case-sensitive")
 @click.option(
     "--description", default="", help="The description of the result, case-sensitive"

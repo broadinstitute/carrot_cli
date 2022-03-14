@@ -26,7 +26,7 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--template_id", default="", help="The template's ID, a version 4 UUID")
+@click.option("--template_id", default="", help="The template's ID")
 @click.option(
     "--pipeline",
     "--pipeline_id",

@@ -26,7 +26,7 @@ def find_by_id(id):
 @click.option(
     "--software_version_id",
     default="",
-    help="The ID of the software version record, a version 4 UUID",
+    help="The ID of the software version record",
 )
 @click.option(
     "--software",

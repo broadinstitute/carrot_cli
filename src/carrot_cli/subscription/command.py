@@ -23,7 +23,7 @@ def find_by_id(id):
 
 @main.command(name="find")
 @click.option(
-    "--subscription_id", default="", help="The subscription's ID, a version 4 UUID"
+    "--subscription_id", default="", help="The subscription's ID"
 )
 @click.option(
     "--entity_type",

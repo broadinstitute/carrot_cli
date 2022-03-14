@@ -26,7 +26,7 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--pipeline_id", default="", help="The pipeline's ID, a version 4 UUID")
+@click.option("--pipeline_id", default="", help="The pipeline's ID")
 @click.option("--name", default="", help="The name of the pipeline, case-sensitive")
 @click.option(
     "--description", default="", help="The description of the pipeline, case-sensitive"

@@ -24,7 +24,7 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--software_id", default="", help="The software's ID, a version 4 UUID")
+@click.option("--software_id", default="", help="The software's ID")
 @click.option("--name", default="", help="The name of the software, case-sensitive")
 @click.option(
     "--description", default="", help="The description of the software, case-sensitive"

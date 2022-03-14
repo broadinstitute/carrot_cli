@@ -37,7 +37,7 @@ Options:
                               4 UUID
 
   --software_id TEXT          The ID of the software to find version records
-                              of, a version 4 UUID
+                              of
 
   --commit TEXT               The commit hash for the version
   --software_name TEXT        The name of the software to find version records

@@ -70,7 +70,7 @@ Usage: carrot_cli report find [OPTIONS]
   Retrieve reports filtered to match the specified parameters
 
 Options:
-  --report_id TEXT       The report's ID, a version 4 UUID
+  --report_id TEXT       The report's ID
   --name TEXT            The name of the report, case-sensitive
   --description TEXT     The description of the report, case-sensitive
   --notebook TEXT        The ipynb file containing the notebook for the

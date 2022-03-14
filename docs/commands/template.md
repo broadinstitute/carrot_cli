@@ -95,7 +95,7 @@ Usage: carrot_cli template find [OPTIONS]
   Retrieve templates filtered to match the specified parameters
 
 Options:
-  --template_id TEXT     The template's ID, a version 4 UUID
+  --template_id TEXT     The template's ID
   --pipeline_id TEXT     The ID of the pipeline that is the template's parent,
                          a version 4 UUID
 

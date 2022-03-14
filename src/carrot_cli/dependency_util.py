@@ -27,9 +27,9 @@ def get_id_from_id_or_name_and_handle_error(id_or_name, module, id_key, entity_n
     except RecordNotFoundError as e:
         LOGGER.debug(
             f"Encountered RecordNotFoundError when running get_id_from_id_or_name with params:"
-            f"id_or_name: {id_or_name}, module: {module.__name__}, id_key: {id_key}, error: {e}"
+            f"id_or_name: {id_or_name}, module: {module.__name__}, id_key: {id_key}, error: {e.message}"
         )
-        print(f"Encountered an error processing value for {entity_name}: {e.message}")
+        LOGGER.error(f"Encountered an error processing value for {entity_name}: {e.message}")
         sys.exit(1)
 
 def get_id_from_id_or_name(id_or_name, module, id_key):

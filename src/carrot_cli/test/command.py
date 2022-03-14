@@ -26,7 +26,7 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--test_id", default="", help="The test's ID, a version 4 UUID")
+@click.option("--test_id", default="", help="The test's ID")
 @click.option(
     "--template",
     "--template_id",
@@ -146,7 +146,7 @@ def find(
     "--template",
     "--template_id",
     required=True,
-    help="The ID or name of the template that will be the test's parent, a version 4 UUID",
+    help="The ID or name of the template that will be the test's parent",
 )
 @click.option("--description", default="", help="The description of the test")
 @click.option(
