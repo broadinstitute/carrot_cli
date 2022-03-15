@@ -11,16 +11,16 @@ def find_by_id(software_id):
 
 
 def find(
-    software_id,
-    name,
-    description,
-    repository_url,
-    created_by,
-    created_before,
-    created_after,
-    sort,
-    limit,
-    offset,
+    software_id="",
+    name="",
+    description="",
+    repository_url="",
+    created_by="",
+    created_before="",
+    created_after="",
+    sort="",
+    limit="",
+    offset="",
 ):
     """Submits a request to CARROT's software find mapping"""
     # Create parameter list

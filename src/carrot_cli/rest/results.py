@@ -11,16 +11,16 @@ def find_by_id(result_id):
 
 
 def find(
-    result_id,
-    name,
-    description,
-    result_type,
-    created_by,
-    created_before,
-    created_after,
-    sort,
-    limit,
-    offset,
+    result_id="",
+    name="",
+    description="",
+    result_type="",
+    created_by="",
+    created_before="",
+    created_after="",
+    sort="",
+    limit="",
+    offset="",
 ):
     """Submits a request to CARROT's results find mapping"""
     # Create parameter list

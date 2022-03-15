@@ -8,7 +8,6 @@ from .config import manager as config
 
 LOGGER = logging.getLogger(__name__)
 
-
 def delete(id, yes, entity, entity_name):
     """
     Calls entity's delete function with id

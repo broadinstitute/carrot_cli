@@ -1,8 +1,10 @@
 import logging
+import sys
 
 import click
 
-from ..rest import subscriptions
+from .. import dependency_util
+from ..rest import pipelines, subscriptions, templates, tests
 
 LOGGER = logging.getLogger(__name__)
 
@@ -21,14 +23,14 @@ def find_by_id(id):
 
 @main.command(name="find")
 @click.option(
-    "--subscription_id", default="", help="The subscription's ID, a version 4 UUID"
+    "--subscription_id", default="", help="The subscription's ID"
 )
 @click.option(
     "--entity_type",
     default="",
     help="The type of the entity subscribed to (pipeline, template, or test)",
 )
-@click.option("--entity_id", default="", help="The entity's ID, a version 4 UUID")
+@click.option("--entity", "--entity_id", default="", help="The entity's ID or name")
 @click.option(
     "--created_before",
     default="",
@@ -63,7 +65,7 @@ def find_by_id(id):
 def find(
     subscription_id,
     entity_type,
-    entity_id,
+    entity,
     created_before,
     created_after,
     email,
@@ -72,6 +74,17 @@ def find(
     offset,
 ):
     """Retrieve subscriptions filtered to match the specified parameters"""
+    # Process entity in case it's a name
+    if entity_type.lower() == "pipeline":
+        entity_id = dependency_util.get_id_from_id_or_name_and_handle_error(entity, pipelines, "pipeline_id", "pipeline")
+    elif entity_type.lower() == "template":
+        entity_id = dependency_util.get_id_from_id_or_name_and_handle_error(entity, templates, "template_id", "template")
+    elif entity_type.lower() == "test":
+        entity_id = dependency_util.get_id_from_id_or_name_and_handle_error(entity, tests, "test_id", "test")
+    else:
+        LOGGER.error("Invalid value for entity_type.  Must be pipeline, template, or test")
+        sys.exit(1)
+
     print(
         subscriptions.find(
             subscription_id,

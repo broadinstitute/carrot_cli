@@ -62,7 +62,7 @@ Usage: carrot_cli result find [OPTIONS]
   Retrieve results filtered to match the specified parameters
 
 Options:
-  --result_id TEXT       The result's ID, a version 4 UUID
+  --result_id TEXT       The result's ID
   --name TEXT            The name of the result, case-sensitive
   --description TEXT     The description of the result, case-sensitive
   --result_type TEXT     The type of the result: numeric, file, or text

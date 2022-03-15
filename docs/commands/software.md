@@ -56,7 +56,7 @@ Usage: carrot_cli software find [OPTIONS]
   Retrieve software definitions filtered to match the specified parameters
 
 Options:
-  --software_id TEXT     The software's ID, a version 4 UUID
+  --software_id TEXT     The software's ID
   --name TEXT            The name of the software, case-sensitive
   --description TEXT     The description of the software, case-sensitive
   --repository_url TEXT  The url of the repository where the software code is

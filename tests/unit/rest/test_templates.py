@@ -66,7 +66,6 @@ def test_find_by_id(find_by_id_data):
                 ("template_id", ""),
                 ("pipeline_id", ""),
                 ("name", "Queen of Bright Moon template"),
-                ("pipeline_name", ""),
                 ("description", ""),
                 ("test_wdl", ""),
                 ("eval_wdl", ""),
@@ -99,7 +98,6 @@ def test_find_by_id(find_by_id_data):
                 ("template_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("pipeline_id", ""),
                 ("name", ""),
-                ("pipeline_name", ""),
                 ("description", ""),
                 ("test_wdl", ""),
                 ("eval_wdl", ""),
@@ -146,7 +144,6 @@ def test_find(find_data):
         find_data["params"][9][1],
         find_data["params"][10][1],
         find_data["params"][11][1],
-        find_data["params"][12][1],
     )
     assert result == find_data["return"]
 

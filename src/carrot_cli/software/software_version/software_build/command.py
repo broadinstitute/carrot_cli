@@ -23,12 +23,12 @@ def find_by_id(id):
 @click.option(
     "--software_build_id",
     default="",
-    help="The ID of the software build record, a version 4 UUID",
+    help="The ID of the software build record",
 )
 @click.option(
     "--software_version_id",
     default="",
-    help="The ID of the software version to find build records of, a version 4 UUID",
+    help="The ID of the software version to find build records of",
 )
 @click.option(
     "--build_job_id",

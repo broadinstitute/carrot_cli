@@ -5,9 +5,10 @@ import sys
 import click
 
 from .. import command_util
+from .. import dependency_util
 from .. import file_util
 from ..config import manager as config
-from ..rest import runs, tests
+from ..rest import runs, templates, tests
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,18 +26,15 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--test_id", default="", help="The test's ID, a version 4 UUID")
+@click.option("--test_id", default="", help="The test's ID")
 @click.option(
+    "--template",
     "--template_id",
-    default="",
-    help="The ID of the template that is the test's parent, a version 4 UUID",
-)
-@click.option("--name", default="", help="The name of the test, case-sensitive")
-@click.option(
     "--template_name",
     default="",
-    help="The name of the template that is the test's parent, case-sensitive",
+    help="The ID or name of the template that is the test's parent",
 )
+@click.option("--name", default="", help="The name of the test, case-sensitive")
 @click.option(
     "--description", default="", help="The description of the test, case-sensitive"
 )
@@ -95,9 +93,8 @@ def find_by_id(id):
 )
 def find(
     test_id,
-    template_id,
+    template,
     name,
-    template_name,
     description,
     test_input_defaults,
     test_option_defaults,
@@ -111,6 +108,11 @@ def find(
     offset,
 ):
     """Retrieve tests filtered to match the specified parameters"""
+    # Process template in case it's a name
+    if template:
+        template_id = dependency_util.get_id_from_id_or_name_and_handle_error(template, templates, "template_id", "template")
+    else:
+        template_id = ""
     # Load data from files for test_input_defaults, test_option_defaults, eval_input_defaults and eval_option_defaults,
     # if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
@@ -123,7 +125,6 @@ def find(
             test_id,
             template_id,
             name,
-            template_name,
             description,
             test_input_defaults,
             test_option_defaults,
@@ -142,9 +143,10 @@ def find(
 @main.command(name="create")
 @click.option("--name", help="The name of the test", required=True)
 @click.option(
+    "--template",
     "--template_id",
     required=True,
-    help="The ID of the template that will be the test's parent, a version 4 UUID",
+    help="The ID or name of the template that will be the test's parent",
 )
 @click.option("--description", default="", help="The description of the test")
 @click.option(
@@ -174,7 +176,7 @@ def find(
 )
 def create(
     name,
-    template_id,
+    template,
     description,
     test_input_defaults,
     test_option_defaults,
@@ -194,6 +196,8 @@ def create(
                 "there must be a value set for email."
             )
             sys.exit(1)
+    # Process template to get id if it's a name
+    template_id = dependency_util.get_id_from_id_or_name_and_handle_error(template, templates, "template_id", "template")
     # Load data from files for test_input_defaults, test_option_defaults, eval_input_defaults and eval_option_defaults,
     # if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
@@ -215,7 +219,7 @@ def create(
 
 
 @main.command(name="update")
-@click.argument("id")
+@click.argument("test")
 @click.option("--name", default="", help="The name of the test")
 @click.option("--description", default="", help="The description of the test")
 @click.option(
@@ -246,8 +250,10 @@ def create(
     "parameter is allowed only if the specified test has no non-failed (i.e. successful or "
     "currently running) runs associated with it",
 )
-def update(id, name, description, test_input_defaults, test_option_defaults, eval_input_defaults, eval_option_defaults):
-    """Update test with ID with the specified parameters"""
+def update(test, name, description, test_input_defaults, test_option_defaults, eval_input_defaults, eval_option_defaults):
+    """Update test for TEST (id or name) with the specified parameters"""
+    # Process test to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(test, tests, "test_id", "test")
     # Load data from files for test_input_defaults, test_option_defaults, eval_input_defaults and eval_option_defaults,
     # if set
     test_input_defaults = file_util.read_file_to_json(test_input_defaults)
@@ -260,7 +266,7 @@ def update(id, name, description, test_input_defaults, test_option_defaults, eva
 
 
 @main.command(name="delete")
-@click.argument("id")
+@click.argument("test")
 @click.option(
     "--yes",
     "-y",
@@ -269,13 +275,15 @@ def update(id, name, description, test_input_defaults, test_option_defaults, eva
     help="Automatically answers yes if prompted to confirm delete of test created by "
     "another user",
 )
-def delete(id, yes):
-    """Delete a test by its ID, if the test has no runs associated with it"""
+def delete(test, yes):
+    """Delete a test by its ID or name, if the test has no runs associated with it"""
+    # Process test to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(test, tests, "test_id", "test")
     command_util.delete(id, yes, tests, "Test")
 
 
 @main.command(name="run")
-@click.argument("id")
+@click.argument("test")
 @click.option(
     "--name",
     default="",
@@ -306,8 +314,8 @@ def delete(id, yes):
     default="",
     help="Email of the creator of the run.  Defaults to email config variable",
 )
-def run(id, name, test_input, test_options, eval_input, eval_options, created_by):
-    """Start a run for the test specified by ID with the specified params"""
+def run(test, name, test_input, test_options, eval_input, eval_options, created_by):
+    """Start a run for the test specified by TEST (id or name) with the specified params"""
     # If created_by is not set and there is an email config variable, fill with that
     if created_by == "":
         email_config_val = config.load_var_no_error("email")
@@ -319,6 +327,8 @@ def run(id, name, test_input, test_options, eval_input, eval_options, created_by
                 "there must be a value set for email."
             )
             sys.exit(1)
+    # Process test to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(test, tests, "test_id", "test")
     # Load data from files for test_input, test_options, eval_input and eval_options, if set
     test_input = file_util.read_file_to_json(test_input)
     test_options = file_util.read_file_to_json(test_options)
@@ -328,7 +338,7 @@ def run(id, name, test_input, test_options, eval_input, eval_options, created_by
 
 
 @main.command(name="find_runs")
-@click.argument("id")
+@click.argument("test")
 @click.option("--name", default="", help="The name of the run")
 @click.option(
     "--status",
@@ -408,7 +418,7 @@ def run(id, name, test_input, test_options, eval_input, eval_options, created_by
     "starting from the second record to be created",
 )
 def find_runs(
-    id,
+    test,
     name,
     status,
     test_input,
@@ -426,7 +436,9 @@ def find_runs(
     limit,
     offset,
 ):
-    """Retrieve runs of the test specified by ID, filtered by the specified parameters"""
+    """Retrieve runs of the test specified by TEST (id or name), filtered by the specified parameters"""
+    # Process test to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(test, tests, "test_id", "test")
     # Load data from files for test_input, test_options, eval_input and eval_options, if set
     test_input = file_util.read_file_to_json(test_input)
     test_options = file_util.read_file_to_json(test_options)
@@ -457,15 +469,15 @@ def find_runs(
 
 
 @main.command(name="subscribe")
-@click.argument("id")
+@click.argument("test")
 @click.option(
     "--email",
     default="",
     help="The email address to receive notifications. If set, takes priority over email config "
     "variable",
 )
-def subscribe(id, email):
-    """Subscribe to receive notifications about the test specified by ID"""
+def subscribe(test, email):
+    """Subscribe to receive notifications about the test specified by TEST (id or name)"""
     # If email is not set and there is an email config variable, fill with that
     if email == "":
         email_config_val = config.load_var_no_error("email")
@@ -478,19 +490,21 @@ def subscribe(id, email):
                 "flag or by setting the email config variable"
             )
             sys.exit(1)
+    # Process test to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(test, tests, "test_id", "test")
     print(tests.subscribe(id, email))
 
 
 @main.command(name="unsubscribe")
-@click.argument("id")
+@click.argument("test")
 @click.option(
     "--email",
     default="",
     help="The email address to stop receiving notifications. If set, takes priority over email "
     "config variable",
 )
-def unsubscribe(id, email):
-    """Delete subscription to the test with the specified by ID and email"""
+def unsubscribe(test, email):
+    """Delete subscription to the test with the specified by TEST (id or name) and email"""
     # If email is not set and there is an email config variable, fill with that
     if email == "":
         email_config_val = config.load_var_no_error("email")
@@ -503,4 +517,6 @@ def unsubscribe(id, email):
                 "flag or by setting the email config variable"
             )
             sys.exit(1)
+    # Process test to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(test, tests, "test_id", "test")
     print(tests.unsubscribe(id, email))

@@ -5,6 +5,7 @@ import sys
 import click
 
 from .. import command_util
+from .. import dependency_util
 from .. import file_util
 
 # Naming this differently here than in other files because reports have a config attribute
@@ -27,7 +28,7 @@ def find_by_id(id):
 
 
 @main.command(name="find")
-@click.option("--report_id", default="", help="The report's ID, a version 4 UUID")
+@click.option("--report_id", default="", help="The report's ID")
 @click.option("--name", default="", help="The name of the report, case-sensitive")
 @click.option(
     "--description", default="", help="The description of the report, case-sensitive"
@@ -155,7 +156,7 @@ def create(name, description, notebook, config, created_by):
 
 
 @main.command(name="update")
-@click.argument("id")
+@click.argument("report")
 @click.option("--name", default="", help="The name of the report")
 @click.option("--description", default="", help="The description of the report")
 @click.option(
@@ -170,8 +171,10 @@ def create(name, description, notebook, config, created_by):
     "generate the report.  The allowed attributes are: cpu, memory, disks, docker, maxRetries, "
     "continueOnReturnCode, failOnStderr, preemptible, and bootDiskSizeGb.",
 )
-def update(id, name, description, notebook, config):
-    """Update report with ID with the specified parameters"""
+def update(report, name, description, notebook, config):
+    """Update report specified by REPORT (id or name) with the specified parameters"""
+    # Process report to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(report, reports, "report_id", "report")
     print(
         reports.update(
             id,
@@ -184,7 +187,7 @@ def update(id, name, description, notebook, config):
 
 
 @main.command(name="delete")
-@click.argument("id")
+@click.argument("report")
 @click.option(
     "--yes",
     "-y",
@@ -193,6 +196,11 @@ def update(id, name, description, notebook, config):
     help="Automatically answers yes if prompted to confirm delete of report created by "
     "another user",
 )
-def delete(id, yes):
-    """Delete a report by its ID, if the report has no templates, sections, or runs associated with it."""
+def delete(report, yes):
+    """
+    Delete a report specified by REPORT (id or name), if the report has no templates, sections, or
+    runs associated with it.
+    """
+    # Process report to get id if it's a name
+    id = dependency_util.get_id_from_id_or_name_and_handle_error(report, reports, "report_id", "report")
     command_util.delete(id, yes, reports, "Report")

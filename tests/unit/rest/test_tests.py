@@ -66,7 +66,6 @@ def test_find_by_id(find_by_id_data):
                 ("test_id", ""),
                 ("template_id", ""),
                 ("name", "Queen of Bright Moon test"),
-                ("template_name", ""),
                 ("description", ""),
                 ("test_input_defaults", ""),
                 ("test_option_defaults", ""),
@@ -103,7 +102,6 @@ def test_find_by_id(find_by_id_data):
                 ("test_id", "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("template_id", ""),
                 ("name", ""),
-                ("template_name", ""),
                 ("description", ""),
                 ("test_input_defaults", ""),
                 ("test_option_defaults", ""),
@@ -154,7 +152,6 @@ def test_find(find_data):
         find_data["params"][11][1],
         find_data["params"][12][1],
         find_data["params"][13][1],
-        find_data["params"][14][1],
     )
     assert result == find_data["return"]
 

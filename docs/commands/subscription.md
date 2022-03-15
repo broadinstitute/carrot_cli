@@ -34,11 +34,11 @@ Usage: carrot_cli subscription find [OPTIONS]
   Retrieve subscriptions filtered to match the specified parameters
 
 Options:
-  --subscription_id TEXT  The subscription's ID, a version 4 UUID
+  --subscription_id TEXT  The subscription's ID
   --entity_type TEXT      The type of the entity subscribed to (pipeline,
                           template, or test)
 
-  --entity_id TEXT        The entity's ID, a version 4 UUID
+  --entity_id TEXT        The entity's ID
   --created_before TEXT   Upper bound for subscription's created_at value, in
                           the format YYYY-MM-DDThh:mm:ss.ssssss
 

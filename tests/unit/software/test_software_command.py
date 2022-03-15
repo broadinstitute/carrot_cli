@@ -288,18 +288,70 @@ def test_create(create_data, caplog):
             ),
         },
         {
+            "args": [
+                "software",
+                "update",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "--description",
+                "This new software replaced the broken one",
+                "--name",
+                "New Sword of Protection software",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "New Sword of Protection software",
+                "This new software replaced the broken one",
+            ],
+            "from_name": {
+                "name": "New Sword of Protection software",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "repository_url": "example.com/repo.git",
+                            "description": "This new software replaced the broken one",
+                            "name": "New Sword of Protection software",
+                            "software_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "repository_url": "example.com/repo.git",
+                    "description": "This new software replaced the broken one",
+                    "name": "New Sword of Protection software",
+                    "software_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
             "args": ["software", "update"],
             "params": [],
-            "return": "Usage: carrot_cli software update [OPTIONS] ID\n"
+            "return": "Usage: carrot_cli software update [OPTIONS] SOFTWARE\n"
             "Try 'carrot_cli software update -h' for help.\n"
             "\n"
-            "Error: Missing argument 'ID'.",
+            "Error: Missing argument 'SOFTWARE'.",
         },
     ]
 )
 def update_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(software).update(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(software).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response only if we expect it to get that far
     if len(request.param["params"]) > 0:
         mockito.when(software).update(

@@ -7,7 +7,7 @@ import mockito
 import pytest
 from carrot_cli.__main__ import main_entry as carrot
 from carrot_cli.config import manager as config
-from carrot_cli.rest import results, template_results
+from carrot_cli.rest import results, template_results, templates
 
 
 @pytest.fixture(autouse=True)
@@ -289,18 +289,70 @@ def test_create(create_data, caplog):
             ),
         },
         {
+            "args": [
+                "result",
+                "update",
+                "Old Sword of Protection result",
+                "--description",
+                "This new result replaced the broken one",
+                "--name",
+                "New Sword of Protection result",
+            ],
+            "params": [
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "New Sword of Protection result",
+                "This new result replaced the broken one",
+            ],
+            "from_name": {
+                "name": "Old Sword of Protection result",
+                "return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "result_type": "file",
+                            "description": "This old result is old",
+                            "name": "Old Sword of Protection result",
+                            "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                {
+                    "created_at": "2020-09-16T18:48:06.371563",
+                    "created_by": "adora@example.com",
+                    "result_type": "file",
+                    "description": "This new result replaced the broken one",
+                    "name": "New Sword of Protection result",
+                    "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
             "args": ["result", "update"],
             "params": [],
-            "return": "Usage: carrot_cli result update [OPTIONS] ID\n"
+            "return": "Usage: carrot_cli result update [OPTIONS] RESULT\n"
             "Try 'carrot_cli result update -h' for help.\n"
             "\n"
-            "Error: Missing argument 'ID'.",
+            "Error: Missing argument 'RESULT'.",
         },
     ]
 )
 def update_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(results).update(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_name" in request.param:
+        mockito.when(results).find(
+            name=request.param["from_name"]["name"],
+            limit=2
+        ).thenReturn(request.param["from_name"]["return"])
     # Mock up request response only if we expect it to get that far
     if len(request.param["params"]) > 0:
         mockito.when(results).update(
@@ -503,6 +555,68 @@ def test_delete(delete_data, caplog):
             "args": [
                 "result",
                 "map_to_template",
+                "Horde Tanks",
+                "Horde Template",
+                "out_horde_tanks",
+                "--created_by",
+                "adora@example.com",
+            ],
+            "params": [
+                "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                "out_horde_tanks",
+                "adora@example.com",
+            ],
+            "from_names": {
+                "result_name": "Horde Tanks",
+                "result_return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "result_type": "numeric",
+                            "description": "How many tanks",
+                            "name": "Horde Tanks",
+                            "result_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                ),
+                "template_name": "Horde Template",
+                "template_return": json.dumps(
+                    [
+                        {
+                            "created_at": "2020-09-16T18:48:06.371563",
+                            "created_by": "adora@example.com",
+                            "description": "This template is for horde stuff",
+                            "test_wdl": "example.com/she-ra_test.wdl",
+                            "eval_wdl": "example.com/she-ra_eval.wdl",
+                            "name": "Horde Template",
+                            "pipeline_id": "4d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                            "template_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                        }
+                    ],
+                    indent=4,
+                    sort_keys=True,
+                )
+            },
+            "return": json.dumps(
+                {
+                    "template_id": "cd987859-06fe-4b1a-9e96-47d4f36bf819",
+                    "result_id": "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
+                    "result_key": "out_horde_tanks",
+                    "created_at": "2020-09-24T19:07:59.311462",
+                    "created_by": "rogelio@example.com",
+                },
+                indent=4,
+                sort_keys=True,
+            ),
+        },
+        {
+            "args": [
+                "result",
+                "map_to_template",
                 "3d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8",
                 "cd987859-06fe-4b1a-9e96-47d4f36bf819",
                 "out_horde_tanks",
@@ -514,16 +628,27 @@ def test_delete(delete_data, caplog):
         {
             "args": ["result", "map_to_template"],
             "params": [],
-            "return": "Usage: carrot_cli result map_to_template [OPTIONS] ID TEMPLATE_ID RESULT_KEY\n"
+            "return": "Usage: carrot_cli result map_to_template [OPTIONS] RESULT TEMPLATE RESULT_KEY\n"
             "Try 'carrot_cli result map_to_template -h' for help.\n"
             "\n"
-            "Error: Missing argument 'ID'.",
+            "Error: Missing argument 'RESULT'.",
         },
     ]
 )
 def map_to_template_data(request):
     # Set all requests to return None so only the one we expect will return a value
     mockito.when(template_results).create_map(...).thenReturn(None)
+    # If there's a value for from_name, set the return value for trying to retrieve the existing
+    # record
+    if "from_names" in request.param:
+        mockito.when(results).find(
+            name=request.param["from_names"]["result_name"],
+            limit=2
+        ).thenReturn(request.param["from_names"]["result_return"])
+        mockito.when(templates).find(
+            name=request.param["from_names"]["template_name"],
+            limit=2
+        ).thenReturn(request.param["from_names"]["template_return"])
     # Mock up request response only if we expect it to get that far
     if len(request.param["params"]) > 0:
         mockito.when(template_results).create_map(

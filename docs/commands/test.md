@@ -33,7 +33,7 @@ Usage: carrot_cli test create [OPTIONS]
 Options:
   --name TEXT                 The name of the test  [required]
   --template_id TEXT          The ID of the template that will be the test's
-                              parent, a version 4 UUID  [required]
+                              parent  [required]
 
   --description TEXT          The description of the test
   --test_input_defaults TEXT  A JSON file containing the default inputs to the
@@ -67,9 +67,9 @@ Usage: carrot_cli test find [OPTIONS]
   Retrieve tests filtered to match the specified parameters
 
 Options:
-  --test_id TEXT              The test's ID, a version 4 UUID
+  --test_id TEXT              The test's ID
   --template_id TEXT          The ID of the template that is the test's
-                              parent, a version 4 UUID
+                              parent
 
   --name TEXT                 The name of the test, case-sensitive
   --template_name TEXT        The name of the template that is the test's

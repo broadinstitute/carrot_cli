@@ -59,7 +59,7 @@ Usage: carrot_cli pipeline find [OPTIONS]
   Retrieve pipelines filtered to match the specified parameters
 
 Options:
-  --pipeline_id TEXT     The pipeline's ID, a version 4 UUID
+  --pipeline_id TEXT     The pipeline's ID
   --name TEXT            The name of the pipeline, case-sensitive
   --description TEXT     The description of the pipeline, case-sensitive
   --created_before TEXT  Upper bound for pipeline's created_at value, in the

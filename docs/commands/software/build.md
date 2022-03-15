@@ -36,7 +36,7 @@ Options:
                               UUID
 
   --software_version_id TEXT  The ID of the software version to find build
-                              records of, a version 4 UUID
+                              records of
 
   --build_job_id TEXT         The cromwell job id for the job that built that
                               generated the build
