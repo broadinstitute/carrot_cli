@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 
@@ -888,3 +889,42 @@ def test_send_request(send_request_data):
     )
     # Check that we got the expected error message
     assert response == send_request_data
+
+
+@pytest.fixture(
+    params=[
+        {
+            "files": {
+                "test_wdl_file": "tests/data/test.wdl",
+                "eval_wdl_file": "tests/data/eval.wdl",
+                "test_wdl_dependencies_file": "tests/data/test_dep.zip",
+                "eval_wdl_dependencies_file": "tests/data/eval_dep.zip"
+            },
+            "success": True
+        },
+        {
+            "files": {
+                "test_wdl_file": "tests/data/not_a_real.wdl",
+                "eval_wdl_file": "tests/data/eval.wdl",
+                "test_wdl_dependencies_file": "tests/data/test_dep.zip",
+                "eval_wdl_dependencies_file": "tests/data/eval_dep.zip"
+            },
+            "success": False,
+            "logging": "Failed to open test_wdl_file file with path tests/data/not_a_real.wdl"
+        }
+    ]
+)
+def process_file_dict_data(request):
+    return request.param
+
+
+def test_process_file_dict(process_file_dict_data, caplog):
+    if process_file_dict_data["success"]:
+        result = request_handler.__process_file_dict(process_file_dict_data["files"])
+        for key, value in result.items():
+            assert value[0] == process_file_dict_data["files"][key].rsplit("/", 1)[1]
+            assert value[1].name == process_file_dict_data["files"][key]
+    else:
+        with pytest.raises(IOError):
+            request_handler.__process_file_dict(process_file_dict_data["files"])
+        assert process_file_dict_data["logging"] in caplog.text

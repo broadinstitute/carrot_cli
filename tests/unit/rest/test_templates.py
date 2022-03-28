@@ -215,21 +215,6 @@ def test_find(find_data):
                 ("pipeline_id", "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
                 ("description", "This template rules the known universe"),
                 ("created_by", "hordeprime@example.com"),
-                ("test_wdl", "tests/data/fake.wdl"),
-                ("test_wdl_dependencies", "http://example.com/horde_test_dependencies.zip"),
-                ("eval_wdl", "http://example.com/horde_eval.wdl"),
-                ("eval_wdl_dependencies", "http://example.com/horde_eval_dependencies.zip"),
-            ],
-            "has_files": False,
-            "return": "Failed to open test wdl file with path tests/data/fake.wdl. "
-                      "Enable verbose logging (-v) for more info",
-        },
-        {
-            "params": [
-                ("name", "Horde Emperor template"),
-                ("pipeline_id", "9d1bfbab-d9ec-46c7-aa8e-9c1d1808f2b8"),
-                ("description", "This template rules the known universe"),
-                ("created_by", "hordeprime@example.com"),
                 ("test_wdl", "http://example.com/horde_test.wdl"),
                 ("test_wdl_dependencies", "http://example.com/horde_test_dependencies.zip"),
                 ("eval_wdl", "http://example.com/horde_eval.wdl"),
@@ -257,20 +242,16 @@ def create_data(request):
         files = {}
         if not request.param["params"][4][1].startswith("http"):
             params.remove(request.param["params"][4])
-            mockito.when(builtins).open(request.param["params"][4][1], "rt").thenReturn("dummy_test_wdl")
-            files['test_wdl_file'] = ('test.wdl', "dummy_test_wdl")
+            files['test_wdl_file'] = request.param["params"][4][1]
         if not request.param["params"][5][1].startswith("http"):
             params.remove(request.param["params"][5])
-            mockito.when(builtins).open(request.param["params"][5][1], "rb").thenReturn("dummy_test_wdl_deps")
-            files['test_wdl_dependencies_file'] = ('test_dependencies.zip', "dummy_test_wdl_deps")
+            files['test_wdl_dependencies_file'] = request.param["params"][5][1]
         if not request.param["params"][6][1].startswith("http"):
             params.remove(request.param["params"][6])
-            mockito.when(builtins).open(request.param["params"][6][1], "rt").thenReturn("dummy_eval_wdl")
-            files['eval_wdl_file'] = ('eval.wdl', "dummy_eval_wdl")
+            files['eval_wdl_file'] = request.param["params"][6][1]
         if not request.param["params"][7][1].startswith("http"):
             params.remove(request.param["params"][7])
-            mockito.when(builtins).open(request.param["params"][7][1], "rb").thenReturn("dummy_eval_wdl_deps")
-            files['eval_wdl_dependencies_file'] = ('eval_dependencies.zip', "dummy_eval_wdl_deps")
+            files['eval_wdl_dependencies_file'] = request.param["params"][7][1]
         # Mock up request response
         mockito.when(request_handler).create(
             "templates", params, files=files
@@ -392,20 +373,16 @@ def update_data(request):
         files = {}
         if not request.param["params"][2][1].startswith("http"):
             params.remove(request.param["params"][2])
-            mockito.when(builtins).open(request.param["params"][2][1], "rt").thenReturn("dummy_test_wdl")
-            files['test_wdl_file'] = ('test.wdl', "dummy_test_wdl")
+            files['test_wdl_file'] = request.param["params"][2][1]
         if not request.param["params"][3][1].startswith("http"):
             params.remove(request.param["params"][3])
-            mockito.when(builtins).open(request.param["params"][3][1], "rb").thenReturn("dummy_test_wdl_deps")
-            files['test_wdl_dependencies_file'] = ('test_dependencies.zip', "dummy_test_wdl_deps")
+            files['test_wdl_dependencies_file'] = request.param["params"][3][1]
         if not request.param["params"][4][1].startswith("http"):
             params.remove(request.param["params"][4])
-            mockito.when(builtins).open(request.param["params"][4][1], "rt").thenReturn("dummy_eval_wdl")
-            files['eval_wdl_file'] = ('eval.wdl', "dummy_eval_wdl")
+            files['eval_wdl_file'] = request.param["params"][4][1]
         if not request.param["params"][5][1].startswith("http"):
             params.remove(request.param["params"][5])
-            mockito.when(builtins).open(request.param["params"][5][1], "rb").thenReturn("dummy_eval_wdl_deps")
-            files['eval_wdl_dependencies_file'] = ('eval_dependencies.zip', "dummy_eval_wdl_deps")
+            files['eval_wdl_dependencies_file'] = request.param["params"][5][1]
         # Mock up request response
         mockito.when(request_handler).update(
             "templates", request.param["id"], params, files=files
@@ -567,129 +544,55 @@ def test_unsubscribe(unsubscribe_data):
                 ("name", "Template name")
             ],
             "files": {},
-            "wdl": "http://example.com/test.wdl",
-            "type": "test",
+            "field_val": "http://example.com/test.wdl",
+            "field_name": "test_wdl",
             "add_to_params": True,
             "add_to_files": False,
-            "return": None
         },
         {
             "params": [
                 ("name", "Template name")
             ],
             "files": {},
-            "wdl": "tests/data/eval.wdl",
-            "type": "eval",
+            "field_val": "tests/data/eval.wdl",
+            "field_name": "eval_wdl",
             "add_to_params": False,
             "add_to_files": True,
-            "return": None
         },
         {
             "params": [
                 ("name", "Template name")
             ],
-            "files": {},
-            "wdl": "tests/data/not_real.wdl",
-            "type": "eval",
-            "add_to_params": False,
-            "add_to_files": False,
-            "return": "Failed to open eval wdl file with path tests/data/not_real.wdl. "
-                      "Enable verbose logging (-v) for more info"
-        }
-    ]
-)
-def process_wdl_data(request):
-    return request.param
-
-def test_process_wdl(process_wdl_data):
-    result = templates.__process_wdl(
-        process_wdl_data["params"],
-        process_wdl_data["files"],
-        process_wdl_data["wdl"],
-        process_wdl_data["type"]
-    )
-    assert result == process_wdl_data["return"]
-    if process_wdl_data["add_to_params"]:
-        assert (f"{process_wdl_data['type']}_wdl", process_wdl_data["wdl"]) in process_wdl_data["params"]
-    else:
-        assert (f"{process_wdl_data['type']}_wdl", process_wdl_data["wdl"]) not in process_wdl_data["params"]
-    if process_wdl_data["add_to_files"]:
-        file_entry = process_wdl_data["files"][f"{process_wdl_data['type']}_wdl_file"]
-        assert file_entry[0] == f"{process_wdl_data['type']}.wdl"
-        opened_file = file_entry[1]
-        with open(process_wdl_data["wdl"], "rt") as expected_file:
-            opened_file_contents = opened_file.read()
-            expected_file_contents = expected_file.read()
-            assert opened_file_contents == expected_file_contents
-    else:
-        assert f"{process_wdl_data['type']}_wdl_file" not in process_wdl_data["files"]
-
-@pytest.fixture(
-    params=[
-        {
-            "params": [
-                ("name", "Template name")
-            ],
-            "files": {},
-            "wdl_dependencies": "http://example.com/test.wdl",
-            "type": "test",
-            "add_to_params": True,
-            "add_to_files": False,
-            "return": None
-        },
-        {
-            "params": [
-                ("name", "Template name")
-            ],
-            "files": {},
-            "wdl_dependencies": "tests/data/eval.wdl",
-            "type": "eval",
+            "files": {
+                "test_wdl_file": "tests/data/test.wdl"
+            },
+            "field_val": "tests/data/eval_deps.zip",
+            "field_name": "eval_wdl_dependencies_file",
             "add_to_params": False,
             "add_to_files": True,
-            "return": None
         },
-        {
-            "params": [
-                ("name", "Template name")
-            ],
-            "files": {},
-            "wdl_dependencies": "tests/data/not_real.zip",
-            "type": "eval",
-            "add_to_params": False,
-            "add_to_files": False,
-            "return": "Failed to open eval wdl dependencies file with path tests/data/not_real.zip. "
-                      "Enable verbose logging (-v) for more info"
-        }
     ]
 )
-def process_wdl_dependencies_data(request):
+def process_maybe_file_field_data(request):
     return request.param
 
-def test_process_wdl(process_wdl_dependencies_data):
-    result = templates.__process_wdl_dependencies(
-        process_wdl_dependencies_data["params"],
-        process_wdl_dependencies_data["files"],
-        process_wdl_dependencies_data["wdl_dependencies"],
-        process_wdl_dependencies_data["type"]
+
+def test_process_maybe_file_field(process_maybe_file_field_data):
+    # Copy the params and files so we can make sure they're not changed if we don't want them to be
+    params = process_maybe_file_field_data["params"].copy()
+    files = process_maybe_file_field_data["files"].copy()
+    templates.__process_maybe_file_field(
+        process_maybe_file_field_data["params"],
+        process_maybe_file_field_data["files"],
+        process_maybe_file_field_data["field_name"],
+        process_maybe_file_field_data["field_val"]
     )
-    assert result == process_wdl_dependencies_data["return"]
-    if process_wdl_dependencies_data["add_to_params"]:
-        assert (
-                   f"{process_wdl_dependencies_data['type']}_wdl_dependencies",
-                   process_wdl_dependencies_data["wdl_dependencies"]
-               ) in process_wdl_dependencies_data["params"]
+    if process_maybe_file_field_data["add_to_params"]:
+        assert (process_maybe_file_field_data['field_name'], process_maybe_file_field_data["field_val"]) in process_maybe_file_field_data["params"]
     else:
-        assert (
-                   f"{process_wdl_dependencies_data['type']}_wdl_dependencies",
-                   process_wdl_dependencies_data["wdl_dependencies"]
-               ) not in process_wdl_dependencies_data["params"]
-    if process_wdl_dependencies_data["add_to_files"]:
-        file_entry = process_wdl_dependencies_data["files"][f"{process_wdl_dependencies_data['type']}_wdl_dependencies_file"]
-        assert file_entry[0] == f"{process_wdl_dependencies_data['type']}_dependencies.zip"
-        opened_file = file_entry[1]
-        with open(process_wdl_dependencies_data["wdl_dependencies"], "rb") as expected_file:
-            opened_file_contents = opened_file.read()
-            expected_file_contents = expected_file.read()
-            assert opened_file_contents == expected_file_contents
+        assert process_maybe_file_field_data["params"] == params
+    if process_maybe_file_field_data["add_to_files"]:
+        assert f"{process_maybe_file_field_data['field_name']}_file" in process_maybe_file_field_data["files"]
+        assert process_maybe_file_field_data["files"][f"{process_maybe_file_field_data['field_name']}_file"] == process_maybe_file_field_data["field_val"]
     else:
-        assert f"{process_wdl_dependencies_data['type']}_wdl_dependencies_file" not in process_wdl_dependencies_data["files"]
+        assert process_maybe_file_field_data["files"] == files

@@ -1,5 +1,6 @@
 import json as json_lib
 import logging
+import os
 import pprint
 import urllib
 
@@ -209,16 +210,21 @@ def send_request(method, url, params=None, json=None, body=None, files=None):
     Sends a request to url with method, optionally with query params, json, form data body, and
     files, and handles potential errors
     """
+    processed_files = None
     try:
+        # Convert files into the format we need to pass to requests
+        processed_files = __process_file_dict(files)
         # Send request
         LOGGER.debug(
-            "Sending %s request to %s with params %s and body %s",
+            "Sending %s request to %s with params %s and json %s and data %s and files %s",
             method,
             url,
             params,
             json,
+            body,
+            files
         )
-        response = requests.request(method, url, params=params, json=json, data=body, files=files)
+        response = requests.request(method, url, params=params, json=json, data=body, files=processed_files)
         LOGGER.debug(
             "Received response with status %i and body %s",
             response.status_code,
@@ -262,3 +268,62 @@ def send_request(method, url, params=None, json=None, body=None, files=None):
             return "Too many redirects"
         else:
             return "Too many redirects. Enable verbose logging (-v) for more info"
+    except IOError as err:
+        LOGGER.debug(err)
+        if LOGGER.getEffectiveLevel() == logging.DEBUG:
+            return "Encountered an IO error"
+        else:
+            return "Encountered an IO error. Enable verbose logging (-v) for more info"
+    finally:
+        # Close any open files
+        if processed_files is not None:
+            __close_files(processed_files)
+
+def __process_file_dict(files):
+    """
+    Accepts a dict of file params mapped to file paths and returns a dict formatted for passing
+    files to requests
+
+    Parameters
+    ----------
+    files - A dict mapping file param names to file paths
+
+    Returns
+    -------
+    A dict mapping file param names to 2-tuples containing the file's basename and a file object
+    for the open file
+    """
+    if files is None:
+        return None
+    # Dict we'll return containing the files
+    processed_files = {}
+    # Loop through the values in files, open each file, and add it to processed files with its filename
+    for param_name in files:
+        file_path = files[param_name]
+        try:
+            file = open(file_path, "rb")
+            processed_files[param_name] = (os.path.basename(file.name), file)
+        except IOError as e:
+            LOGGER.error(f"Failed to open {param_name} file with path {file_path}.")
+            # Close all the open files
+            __close_files(processed_files)
+            raise e
+    return processed_files
+
+def __close_files(files):
+    """
+    Closes all the files in files
+
+    Parameters
+    ----------
+    files - A files dict formatted to match requests' files param (keys are the name of the param,
+            mapped to tuples where the second value is a file object)
+
+    Returns
+    -------
+    None
+    """
+    if files is None:
+        return
+    for param_name in files:
+        files[param_name][1].close()

@@ -1,4 +1,5 @@
 import logging
+import os
 
 from . import request_handler
 
@@ -63,23 +64,14 @@ def create(
     ]
     # Start files as an empty dict
     files = {}
-    # Process test and eval wdls and dependen cies to put them in the correct lists depending on
+    # Process test and eval wdls and dependencies to put them in the correct lists depending on
     # how they are provided
-    wdl_error = __process_wdl(params, files, test_wdl, "test")
+    __process_maybe_file_field(params, files, "test_wdl", test_wdl)
     if test_wdl_dependencies:
-        wdl_error = wdl_error if wdl_error else __process_wdl_dependencies(params, files, test_wdl_dependencies, "test")
-        # If there was an error, return it
-        if wdl_error:
-            return wdl_error
-    wdl_error = wdl_error if wdl_error else __process_wdl(params, files, eval_wdl, "eval")
+        __process_maybe_file_field(params, files, "test_wdl_dependencies", test_wdl_dependencies)
+    __process_maybe_file_field(params, files, "eval_wdl", eval_wdl)
     if eval_wdl_dependencies:
-        wdl_error = wdl_error if wdl_error else __process_wdl_dependencies(params, files, eval_wdl_dependencies, "eval")
-        # If there was an error, return it
-        if wdl_error:
-            return wdl_error
-    # If there was an error, return it
-    if wdl_error:
-        return wdl_error
+        __process_maybe_file_field(params, files, "eval_wdl_dependencies", eval_wdl_dependencies)
     # Make the request
     return request_handler.create("templates", params, files=(files if files else None))
 
@@ -104,25 +96,13 @@ def update(
     # Process test and eval wdls and dependencies (if provided) to put them in the correct lists
     # depending on how they are provided
     if test_wdl:
-        wdl_error = __process_wdl(params, files, test_wdl, "test")
-        # If there was an error, return it
-        if wdl_error:
-            return wdl_error
+        __process_maybe_file_field(params, files, "test_wdl", test_wdl)
     if test_wdl_dependencies:
-        wdl_error = __process_wdl_dependencies(params, files, test_wdl_dependencies, "test")
-        # If there was an error, return it
-        if wdl_error:
-            return wdl_error
+        __process_maybe_file_field(params, files, "test_wdl_dependencies", test_wdl_dependencies)
     if eval_wdl:
-        wdl_error = __process_wdl(params, files, eval_wdl, "eval")
-        # If there was an error, return it
-        if wdl_error:
-            return wdl_error
+        __process_maybe_file_field(params, files, "eval_wdl", eval_wdl)
     if eval_wdl_dependencies:
-        wdl_error = __process_wdl_dependencies(params, files, eval_wdl_dependencies, "eval")
-        # If there was an error, return it
-        if wdl_error:
-            return wdl_error
+        __process_maybe_file_field(params, files, "eval_wdl_dependencies", eval_wdl_dependencies)
     # Make the request
     return request_handler.update("templates", template_id, params, files=(files if files else None))
 
@@ -142,41 +122,28 @@ def unsubscribe(template_id, email):
     return request_handler.unsubscribe("templates", template_id, email)
 
 
-def __process_wdl(params, files, wdl, type):
-    # If wdl is an http or gs uri, we'll add it to params
-    if wdl.startswith("http://") or wdl.startswith("https://") or wdl.startswith("gs://"):
-        params.append((f"{type}_wdl", wdl))
-    # Otherwise, assume wdl is a file, so we'll try to open it and put it in a files list
-    else:
-        try:
-            wdl_file = open(wdl, "rt")
-            files[f'{type}_wdl_file'] = (f'{type}.wdl', wdl_file)
-        except IOError as e:
-            LOGGER.debug(e)
-            if LOGGER.getEffectiveLevel() == logging.DEBUG:
-                return f"Failed to open {type} wdl file with path {wdl}."
-            else:
-                return f"Failed to open {type} wdl file with path {wdl}. Enable verbose logging (-v) for more info"
-    # Return None if all goes well
-    return None
+def __process_maybe_file_field(params, files, field_name, field_val):
+    """
+    Accepts the name and value for a field that is either a file or an http/https/gs uri and adds
+    it to either the files dict or params list respectively
 
-def __process_wdl_dependencies(params, files, wdl_dependencies, type):
-    # If wdl is an http or gs uri, we'll add it to params
-    if wdl_dependencies.startswith("http://")\
-            or wdl_dependencies.startswith("https://")\
-            or wdl_dependencies.startswith("gs://"):
-        params.append((f"{type}_wdl_dependencies", wdl_dependencies))
-    # Otherwise, assume wdl_dependencies is a file, so we'll try to open it and put it in a files list
+    Parameters
+    ----------
+    params - In-progress params list for a request
+    files - In-progress files dict for a request (keys are param names and vals are file paths)
+    field_name - The name of the field, if it were added to the params list (it will be appended
+                with _file if added to the files dict
+    field_val - The value of the field: either an http/https/gs uri or a local file path
+
+    Returns
+    -------
+    None
+    """
+    # If field_val is an http or gs uri, we'll add it to params
+    if field_val.startswith("http://") \
+            or field_val.startswith("https://") \
+            or field_val.startswith("gs://"):
+        params.append((field_name, field_val))
+    # Otherwise, assume field_val is a file, so we'll throw it in the files list
     else:
-        try:
-            wdl_file = open(wdl_dependencies, "rb")
-            files[f'{type}_wdl_dependencies_file'] = (f'{type}_dependencies.zip', wdl_file)
-        except IOError as e:
-            LOGGER.debug(e)
-            if LOGGER.getEffectiveLevel() == logging.DEBUG:
-                return f"Failed to open {type} wdl dependencies file with path {wdl_dependencies}."
-            else:
-                return f"Failed to open {type} wdl dependencies file with path {wdl_dependencies}. " \
-                       f"Enable verbose logging (-v) for more info"
-    # Return None if all goes well
-    return None
+        files[f'{field_name}_file'] = field_val
