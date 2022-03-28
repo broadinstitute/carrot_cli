@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 
@@ -166,7 +167,7 @@ def create_data(request):
     address = "http://%s/api/v1/%s" % ("example.com", request.param["entity"])
     # Get params converted to dict
     params = dict(request.param["params"])
-    mockito.when(request_handler).send_request("POST", address, body=params).thenReturn(
+    mockito.when(request_handler).send_request("POST", address, json=params).thenReturn(
         request.param["return"]
     )
     return request.param
@@ -229,7 +230,7 @@ def update_data(request):
     )
     # Get params converted to dict
     params = dict(request.param["params"])
-    mockito.when(request_handler).send_request("PUT", address, body=params).thenReturn(
+    mockito.when(request_handler).send_request("PUT", address, json=params).thenReturn(
         request.param["return"]
     )
     return request.param
@@ -335,7 +336,7 @@ def subscribe_data(request):
     )
     # Make request body with email
     body = {"email": request.param["email"]}
-    mockito.when(request_handler).send_request("POST", address, body=body).thenReturn(
+    mockito.when(request_handler).send_request("POST", address, json=body).thenReturn(
         request.param["return"]
     )
     return request.param
@@ -457,7 +458,7 @@ def run_data(request):
     )
     # Get params converted to dict
     params = dict(request.param["params"])
-    mockito.when(request_handler).send_request("POST", address, body=params).thenReturn(
+    mockito.when(request_handler).send_request("POST", address, json=params).thenReturn(
         request.param["return"]
     )
     return request.param
@@ -598,7 +599,7 @@ def create_map_data(request):
     # Get params converted to dict
     params = dict(request.param["params"])
     mockito.when(request_handler).send_request(
-        "POST", address, body=params, params=None
+        "POST", address, json=params, params=None
     ).thenReturn(request.param["return"])
     return request.param
 
@@ -857,11 +858,11 @@ def send_request_data(request):
     mockito.when(requests).request(...).thenReturn(None)
     # Params to pass to make sure it processes them properly
     params = [("sort", "asc(name)")]
-    body = {"test", "test"}
+    json_body = {"test", "test"}
     # For exceptions, if we get a request, raise the exception
     if "exception" in request.param:
         mockito.when(requests).request(
-            "POST", "http://example.com/api/v1/pipelines", params=params, json=body
+            "POST", "http://example.com/api/v1/pipelines", params=params, json=json_body, data=None, files=None
         ).thenRaise(request.param["exception"])
     # Otherwise, set it to return the specified response
     else:
@@ -873,7 +874,7 @@ def send_request_data(request):
         if request.param["text"] != "":
             mockito.when(response).json().thenReturn(json.loads(request.param["text"]))
         mockito.when(requests).request(
-            "POST", "http://example.com/api/v1/pipelines", params=params, json=body
+            "POST", "http://example.com/api/v1/pipelines", params=params, json=json_body, data=None, files=None
         ).thenReturn(response)
 
     return request.param["return"]
@@ -884,7 +885,46 @@ def test_send_request(send_request_data):
     body = {"test", "test"}
     # Send request
     response = request_handler.send_request(
-        "POST", "http://example.com/api/v1/pipelines", params=params, body=body
+        "POST", "http://example.com/api/v1/pipelines", params=params, json=body
     )
     # Check that we got the expected error message
     assert response == send_request_data
+
+
+@pytest.fixture(
+    params=[
+        {
+            "files": {
+                "test_wdl_file": "tests/data/test.wdl",
+                "eval_wdl_file": "tests/data/eval.wdl",
+                "test_wdl_dependencies_file": "tests/data/test_dep.zip",
+                "eval_wdl_dependencies_file": "tests/data/eval_dep.zip"
+            },
+            "success": True
+        },
+        {
+            "files": {
+                "test_wdl_file": "tests/data/not_a_real.wdl",
+                "eval_wdl_file": "tests/data/eval.wdl",
+                "test_wdl_dependencies_file": "tests/data/test_dep.zip",
+                "eval_wdl_dependencies_file": "tests/data/eval_dep.zip"
+            },
+            "success": False,
+            "logging": "Failed to open test_wdl_file file with path tests/data/not_a_real.wdl"
+        }
+    ]
+)
+def process_file_dict_data(request):
+    return request.param
+
+
+def test_process_file_dict(process_file_dict_data, caplog):
+    if process_file_dict_data["success"]:
+        result = request_handler.__process_file_dict(process_file_dict_data["files"])
+        for key, value in result.items():
+            assert value[0] == process_file_dict_data["files"][key].rsplit("/", 1)[1]
+            assert value[1].name == process_file_dict_data["files"][key]
+    else:
+        with pytest.raises(IOError):
+            request_handler.__process_file_dict(process_file_dict_data["files"])
+        assert process_file_dict_data["logging"] in caplog.text

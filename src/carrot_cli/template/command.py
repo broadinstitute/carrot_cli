@@ -41,12 +41,14 @@ def find_by_id(id):
 @click.option(
     "--test_wdl",
     default="",
-    help="The location where the test WDL for the template is hosted",
+    help="The location where the test WDL for the template is hosted, either in the form of a "
+    "http/https/gs uri",
 )
 @click.option(
     "--eval_wdl",
     default="",
-    help="The location where the eval WDL for the template is hosted",
+    help="The location where the eval WDL for the template is hosted, either in the form of a "
+    "http/https/gs uri",
 )
 @click.option(
     "--created_before",
@@ -133,8 +135,13 @@ def find(
 @click.option(
     "--test_wdl",
     required=True,
-    help="The location where the test WDL for this template is hosted. The test WDL is the WDL "
-    "which defines the thing the be tested",
+    help="The location where the test WDL for this template is hosted, or its local file path. The"
+    "test WDL is the WDL which defines the thing the be tested",
+)
+@click.option(
+    "--test_wdl_dependencies",
+    help="The location where the test WDL dependencies zip for this template is hosted, or its"
+    "local file path. The zip should be formatted the same as it would be for cromwell",
 )
 @click.option(
     "--eval_wdl",
@@ -143,11 +150,25 @@ def find(
     "which takes the outputs from the test WDL and evaluates them",
 )
 @click.option(
+    "--eval_wdl_dependencies",
+    help="The location where the eval WDL dependencies zip for this template is hosted, or its"
+    "local file path. The zip should be formatted the same as it would be for cromwell",
+)
+@click.option(
     "--created_by",
     default="",
     help="Email of the creator of the template.  Defaults to email config variable",
 )
-def create(name, pipeline, description, test_wdl, eval_wdl, created_by):
+def create(
+    name,
+    pipeline,
+    description,
+    test_wdl,
+    test_wdl_dependencies,
+    eval_wdl,
+    eval_wdl_dependencies,
+    created_by
+):
     """Create template with the specified parameters"""
     # If created_by is not set and there is an email config variable, fill with that
     if created_by == "":
@@ -164,35 +185,57 @@ def create(name, pipeline, description, test_wdl, eval_wdl, created_by):
     pipeline_id = dependency_util.get_id_from_id_or_name_and_handle_error(pipeline, pipelines, "pipeline_id", "pipeline")
 
     print(
-        templates.create(name, pipeline_id, description, test_wdl, eval_wdl, created_by)
+        templates.create(
+            name,
+            pipeline_id,
+            description,
+            test_wdl,
+            test_wdl_dependencies,
+            eval_wdl,
+            eval_wdl_dependencies,
+            created_by
+        )
     )
-
 
 
 @main.command(name="update")
 @click.argument("template")
-@click.option("--name", default="", help="The name of the template")
-@click.option("--description", default="", help="The description of the template")
+@click.option("--name", default="", help="The new name of the template")
+@click.option("--description", default="", help="The new description of the template")
 @click.option(
     "--test_wdl",
     default="",
-    help="The location where the test WDL for the template is hosted.  Updating this parameter "
-    "is allowed only if the specified template has no non-failed (i.e. successful or currently "
-    "running) runs associated with it",
+    help="The location where the new test WDL for the template is hosted or a local file path.  "
+    "Updating this parameter is allowed only if the specified template has no non-failed "
+    "(i.e. successful or currently running) runs associated with it",
+)
+@click.option(
+    "--test_wdl_dependencies",
+    default="",
+    help="The location where the new test WDL dependencies zip for the template is hosted or a "
+    "local file path.  Updating this parameter is allowed only if the specified template has no "
+    "non-failed (i.e. successful or currently running) runs associated with it",
 )
 @click.option(
     "--eval_wdl",
     default="",
-    help="The location where the eval WDL for the template is hosted.  Updating this parameter "
-    "is allowed only if the specified template has no non-failed (i.e. successful or currently "
-    "running) runs associated with it",
+    help="The location where the new eval WDL for the template is hosted or a local file path.  "
+    "Updating this parameter is allowed only if the specified template has no non-failed (i.e. "
+    "successful or currently running) runs associated with it",
 )
-def update(template, name, description, test_wdl, eval_wdl):
+@click.option(
+    "--eval_wdl_dependencies",
+    default="",
+    help="The location where the new eval WDL dependencies zip for the template is hosted or a "
+    "local file path.  Updating this parameter is allowed only if the specified template has no "
+    "non-failed (i.e. successful or currently running) runs associated with it",
+)
+def update(template, name, description, test_wdl, test_wdl_dependencies, eval_wdl, eval_wdl_dependencies):
     """Update template with TEMPLATE (id or name) with the specified parameters"""
     # Process template to get id if it's a name
     id = dependency_util.get_id_from_id_or_name_and_handle_error(template, templates, "template_id", "template")
 
-    print(templates.update(id, name, description, test_wdl, eval_wdl))
+    print(templates.update(id, name, description, test_wdl, test_wdl_dependencies, eval_wdl, eval_wdl_dependencies))
 
 
 
