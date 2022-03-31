@@ -1,4 +1,7 @@
 ![CARROT CLI](https://github.com/broadinstitute/carrot_cli/blob/master/logo.png?raw=true)
+# DEPRECATED
+THIS REPOSITORY WILL NO LONGER BE UPDATED. CARROT_CLI HAS BEEN INTEGRATED INTO THE [CARROT REPO](https://github.com/broadinstitute/carrot). PLEASE GO THERE FOR FUTURE UPDATES TO CARROT_CLI.
+
 # carrot\_cli
 The official CLI tool for [CARROT](https://github.com/broadinstitute/carrot). This tool provides a suite of commands for interacting with the CARROT REST API.
 
